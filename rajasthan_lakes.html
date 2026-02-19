@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Rajasthan Lakes Quiz</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background: #f0f4f8;
+        }
+
+        #map-overlays {
+            position: relative;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #map {
+            height: calc(100vh - 78px);
+            margin-top: 8px;
+            background: #e3f2fd;
+        }
+
+        .overlay {
+            position: absolute;
+            z-index: 400;
+            padding: 8px 14px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            font-weight: 600;
+            color: #333;
+        }
+
+        .top-left {
+            left: 15px;
+            top: 12px;
+            border-left: 4px solid #0077be;
+        }
+
+        .top-right {
+            right: 15px;
+            top: 12px;
+        }
+
+        .center-top {
+            left: 50%;
+            top: 12px;
+            transform: translateX(-50%);
+            font-size: 22px;
+            color: #004e7c;
+        }
+
+        #question {
+            font-size: 20px;
+        }
+
+        #score {
+            font-size: 16px;
+        }
+
+        .lake-icon {
+            background: transparent;
+            border: 0;
+        }
+
+        .lake-icon svg {
+            display: block;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+        }
+
+        .wrong-tooltip {
+            background-color: #d33a32 !important;
+            border: none !important;
+            color: white !important;
+            font-weight: bold;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .wrong-tooltip .leaflet-tooltip-tip {
+            border-top-color: #d33a32 !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="map-overlays">
+        <div class="overlay top-left">Quiz : Lakes of Rajasthan</div>
+        <div id="score" class="overlay top-right">
+            <span id="score-text">Score: 0%</span>
+            <span id="timer" style="margin-left:12px;font-weight:400;font-size:15px;"></span>
+        </div>
+        <div id="question" class="overlay center-top">Loading lakes...</div>
+    </div>
+    <div id="map"></div>
+
+    <script>
+
+        let allData = [];
+        let lakes = [];
+        let currentLake = "";
+        let totalQuestions = 0;
+        let correctAnswers = 0;
+        let geoLayer;
+        let maxQuestions = 0;
+        let attemptsLeft = 3;
+        let attemptsCount = 0;
+        let requireCorrectToAdvance = false;
+        let correctMarkerForCurrent = null;
+        let map = null;
+        let audioContext = null;
+
+        const rajBounds = [[23.0, 69.5], [30.5, 78.5]];
+
+        const MARKER_VISUALS = {
+            default: { size: 20, fill: "#0077be", stroke: "#004e7c" },
+            hover: { size: 24, fill: "#0099ff", stroke: "#004e7c" },
+            correct: { size: 24, fill: "#1e9d46", stroke: "#0e6128" },
+            wrong: { size: 24, fill: "#d33a32", stroke: "#8a1f1a" },
+            target: { size: 28, fill: "#d33a32", stroke: "#8a1f1a" }
+        };
+
+        function initAudio() {
+            if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioContext.state === 'suspended') audioContext.resume();
+        }
+
+        function playCorrectSound() {
+            initAudio();
+            const now = audioContext.currentTime;
+            const osc = audioContext.createOscillator(), gain = audioContext.createGain();
+            osc.connect(gain); gain.connect(audioContext.destination);
+            osc.frequency.value = 800; osc.type = 'sine';
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+            osc.start(now); osc.stop(now + 0.3);
+        }
+
+        function playIncorrectSound() {
+            initAudio();
+            const now = audioContext.currentTime;
+            const osc = audioContext.createOscillator(), gain = audioContext.createGain();
+            osc.connect(gain); gain.connect(audioContext.destination);
+            osc.frequency.value = 400; osc.type = 'sine';
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+            osc.start(now); osc.stop(now + 0.3);
+        }
+
+        function parseCSV(text) {
+            const rows = [];
+            let row = [], cell = '', inQuotes = false;
+            for (let i = 0; i < text.length; i++) {
+                const ch = text[i], next = text[i + 1];
+                if (ch === '"') { if (inQuotes && next === '"') { cell += '"'; i++; } else { inQuotes = !inQuotes; } continue; }
+                if (!inQuotes && ch === ',') { row.push(cell); cell = ''; continue; }
+                if (!inQuotes && (ch === '\n' || ch === '\r')) {
+                    if (ch === '\r' && next === '\n') i++;
+                    row.push(cell);
+                    if (row.some(v => (v || '').trim() !== '')) rows.push(row);
+                    row = []; cell = ''; continue;
+                }
+                cell += ch;
+            }
+            row.push(cell);
+            if (row.some(v => (v || '').trim() !== '')) rows.push(row);
+            return rows;
+        }
+
+        function toFeaturesFromCSV(csvText) {
+            const rows = parseCSV(csvText);
+            if (!rows.length) return [];
+            const header = rows[0].map(h => (h || '').replace(/^\uFEFF/, '').trim());
+            const idx = {
+                name: header.indexOf('LAKE_NAME'),
+                lat: header.indexOf('LATITUDE'),
+                lng: header.indexOf('LONGITUDE'),
+                type: header.indexOf('TYPE'),
+                comment: header.indexOf('COMMENT')
+            };
+            if (idx.name === -1 || idx.lat === -1 || idx.lng === -1) return [];
+            return rows.slice(1).map(cols => {
+                const name = (cols[idx.name] || '').trim();
+                const lat = parseFloat((cols[idx.lat] || '').trim());
+                const lng = parseFloat((cols[idx.lng] || '').trim());
+                const type = (cols[idx.type] || '').trim();
+                const comment = (cols[idx.comment] || '').trim();
+                if (!name || !Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+                return {
+                    type: 'Feature',
+                    geometry: { type: 'Point', coordinates: [lng, lat] },
+                    properties: { LAKE_NAME: name, Type: type, Comment: comment }
+                };
+            }).filter(Boolean);
+        }
+
+        function getLakeIcon(state) {
+            const visual = MARKER_VISUALS[state] || MARKER_VISUALS.default;
+            const sz = visual.size, f = visual.fill, s = visual.stroke;
+            return L.divIcon({
+                className: 'lake-icon',
+                iconSize: [sz, sz],
+                iconAnchor: [sz / 2, sz / 2],
+                html:
+                    '<svg width="' + sz + '" height="' + sz + '" viewBox="0 0 24 24" aria-hidden="true">' +
+                    '<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="' + f + '" stroke="' + s + '" stroke-width="1.5" stroke-linejoin="round"/>' +
+                    '<path d="M12 5.5l2.5 2.5h-5z" fill="#ffffff" opacity="0.6"/>' +
+                    '</svg>'
+            });
+        }
+
+        function setMarkerState(marker, state) { marker.setIcon(getLakeIcon(state)); }
+        function resetMarkerStyle(marker) { setMarkerState(marker, 'default'); }
+
+        function triggerRippleAt(latlng, color) {
+            if (!map || !latlng) return;
+            for (let i = 0; i < 4; i++) {
+                setTimeout(() => {
+                    const ripple = L.circleMarker(latlng, {
+                        pane: 'ripplePane', radius: 10, color: color || '#0077be',
+                        weight: 4, opacity: 1, fillColor: '#fff', fillOpacity: 0.08
+                    }).addTo(map);
+                    let frame = 0; const maxFrames = 34;
+                    const iv = setInterval(() => {
+                        frame++;
+                        const t = frame / maxFrames;
+                        ripple.setRadius(10 + t * 85);
+                        ripple.setStyle({ opacity: 1 - t, weight: Math.max(1, 4 - t * 2.4), fillOpacity: Math.max(0, 0.08 * (1 - t)) });
+                        if (frame >= maxFrames) { clearInterval(iv); if (map && map.hasLayer(ripple)) map.removeLayer(ripple); }
+                    }, 30);
+                }, i * 180);
+            }
+        }
+
+        function triggerCelebration(latlng) {
+            if (!map || !latlng) return;
+            const colors = ['#ff0000', '#00aaff', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff8800'];
+            for (let i = 0; i < 24; i++) {
+                const angle = Math.random() * Math.PI * 2, velocity = 2 + Math.random() * 4;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const particle = L.circleMarker(latlng, {
+                    pane: 'ripplePane', radius: 4, color, fillColor: color, fillOpacity: 1, stroke: false
+                }).addTo(map);
+                let frame = 0;
+                const anim = setInterval(() => {
+                    frame++;
+                    const t = frame / 30, cur = particle.getLatLng();
+                    particle.setLatLng([cur.lat + Math.sin(angle) * velocity * 0.0005, cur.lng + Math.cos(angle) * velocity * 0.0005]);
+                    particle.setStyle({ opacity: 1 - t, fillOpacity: 1 - t, radius: 4 * (1 - t / 2) });
+                    if (frame >= 30) { clearInterval(anim); if (map && map.hasLayer(particle)) map.removeLayer(particle); }
+                }, 20);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', function () {
+            fetch('lakes_rajasthan.csv')
+                .then(r => r.text())
+                .then(csvText => {
+                    allData = toFeaturesFromCSV(csvText);
+                    if (allData.length > 0) initializeQuiz();
+                    else alert('Invalid or empty lakes_rajasthan.csv file');
+                })
+                .catch(err => alert('Error loading lakes_rajasthan.csv: ' + err.message));
+        });
+
+        function initializeQuiz() {
+            map = L.map('map', { maxBounds: rajBounds, maxBoundsViscosity: 1.0 }).setView([26.0, 74.0], 7);
+
+            map.createPane('ripplePane');
+            map.getPane('ripplePane').style.zIndex = 700;
+            map.getPane('ripplePane').style.pointerEvents = 'none';
+
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '© Esri', maxZoom: 10, minZoom: 6, bounds: rajBounds, noWrap: true
+            }).addTo(map);
+
+            // Rajasthan district boundaries
+            fetch('india_districts.geojson')
+                .then(r => r.json())
+                .then(districtData => {
+                    const rajDistricts = {
+                        type: 'FeatureCollection',
+                        features: districtData.features.filter(f => f.properties && f.properties.st_nm === 'Rajasthan')
+                    };
+                    L.geoJSON(rajDistricts, {
+                        interactive: false,
+                        style: { color: "#004e7c", weight: 1.2, opacity: 0.6, fillColor: "#0077be", fillOpacity: 0.07 }
+                    }).addTo(map);
+                });
+
+            lakes = allData.map(f => f.properties.LAKE_NAME || 'Unknown Lake');
+            maxQuestions = lakes.length;
+            geoLayer = L.featureGroup();
+
+            allData.forEach(feature => {
+                const coords = feature.geometry.coordinates;
+                const lakeName = feature.properties.LAKE_NAME || 'Unknown Lake';
+                const lakeType = feature.properties.Type;
+                const comment = feature.properties.Comment;
+
+                const marker = L.marker([coords[1], coords[0]], { icon: getLakeIcon('default'), keyboard: false });
+
+                marker.on({
+                    mouseover: function () { if (marker === correctMarkerForCurrent) return; setMarkerState(marker, 'hover'); },
+                    mouseout: function () { if (marker === correctMarkerForCurrent) return; resetMarkerStyle(marker); },
+                    click: function (e) {
+                        attemptsCount++;
+
+                        if (lakeName === currentLake) {
+                            correctAnswers++;
+                            playCorrectSound();
+                            updateScore();
+                            setMarkerState(marker, 'correct');
+                            triggerCelebration(marker.getLatLng());
+
+                            let details = "<b>" + lakeName + "</b>";
+                            if (lakeType) details += " &nbsp;<span style='color:#888;font-size:0.85em'>(" + lakeType + ")</span>";
+                            if (comment) details += "<br/>" + comment;
+                            marker.bindTooltip(details, { permanent: false, direction: 'top', offset: [0, -10] }).openTooltip();
+
+                            setTimeout(() => { marker.closeTooltip(); resetMarkerStyle(marker); nextQuestion(); }, 2500);
+                            return;
+                        }
+
+                        playIncorrectSound();
+                        updateScore();
+
+                        if (requireCorrectToAdvance) {
+                            setMarkerState(marker, 'wrong');
+                            setTimeout(() => resetMarkerStyle(marker), 1200);
+                            marker.bindTooltip("Incorrect: " + lakeName, {
+                                permanent: false, className: 'wrong-tooltip', direction: 'top', offset: [0, -10]
+                            }).openTooltip(e && e.latlng ? e.latlng : undefined);
+                            setTimeout(() => { marker.closeTooltip(); marker.unbindTooltip(); }, 1200);
+                            return;
+                        }
+
+                        attemptsLeft = Math.max(0, attemptsLeft - 1);
+                        if (attemptsLeft > 0) {
+                            setMarkerState(marker, 'wrong');
+                            setTimeout(() => resetMarkerStyle(marker), 2000);
+                        } else {
+                            let correctMarker = null;
+                            geoLayer.eachLayer(lyr => {
+                                if (lyr.feature && lyr.feature.properties.LAKE_NAME === currentLake) correctMarker = lyr;
+                            });
+                            if (correctMarker) {
+                                let on = true;
+                                const iv = setInterval(() => { setMarkerState(correctMarker, on ? 'wrong' : 'default'); on = !on; }, 250);
+                                setTimeout(() => {
+                                    clearInterval(iv);
+                                    requireCorrectToAdvance = true;
+                                    correctMarkerForCurrent = correctMarker;
+                                    setMarkerState(correctMarker, 'target');
+                                    triggerRippleAt(correctMarker.getLatLng(), '#d33a32');
+                                    const q = document.getElementById('question');
+                                    if (q) q.innerHTML = "Locate: <b>" + currentLake + "</b> (Click the highlighted lake to continue)";
+                                }, 2000);
+                            } else { nextQuestion(); }
+                        }
+
+                        marker.bindTooltip("Incorrect: " + lakeName, {
+                            permanent: false, className: 'wrong-tooltip', direction: 'top', offset: [0, -10]
+                        }).openTooltip(e && e.latlng ? e.latlng : undefined);
+                        setTimeout(() => { marker.closeTooltip(); marker.unbindTooltip(); }, 1200);
+                    }
+                });
+
+                marker.feature = feature;
+                geoLayer.addLayer(marker);
+            });
+
+            geoLayer.addTo(map);
+            try { map.fitBounds(geoLayer.getBounds(), { padding: [40, 40] }); } catch (err) { }
+
+            startTimer();
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            requireCorrectToAdvance = false;
+            if (correctMarkerForCurrent) { resetMarkerStyle(correctMarkerForCurrent); correctMarkerForCurrent = null; }
+            if (maxQuestions > 0 && totalQuestions >= maxQuestions) { endQuiz(); return; }
+            if (!lakes || lakes.length === 0) { endQuiz(); return; }
+            const idx = Math.floor(Math.random() * lakes.length);
+            currentLake = lakes.splice(idx, 1)[0];
+            attemptsLeft = 3;
+            totalQuestions++;
+            document.getElementById("question").innerHTML = "Click on: <b>" + currentLake + "</b>";
+        }
+
+        function updateScore() {
+            const pct = attemptsCount === 0 ? 0 : Math.round((correctAnswers / attemptsCount) * 100);
+            document.getElementById("score-text").innerHTML = "Score: " + pct + "%";
+        }
+
+        let timerInterval = null, startTime = null;
+        function startTimer() { startTime = Date.now(); timerInterval = setInterval(updateTimer, 1000); }
+        function updateTimer() {
+            if (!startTime) return;
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const mins = Math.floor(elapsed / 60), secs = elapsed % 60;
+            document.getElementById("timer").textContent = "Time: " + mins + ":" + (secs < 10 ? "0" : "") + secs;
+        }
+        function stopTimer() { if (timerInterval) clearInterval(timerInterval); timerInterval = null; }
+
+        function endQuiz() {
+            stopTimer();
+            const percent = attemptsCount === 0 ? 0 : Math.round((correctAnswers / attemptsCount) * 100);
+            document.getElementById("question").innerHTML = "Quiz finished! Final score: <b>" + percent + "%</b>";
+            if (geoLayer) geoLayer.eachLayer(l => l.off());
+            const restart = document.createElement('button');
+            restart.textContent = 'Restart Quiz';
+            restart.style.cssText = 'margin-left:15px; padding:5px 12px; border-radius:4px; border:1px solid #0077be; background:#fff; color:#0077be; cursor:pointer; font-weight:bold;';
+            restart.onclick = () => location.reload();
+            const q = document.getElementById('question');
+            if (q) q.appendChild(restart);
+        }
+
+    </script>
+
+</body>
+
+</html>

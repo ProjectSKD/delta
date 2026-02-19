@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Topographical Map - Leaflet</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .info {
+            padding: 6px 8px;
+            font: 14px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255,255,255,0.8);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border-radius: 5px;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 400;
+        }
+    </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<div class="info">
+    <strong>Topographical Map</strong><br>
+    Zoom: <span id="zoom">5</span><br>
+    Center: <span id="center">[20, 78]</span><br>
+    State Border:
+    <input type="color" id="stateColorPicker" value="#2f5f9a" title="Pick state border color">
+</div>
+
+<script>
+
+// Initialize map centered on India
+const indiaBounds = [
+    [6, 67],   // Southwest: lat, lng
+    [38, 98]   // Northeast: lat, lng
+];
+
+const map = L.map('map', {
+    maxBounds: indiaBounds,
+    maxBoundsViscosity: 1.0
+}).setView([20, 78], 5);
+const defaultStateColor = '#2f5f9a';
+let stateLayer = null;
+
+// Add ESRI World_Terrain_Base - label-free topographic basemap
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}', {
+    attribution: '© Esri',
+    maxZoom: 9,
+    minZoom: 4,
+    opacity: 1,
+    bounds: indiaBounds,
+    noWrap: true
+}).addTo(map);
+
+// Load and display India states GeoJSON
+fetch('india_states.geojson')
+    .then(response => response.json())
+    .then(data => {
+        stateLayer = L.geoJSON(data, {
+            style: {
+                color: defaultStateColor,
+                weight: 1.7,
+                opacity: 0.9,
+                fillOpacity: 0.08,
+                fillColor: '#7fb5ff'
+            },
+            interactive: false
+        }).addTo(map);
+    })
+    .catch(err => console.log('Error loading india.geojson:', err));
+
+// Live state border color control
+document.getElementById('stateColorPicker').addEventListener('input', function(e) {
+    if (!stateLayer) return;
+    stateLayer.setStyle({
+        color: e.target.value
+    });
+});
+
+// Update displayed zoom and center on map changes
+map.on('zoomend', function() {
+    document.getElementById('zoom').textContent = map.getZoom();
+});
+
+map.on('moveend', function() {
+    const center = map.getCenter();
+    document.getElementById('center').textContent = 
+        '[' + center.lat.toFixed(2) + ', ' + center.lng.toFixed(2) + ']';
+});
+
+// Log initial center
+const center = map.getCenter();
+document.getElementById('center').textContent = 
+    '[' + center.lat.toFixed(2) + ', ' + center.lng.toFixed(2) + ']';
+
+</script>
+
+</body>
+</html>

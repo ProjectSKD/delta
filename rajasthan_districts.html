@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rajasthan Districts Quiz</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <style>
+        body { font-family: Arial; text-align: center; margin: 0; padding: 0; }
+        /* overlays sit above the map */
+        #map-overlays { position: relative; height: 64px; }
+        #map { height: 600px; margin-top: 8px; background: #f4f4f4; }
+        .overlay { position: absolute; z-index: 400; padding: 6px 10px; background: rgba(255,255,255,0.95); border-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); font-weight: 600; }
+        .top-left { left: 8px; top: 8px; }
+        .top-right { right: 8px; top: 8px; }
+        .center-top { left: 50%; top: 8px; transform: translateX(-50%); font-size: 20px; }
+        #question { font-size: 18px; }
+        #score { font-size: 16px; }
+    </style>
+</head>
+<body>
+
+<div id="map-overlays">
+    <div class="overlay top-left">Quiz : Rajasthan Districts</div>
+    <div id="score" class="overlay top-right"><span id="score-text">Score: 0%</span> <span id="timer" style="margin-left:12px;font-weight:400;font-size:15px;"></span></div>
+    <div id="question" class="overlay center-top">Loading...</div>
+</div>
+<div id="map"></div>
+
+<script>
+
+let allData = null;
+let districts = [];
+let currentDistrict = "";
+let totalQuestions = 0;
+let correctAnswers = 0;
+let geoLayer;
+let maxQuestions = 0;
+let attemptsLeft = 3;
+let attemptsCount = 0;
+let requireCorrectToAdvance = false;
+let correctLayerForCurrent = null;
+let map = null;
+let audioContext = null;
+
+// Initialize Web Audio context for sound effects
+function initAudio() {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+}
+
+// Play correct sound
+function playCorrectSound() {
+    initAudio();
+    const now = audioContext.currentTime;
+    const osc = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    osc.connect(gain);
+    gain.connect(audioContext.destination);
+    osc.frequency.value = 800;
+    osc.type = 'sine';
+    gain.gain.setValueAtTime(0.3, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+    osc.start(now);
+    osc.stop(now + 0.3);
+}
+
+// Play incorrect sound
+function playIncorrectSound() {
+    initAudio();
+    const now = audioContext.currentTime;
+    const osc = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    osc.connect(gain);
+    gain.connect(audioContext.destination);
+    osc.frequency.value = 400;
+    osc.type = 'sine';
+    gain.gain.setValueAtTime(0.3, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+    osc.start(now);
+    osc.stop(now + 0.3);
+}
+
+// Load data on page load
+window.addEventListener('DOMContentLoaded', function() {
+    fetch('india_districts.geojson')
+        .then(response => response.json())
+        .then(data => {
+            allData = data;
+            initializeQuiz();
+        })
+        .catch(error => {
+            alert('Error loading district data: ' + error.message);
+        });
+});
+
+function initializeQuiz() {
+    map = L.map('map').setView([27.5, 74.5], 6);
+    
+    // Filter districts for Rajasthan only
+    const rajasthanFeatures = allData.features.filter(f => 
+        f.properties && (f.properties.st_nm === 'Rajasthan' || f.properties.ST_NM === 'Rajasthan')
+    );
+    
+    // Load background states layer
+    fetch('india_states.geojson')
+        .then(response => response.json())
+        .then(statesData => {
+            L.geoJSON(statesData, {
+                interactive: false,
+                style: {
+                    color: "#cccccc",
+                    weight: 1,
+                    fillColor: "#e8e8e8",
+                    fillOpacity: 0.4
+                }
+            }).addTo(map);
+        });
+    
+    districts = rajasthanFeatures.map(f => f.properties.DISTRICT || f.properties.district || 'Unknown District');
+    maxQuestions = Math.min(districts.length, 20);
+    
+    geoLayer = L.geoJSON(
+        { type: "FeatureCollection", features: rajasthanFeatures },
+        {
+            style: {
+                color: "#cc6600",
+                weight: 2,
+                fillColor: "#ffcc99",
+                fillOpacity: 0.6
+            },
+            onEachFeature: function (feature, layer) {
+                const districtName = feature.properties.DISTRICT || feature.properties.district || 'Unknown District';
+                
+                layer.on({
+                    mouseover: function (e) {
+                        layer.setStyle({ weight: 3, fillOpacity: 0.8 });
+                    },
+                    mouseout: function (e) {
+                        geoLayer.resetStyle(layer);
+                    },
+                    click: function (e) {
+                        attemptsCount++;
+
+                        if (districtName === currentDistrict) {
+                            correctAnswers++;
+                            playCorrectSound();
+                            updateScore();
+                            layer.setStyle({ fillColor: 'green' });
+                            setTimeout(() => {
+                                geoLayer.resetStyle(layer);
+                                nextQuestion();
+                            }, 2000);
+
+                        } else {
+                            playIncorrectSound();
+                            updateScore();
+                            attemptsLeft = Math.max(0, attemptsLeft - 1);
+                            if (attemptsLeft > 0) {
+                                layer.setStyle({ fillColor: 'red' });
+                                setTimeout(() => geoLayer.resetStyle(layer), 2000);
+                            } else {
+                                let correctLayer = null;
+                                geoLayer.eachLayer(function (lyr) {
+                                    const nm = lyr.feature && lyr.feature.properties && 
+                                        (lyr.feature.properties.DISTRICT || lyr.feature.properties.district);
+                                    if (nm === currentDistrict) correctLayer = lyr;
+                                });
+                                if (correctLayer) {
+                                    let on = true;
+                                    const iv = setInterval(() => {
+                                        correctLayer.setStyle({ fillColor: on ? 'red' : '#ffcc99' });
+                                        on = !on;
+                                    }, 250);
+                                    setTimeout(() => {
+                                        clearInterval(iv);
+                                        geoLayer.resetStyle(correctLayer);
+                                        requireCorrectToAdvance = true;
+                                        correctLayerForCurrent = correctLayer;
+                                        try { correctLayer.setStyle({ weight: 4, color: '#2a7fff' }); } catch(e) {}
+                                        const q = document.getElementById('question');
+                                        if (q) q.innerHTML = "Click on: <b>" + currentDistrict + "</b> (click the correct district to continue)";
+                                    }, 3000);
+                                } else {
+                                    nextQuestion();
+                                }
+                            }
+                            let tooltipContent = districtName || 'Unknown';
+                            layer.bindTooltip(tooltipContent, {
+                                permanent: false,
+                                direction: 'top',
+                                offset: [0, -10]
+                            }).openTooltip(e && e.latlng ? e.latlng : undefined);
+                            setTimeout(()=> layer.closeTooltip(), 1200);
+                        }
+                    }
+                });
+            }
+        }
+    ).addTo(map);
+
+    try { map.fitBounds(geoLayer.getBounds()); } catch(e) { }
+
+    startTimer();
+    nextQuestion();
+}
+
+function nextQuestion() {
+    requireCorrectToAdvance = false;
+    if (correctLayerForCurrent) {
+        try { geoLayer.resetStyle(correctLayerForCurrent); } catch(e) {}
+        correctLayerForCurrent = null;
+    }
+
+    if (maxQuestions > 0 && totalQuestions >= maxQuestions) {
+        endQuiz();
+        return;
+    }
+
+    if (!districts || districts.length === 0) {
+        endQuiz();
+        return;
+    }
+
+    const idx = Math.floor(Math.random() * districts.length);
+    currentDistrict = districts.splice(idx, 1)[0];
+    attemptsLeft = 3;
+    totalQuestions++;
+
+    document.getElementById("question").innerHTML = "Click on: <b>" + currentDistrict + "</b>";
+}
+
+function updateScore() {
+    let percentage = attemptsCount === 0 ? 0 : Math.round((correctAnswers / attemptsCount) * 100);
+    document.getElementById("score-text").innerHTML = "Score: " + percentage + "%";
+}
+
+let timerInterval = null;
+let startTime = null;
+function startTimer() {
+    startTime = Date.now();
+    timerInterval = setInterval(updateTimer, 1000);
+}
+function updateTimer() {
+    if (!startTime) return;
+    const now = Date.now();
+    const elapsed = Math.floor((now - startTime) / 1000);
+    const mins = Math.floor(elapsed / 60);
+    const secs = elapsed % 60;
+    document.getElementById("timer").textContent =
+        "Time: " + mins + ":" + (secs < 10 ? "0" : "") + secs;
+}
+function stopTimer() {
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = null;
+}
+
+function endQuiz() {
+    stopTimer();
+    const percent = attemptsCount === 0 ? 0 : Math.round((correctAnswers / attemptsCount) * 100);
+    document.getElementById("question").innerHTML =
+        "Quiz finished! Final score: <b>" + percent + "%</b>";
+
+    if (geoLayer) {
+        geoLayer.eachLayer(function (layer) {
+            layer.off();
+        });
+    }
+
+    const restart = document.createElement('button');
+    restart.textContent = 'Restart Quiz';
+    restart.style.marginLeft = '10px';
+    restart.onclick = function () { location.reload(); };
+    const q = document.getElementById('question');
+    if (q) q.appendChild(restart);
+}
+
+</script>
+
+</body>
+</html>

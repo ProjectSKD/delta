@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>India Rivers Quiz</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <style>
+        body { font-family: Arial; text-align: center; margin: 0; padding: 0; }
+        /* overlays sit above the map */
+        #map-overlays { position: relative; height: 64px; }
+        #map { height: 600px; margin-top: 8px; background: #f4f4f4; }
+        .overlay { position: absolute; z-index: 400; padding: 6px 10px; background: rgba(255,255,255,0.95); border-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); font-weight: 600; }
+        .top-left { left: 8px; top: 8px; }
+        .top-right { right: 8px; top: 8px; }
+        .center-top { left: 50%; top: 8px; transform: translateX(-50%); font-size: 20px; }
+        #question { font-size: 18px; }
+        #score { font-size: 16px; }
+    </style>
+</head>
+<body>
+
+<div id="map-overlays">
+    <div class="overlay top-left">Quiz : Rivers on India Map</div>
+    <div id="score" class="overlay top-right"><span id="score-text">Score: 0%</span> <span id="timer" style="margin-left:12px;font-weight:400;font-size:15px;"></span></div>
+    <div id="question" class="overlay center-top">Loading...</div>
+</div>
+<div id="map"></div>
+
+<script>
+
+let allData = null;
+let rivers = [];
+let currentRiver = "";
+let totalQuestions = 0;
+let correctAnswers = 0;
+let geoLayer;
+let maxQuestions = 0;
+let attemptsLeft = 3;
+let attemptsCount = 0;
+let requireCorrectToAdvance = false;
+let correctLayerForCurrent = null;
+let map = null;
+
+// Auto-load Rivers_3.geojson on page load
+window.addEventListener('DOMContentLoaded', function() {
+    fetch('Rivers_compressed.geojson')
+        .then(response => response.json())
+        .then(data => {
+            allData = data;
+            // Start quiz immediately
+            if (allData && allData.features) {
+                initializeQuiz();
+            } else {
+                alert('Invalid GeoJSON file');
+            }
+        })
+        .catch(error => {
+            alert('Error loading Rivers_3.geojson: ' + error.message);
+        });
+});
+
+
+function initializeQuiz() {
+    // Create map
+    map = L.map('map').setView([20, 78], 5);
+    
+    // Load India states as background layer
+    fetch('india_states.geojson')
+        .then(response => response.json())
+        .then(statesData => {
+            L.geoJSON(statesData, {
+                interactive: false,
+                style: {
+                    color: "#cccccc",
+                    weight: 1,
+                    fillColor: "#e8e8e8",
+                    fillOpacity: 0.4
+                }
+            }).addTo(map);
+        });
+    
+    rivers = allData.features.map(f => f.properties.rivname || f.properties.name || 'Unknown River');
+    maxQuestions = Math.min(rivers.length, 20);
+    
+    geoLayer = L.geoJSON(allData, {
+        style: {
+            color: "#00008B",
+            weight: 1.5,
+            opacity: 0.8
+        },
+        onEachFeature: function (feature, layer) {
+            layer.on({
+                mouseover: function (e) {
+                    layer.setStyle({ weight: 5, color: '#003399' });
+                },
+                mouseout: function (e) {
+                    geoLayer.resetStyle(layer);
+                },
+                click: function (e) {
+                    const riverName = feature.properties.rivname || feature.properties.name || 'Unknown River';
+                    
+                    // increment attempts count
+                    attemptsCount++;
+
+                    if (riverName === currentRiver) {
+                        // Correct: show green for 2s
+                        correctAnswers++;
+                        updateScore();
+                        layer.setStyle({ color: 'green', weight: 5 });
+                        setTimeout(() => {
+                            geoLayer.resetStyle(layer);
+                            nextQuestion();
+                        }, 2000);
+
+                    } else {
+                        // Incorrect: decrement attempts
+                        updateScore();
+                        attemptsLeft = Math.max(0, attemptsLeft - 1);
+                        if (attemptsLeft > 0) {
+                            // red for 2s on the clicked (wrong) layer
+                            layer.setStyle({ color: 'red', weight: 5 });
+                            setTimeout(() => geoLayer.resetStyle(layer), 2000);
+                        } else {
+                            // after 3 consecutive wrong tries: show correct river by flickering it for 3s
+                            let correctLayer = null;
+                            geoLayer.eachLayer(function (lyr) {
+                                const nm = lyr.feature && lyr.feature.properties && (lyr.feature.properties.rivname || lyr.feature.properties.name);
+                                if (nm === currentRiver) correctLayer = lyr;
+                            });
+                            if (correctLayer) {
+                                let on = true;
+                                const iv = setInterval(() => {
+                                    correctLayer.setStyle({ color: on ? 'red' : '#0066cc' });
+                                    on = !on;
+                                }, 250);
+                                setTimeout(() => {
+                                    clearInterval(iv);
+                                    geoLayer.resetStyle(correctLayer);
+                                    // Do NOT auto-advance; require the user to click the correct river to continue
+                                    requireCorrectToAdvance = true;
+                                    correctLayerForCurrent = correctLayer;
+                                    // visually indicate the correct target (outline)
+                                    try { correctLayer.setStyle({ weight: 6, color: '#2a7fff' }); } catch(e) {}
+                                    // update the prompt to make the requirement clear
+                                    const q = document.getElementById('question');
+                                    if (q) q.innerHTML = "Click on: <b>" + currentRiver + "</b> (click the correct river to continue)";
+                                }, 3000);
+                            } else {
+                                // fallback: if we can't locate the correct layer, advance
+                                nextQuestion();
+                            }
+                        }
+                        // show a short tooltip with the clicked river's name at the click location
+                        let tooltipContent = riverName || 'Unknown';
+                        layer.bindTooltip(tooltipContent, {
+                            permanent: false,
+                            className: 'wrong-tooltip',
+                            direction: 'top',
+                            offset: [0, -10]
+                        }).openTooltip(e && e.latlng ? e.latlng : undefined);
+                        setTimeout(()=> layer.closeTooltip(), 1200);
+                    }
+                }
+            });
+        }
+    }).addTo(map);
+
+    // Fit to GeoJSON bounds for a better initial view
+    try { map.fitBounds(geoLayer.getBounds()); } catch(e) { }
+
+    startTimer();
+    nextQuestion();
+}
+
+function nextQuestion() {
+
+    // Clear any 'must click correct to advance' state from previous question
+    requireCorrectToAdvance = false;
+    if (correctLayerForCurrent) {
+        try { geoLayer.resetStyle(correctLayerForCurrent); } catch(e) {}
+        correctLayerForCurrent = null;
+    }
+
+    // If maxQuestions is set and we've already asked that many, finish
+    if (maxQuestions > 0 && totalQuestions >= maxQuestions) {
+        endQuiz();
+        return;
+    }
+
+    if (!rivers || rivers.length === 0) {
+        endQuiz();
+        return;
+    }
+
+    // Pick a random river and remove it from the pool to avoid repeats
+    const idx = Math.floor(Math.random() * rivers.length);
+    currentRiver = rivers.splice(idx, 1)[0];
+
+    // reset attempts for this question
+    attemptsLeft = 3;
+
+    totalQuestions++;
+
+    document.getElementById("question").innerHTML =
+        "Click on: <b>" + currentRiver + "</b>";
+}
+
+function updateScore() {
+    // Score = correct clicks / total clicks (attempts)
+    let percentage = attemptsCount === 0 ? 0 : Math.round((correctAnswers / attemptsCount) * 100);
+    document.getElementById("score-text").innerHTML =
+        "Score: " + percentage + "%";
+}
+
+// Timer logic
+let timerInterval = null;
+let startTime = null;
+function startTimer() {
+    startTime = Date.now();
+    timerInterval = setInterval(updateTimer, 1000);
+}
+function updateTimer() {
+    if (!startTime) return;
+    const now = Date.now();
+    const elapsed = Math.floor((now - startTime) / 1000);
+    const mins = Math.floor(elapsed / 60);
+    const secs = elapsed % 60;
+    document.getElementById("timer").textContent =
+        "Time: " + mins + ":" + (secs < 10 ? "0" : "") + secs;
+}
+function stopTimer() {
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = null;
+}
+
+function endQuiz() {
+    stopTimer();
+    const percent = attemptsCount === 0 ? 0 : Math.round((correctAnswers / attemptsCount) * 100);
+    document.getElementById("question").innerHTML =
+        "Quiz finished! Final score: <b>" + percent + "%</b>";
+
+    // Disable interactions on all layers
+    if (geoLayer) {
+        geoLayer.eachLayer(function (layer) {
+            layer.off();
+        });
+    }
+
+    // Show restart control
+    const restart = document.createElement('button');
+    restart.textContent = 'Restart Quiz';
+    restart.style.marginLeft = '10px';
+    restart.onclick = function () { location.reload(); };
+    const q = document.getElementById('question');
+    if (q) q.appendChild(restart);
+}
+
+</script>
+
+</body>
+</html>

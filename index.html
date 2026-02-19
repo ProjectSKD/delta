@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>India Geography Quiz Hub</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Interactive map-based geography quizzes on India's states, districts, rivers, lakes, mountains, national parks, wetlands and more.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: #dce8f7;
+            color: #1a202c;
+        }
+
+        /* ── Animated background blobs (soft, pastel) ── */
+        .bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            background: linear-gradient(140deg, #e8f0fb 0%, #f0e8fb 50%, #e8f5f0 100%);
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.6;
+            animation: drift linear infinite;
+        }
+
+        .blob-1 {
+            width: 500px;
+            height: 500px;
+            background: #93c5fd;
+            top: -100px;
+            left: -80px;
+            animation-duration: 22s;
+        }
+
+        .blob-2 {
+            width: 380px;
+            height: 380px;
+            background: #c4b5fd;
+            top: 25%;
+            right: -60px;
+            animation-duration: 28s;
+            animation-delay: -6s;
+        }
+
+        .blob-3 {
+            width: 340px;
+            height: 340px;
+            background: #6ee7b7;
+            bottom: -40px;
+            left: 28%;
+            animation-duration: 25s;
+            animation-delay: -12s;
+        }
+
+        .blob-4 {
+            width: 260px;
+            height: 260px;
+            background: #fca5a5;
+            top: 55%;
+            left: 8%;
+            animation-duration: 20s;
+            animation-delay: -4s;
+        }
+
+        .blob-5 {
+            width: 220px;
+            height: 220px;
+            background: #7dd3fc;
+            bottom: 8%;
+            right: 12%;
+            animation-duration: 30s;
+            animation-delay: -18s;
+        }
+
+        @keyframes drift {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            25% {
+                transform: translate(35px, -25px) scale(1.05);
+            }
+
+            50% {
+                transform: translate(-15px, 35px) scale(0.96);
+            }
+
+            75% {
+                transform: translate(25px, 18px) scale(1.03);
+            }
+
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+        }
+
+        /* ── Page ── */
+        .page {
+            position: relative;
+            z-index: 1;
+            padding: 52px 24px 72px;
+            max-width: 920px;
+            margin: 0 auto;
+        }
+
+        /* ── Header ── */
+        header {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+
+        .flag {
+            font-size: 2.2rem;
+            display: block;
+            margin-bottom: 14px;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            color: #1e3a5f;
+        }
+
+        header p {
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: #5a7a9a;
+        }
+
+        /* ── Section label ── */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-label {
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #7a90aa;
+            margin-bottom: 14px;
+        }
+
+        /* ── Glass base ── */
+        .glass {
+            background: rgba(255, 255, 255, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px) saturate(160%);
+            -webkit-backdrop-filter: blur(20px) saturate(160%);
+            border-radius: 16px;
+        }
+
+        /* ── India-level grid ── */
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(188px, 1fr));
+            gap: 14px;
+        }
+
+        .quiz-card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 22px 20px;
+            text-decoration: none;
+            color: #1e3a5f;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+        }
+
+        .quiz-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, transparent 70%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 36px rgba(60, 80, 140, 0.18);
+            background: rgba(255, 255, 255, 0.65);
+        }
+
+        .quiz-card:hover::before {
+            opacity: 1;
+        }
+
+        .quiz-card .icon {
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+        }
+
+        .quiz-card h3 {
+            font-size: 0.92rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .quiz-card p {
+            font-size: 0.75rem;
+            color: #5a7a9a;
+            line-height: 1.45;
+        }
+
+        /* ── State blocks ── */
+        .state-block {
+            padding: 18px 22px;
+            margin-bottom: 10px;
+        }
+
+        .state-name {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #2d4a6e;
+            margin-bottom: 12px;
+        }
+
+        .state-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .state-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 13px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(100, 150, 220, 0.25);
+            border-radius: 20px;
+            text-decoration: none;
+            color: #2d4a6e;
+            font-size: 0.76rem;
+            font-weight: 500;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: background 0.18s, border-color 0.18s, transform 0.18s, box-shadow 0.18s;
+            white-space: nowrap;
+        }
+
+        .state-link:hover {
+            background: rgba(255, 255, 255, 0.85);
+            border-color: rgba(60, 100, 200, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(60, 80, 180, 0.12);
+        }
+
+        /* ── Current Affairs section ── */
+        .ca-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 14px;
+        }
+
+        .ca-card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 22px 20px;
+            text-decoration: none;
+            color: #1e3a5f;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+        }
+
+        .ca-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(60, 80, 140, 0.16);
+            background: rgba(255, 255, 255, 0.65);
+        }
+
+        .ca-card .icon {
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+        }
+
+        .ca-card h3 {
+            font-size: 0.92rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .ca-card p {
+            font-size: 0.75rem;
+            color: #5a7a9a;
+            line-height: 1.45;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 9px;
+            border-radius: 10px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .badge-soon {
+            background: rgba(251, 191, 36, 0.2);
+            color: #92620a;
+            border: 1px solid rgba(251, 191, 36, 0.4);
+        }
+
+        .badge-new {
+            background: rgba(52, 211, 153, 0.2);
+            color: #065f46;
+            border: 1px solid rgba(52, 211, 153, 0.4);
+        }
+
+        .badge-live {
+            background: rgba(59, 130, 246, 0.2);
+            color: #1e3a8a;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+        }
+
+        /* ── Footer ── */
+        .note {
+            text-align: center;
+            font-size: 0.74rem;
+            color: #8fa8c0;
+            margin-top: 48px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="blob blob-4"></div>
+        <div class="blob blob-5"></div>
+    </div>
+
+    <div class="page">
+
+        <header>
+            <span class="flag">🇮🇳</span>
+            <h1>India Geography Quiz Hub</h1>
+            <p>Interactive map-based quizzes on India's geography</p>
+        </header>
+
+        <!-- India-level quizzes -->
+        <div class="section">
+            <div class="section-label">India-Level</div>
+            <div class="quiz-grid">
+                <a href="index_india_final.html" class="quiz-card glass">
+                    <div class="icon">🗺️</div>
+                    <h3>States</h3>
+                    <p>Identify Indian states on the map</p>
+                </a>
+                <a href="india_geojson_districts.html" class="quiz-card glass">
+                    <div class="icon">🏘️</div>
+                    <h3>Districts</h3>
+                    <p>Identify districts across India</p>
+                </a>
+                <a href="rivers_quiz.html" class="quiz-card glass">
+                    <div class="icon">🌊</div>
+                    <h3>Rivers</h3>
+                    <p>Locate major rivers across India</p>
+                </a>
+                <a href="lakes_quiz.html" class="quiz-card glass">
+                    <div class="icon">💧</div>
+                    <h3>Lakes</h3>
+                    <p>Find important lakes &amp; water bodies</p>
+                </a>
+                <a href="mountains_quiz.html" class="quiz-card glass">
+                    <div class="icon">⛰️</div>
+                    <h3>Mountains</h3>
+                    <p>Locate major peaks across India</p>
+                </a>
+                <a href="national_parks_quiz.html" class="quiz-card glass">
+                    <div class="icon">🌲</div>
+                    <h3>National Parks</h3>
+                    <p>Explore India's protected parks</p>
+                </a>
+                <a href="wetlands_quiz.html" class="quiz-card glass">
+                    <div class="icon">🌾</div>
+                    <h3>Wetlands</h3>
+                    <p>Identify Ramsar wetland sites</p>
+                </a>
+            </div>
+        </div>
+
+        <!-- State-specific quizzes -->
+        <div class="section">
+            <div class="section-label">State-Level</div>
+
+            <div class="state-block glass">
+                <div class="state-name">Rajasthan</div>
+                <div class="state-links">
+                    <a href="rajasthan_districts.html" class="state-link">🏘️ Districts</a>
+                    <a href="rajasthan_lakes.html" class="state-link">💧 Lakes</a>
+                    <a href="wildlife_century_rajasthan_quiz.html" class="state-link">🦁 Wildlife Sanctuaries</a>
+                    <a href="rajasthan_mountains.html" class="state-link">⛰️ Mountains</a>
+                </div>
+            </div>
+
+            <div class="state-block glass">
+                <div class="state-name">Bihar</div>
+                <div class="state-links">
+                    <a href="bihar_districts.html" class="state-link">🏘️ Districts</a>
+                </div>
+            </div>
+
+            <div class="state-block glass">
+                <div class="state-name">Uttar Pradesh</div>
+                <div class="state-links">
+                    <a href="uttar_pradesh_districts.html" class="state-link">🏘️ Districts</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Affairs -->
+        <div class="section">
+            <div class="section-label">Current Affairs</div>
+            <div class="ca-grid">
+                <a href="ca_places_quiz.html" class="ca-card glass">
+                    <div class="icon">📍</div>
+                    <h3>Places in News</h3>
+                    <p>Locate places that have been in recent news &amp; events</p>
+                    <span class="badge badge-soon">Coming Soon</span>
+                </a>
+                <a href="ca_features_quiz.html" class="ca-card glass">
+                    <div class="icon">🏗️</div>
+                    <h3>Features &amp; Projects</h3>
+                    <p>Identify newly inaugurated projects, dams &amp; infrastructure</p>
+                    <span class="badge badge-soon">Coming Soon</span>
+                </a>
+                <a href="ca_persons_quiz.html" class="ca-card glass">
+                    <div class="icon">👤</div>
+                    <h3>Persons in News</h3>
+                    <p>Match prominent personalities to their role or place</p>
+                    <span class="badge badge-soon">Coming Soon</span>
+                </a>
+            </div>
+        </div>
+
+        <p class="note">More states &amp; categories coming soon &middot; Click any card to start a quiz</p>
+
+    </div>
+
+</body>
+
+</html>
