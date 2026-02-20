@@ -350,6 +350,19 @@
             color: #8fa8c0;
             margin-top: 48px;
         }
+
+        @media (max-width: 600px) {
+            .quiz-grid, .ca-grid {
+                grid-template-columns: 1fr;
+            }
+            header h1 {
+                font-size: 1.6rem;
+            }
+            .state-link {
+                padding: 10px 18px;
+                font-size: 0.85rem;
+            }
+        }
     </style>
 </head>
 
@@ -375,37 +388,37 @@
         <div class="section">
             <div class="section-label">India-Level</div>
             <div class="quiz-grid">
-                <a href="index_india_final.html" class="quiz-card glass">
+                <a href="quizzes/india/states.html" class="quiz-card glass">
                     <div class="icon">🗺️</div>
                     <h3>States</h3>
                     <p>Identify Indian states on the map</p>
                 </a>
-                <a href="india_geojson_districts.html" class="quiz-card glass">
+                <a href="quizzes/india/districts.html" class="quiz-card glass">
                     <div class="icon">🏘️</div>
                     <h3>Districts</h3>
                     <p>Identify districts across India</p>
                 </a>
-                <a href="rivers_quiz.html" class="quiz-card glass">
+                <a href="quizzes/india/rivers.html" class="quiz-card glass">
                     <div class="icon">🌊</div>
                     <h3>Rivers</h3>
                     <p>Locate major rivers across India</p>
                 </a>
-                <a href="lakes_quiz.html" class="quiz-card glass">
+                <a href="quizzes/india/lakes.html" class="quiz-card glass">
                     <div class="icon">💧</div>
                     <h3>Lakes</h3>
                     <p>Find important lakes &amp; water bodies</p>
                 </a>
-                <a href="mountains_quiz.html" class="quiz-card glass">
+                <a href="quizzes/india/mountains.html" class="quiz-card glass">
                     <div class="icon">⛰️</div>
                     <h3>Mountains</h3>
                     <p>Locate major peaks across India</p>
                 </a>
-                <a href="national_parks_quiz.html" class="quiz-card glass">
+                <a href="quizzes/india/national-parks.html" class="quiz-card glass">
                     <div class="icon">🌲</div>
                     <h3>National Parks</h3>
                     <p>Explore India's protected parks</p>
                 </a>
-                <a href="wetlands_quiz.html" class="quiz-card glass">
+                <a href="quizzes/india/wetlands.html" class="quiz-card glass">
                     <div class="icon">🌾</div>
                     <h3>Wetlands</h3>
                     <p>Identify Ramsar wetland sites</p>
@@ -420,24 +433,24 @@
             <div class="state-block glass">
                 <div class="state-name">Rajasthan</div>
                 <div class="state-links">
-                    <a href="rajasthan_districts.html" class="state-link">🏘️ Districts</a>
-                    <a href="rajasthan_lakes.html" class="state-link">💧 Lakes</a>
-                    <a href="wildlife_century_rajasthan_quiz.html" class="state-link">🦁 Wildlife Sanctuaries</a>
-                    <a href="rajasthan_mountains.html" class="state-link">⛰️ Mountains</a>
+                    <a href="quizzes/states/rajasthan/districts.html" class="state-link">🏘️ Districts</a>
+                    <a href="quizzes/states/rajasthan/lakes.html" class="state-link">💧 Lakes</a>
+                    <a href="quizzes/states/rajasthan/wildlife-sanctuaries.html" class="state-link">🦁 Wildlife Sanctuaries</a>
+                    <a href="quizzes/states/rajasthan/mountains.html" class="state-link">⛰️ Mountains</a>
                 </div>
             </div>
 
             <div class="state-block glass">
                 <div class="state-name">Bihar</div>
                 <div class="state-links">
-                    <a href="bihar_districts.html" class="state-link">🏘️ Districts</a>
+                    <a href="quizzes/states/bihar/districts.html" class="state-link">🏘️ Districts</a>
                 </div>
             </div>
 
             <div class="state-block glass">
                 <div class="state-name">Uttar Pradesh</div>
                 <div class="state-links">
-                    <a href="uttar_pradesh_districts.html" class="state-link">🏘️ Districts</a>
+                    <a href="quizzes/states/uttar-pradesh/districts.html" class="state-link">🏘️ Districts</a>
                 </div>
             </div>
         </div>
@@ -446,19 +459,19 @@
         <div class="section">
             <div class="section-label">Current Affairs</div>
             <div class="ca-grid">
-                <a href="ca_places_quiz.html" class="ca-card glass">
+                <a href="#" class="ca-card glass" style="cursor: not-allowed; opacity: 0.8;" onclick="return false;">
                     <div class="icon">📍</div>
                     <h3>Places in News</h3>
                     <p>Locate places that have been in recent news &amp; events</p>
                     <span class="badge badge-soon">Coming Soon</span>
                 </a>
-                <a href="ca_features_quiz.html" class="ca-card glass">
+                <a href="#" class="ca-card glass" style="cursor: not-allowed; opacity: 0.8;" onclick="return false;">
                     <div class="icon">🏗️</div>
                     <h3>Features &amp; Projects</h3>
                     <p>Identify newly inaugurated projects, dams &amp; infrastructure</p>
                     <span class="badge badge-soon">Coming Soon</span>
                 </a>
-                <a href="ca_persons_quiz.html" class="ca-card glass">
+                <a href="#" class="ca-card glass" style="cursor: not-allowed; opacity: 0.8;" onclick="return false;">
                     <div class="icon">👤</div>
                     <h3>Persons in News</h3>
                     <p>Match prominent personalities to their role or place</p>

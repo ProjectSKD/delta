@@ -47,7 +47,7 @@ let map = null;
 
 // Auto-load Rivers_3.geojson on page load
 window.addEventListener('DOMContentLoaded', function() {
-    fetch('Rivers_compressed.geojson')
+    fetch('data/Rivers_compressed.geojson')
         .then(response => response.json())
         .then(data => {
             allData = data;
@@ -69,7 +69,7 @@ function initializeQuiz() {
     map = L.map('map').setView([20, 78], 5);
     
     // Load India states as background layer
-    fetch('india_states.geojson')
+    fetch('data/india_states.geojson')
         .then(response => response.json())
         .then(statesData => {
             L.geoJSON(statesData, {

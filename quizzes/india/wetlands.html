@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>India Ramsar Wetlands Quiz</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="../../src/css/quiz.css" />
+    
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script type="module">
+        import { initPointQuiz } from '../../src/js/quiz/pointQuiz.js';
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            initPointQuiz({
+                quizTitle: 'Ramsar Wetlands of India',
+                csvPath: '/data/ramsar_wetlands_india.csv',
+                nameProperty: 'WETLAND_NAME',
+                latColumn: 'LATITUDE',
+                lngColumn: 'LONGITUDE',
+                center: [20, 80],
+                zoom: 5,
+                columnMapping: {
+                    'STATE/UT': 'State_UT',
+                    'Comment': 'Comment'
+                },
+                markerType: 'lake',
+                visuals: {
+                    default: { size: 20, fill: "#1a6eb5", stroke: "#0d4472" },
+                    hover: { size: 24, fill: "#3498db", stroke: "#0d4472" },
+                    correct: { size: 24, fill: "#1e9d46", stroke: "#0e6128" },
+                    wrong: { size: 24, fill: "#d33a32", stroke: "#8a1f1a" },
+                    target: { size: 28, fill: "#d33a32", stroke: "#8a1f1a" }
+                }
+            }).catch(error => {
+                console.error('Error initializing wetlands quiz:', error);
+                alert('Error loading quiz: ' + error.message);
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="map"></div>
+</body>
+</html>

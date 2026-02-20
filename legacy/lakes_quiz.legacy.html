@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>India National Parks Quiz</title>
+    <title>India Lakes Quiz</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -15,7 +15,7 @@
             text-align: center;
             margin: 0;
             padding: 0;
-            background: #f0f7f0;
+            background: #f0f4f8;
         }
 
         #map-overlays {
@@ -31,7 +31,7 @@
         #map {
             height: calc(100vh - 78px);
             margin-top: 8px;
-            background: #e8f5e9;
+            background: #e3f2fd;
         }
 
         .overlay {
@@ -48,7 +48,7 @@
         .top-left {
             left: 15px;
             top: 12px;
-            border-left: 4px solid #228B22;
+            border-left: 4px solid #0077be;
         }
 
         .top-right {
@@ -61,7 +61,7 @@
             top: 12px;
             transform: translateX(-50%);
             font-size: 22px;
-            color: #1a5c1a;
+            color: #004e7c;
         }
 
         #question {
@@ -72,14 +72,14 @@
             font-size: 16px;
         }
 
-        .park-icon {
+        .lake-icon {
             background: transparent;
             border: 0;
         }
 
-        .park-icon svg {
+        .lake-icon svg {
             display: block;
-            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
         }
 
         .wrong-tooltip {
@@ -100,18 +100,18 @@
 <body>
 
     <div id="map-overlays">
-        <div class="overlay top-left">Quiz : National Parks of India</div>
+        <div class="overlay top-left">Quiz : Lakes of India</div>
         <div id="score" class="overlay top-right"><span id="score-text">Score: 0%</span> <span id="timer"
                 style="margin-left:12px;font-weight:400;font-size:15px;"></span></div>
-        <div id="question" class="overlay center-top">Loading parks...</div>
+        <div id="question" class="overlay center-top">Loading lakes...</div>
     </div>
     <div id="map"></div>
 
     <script>
 
         let allData = [];
-        let parks = [];
-        let currentPark = "";
+        let lakes = [];
+        let currentLake = "";
         let totalQuestions = 0;
         let correctAnswers = 0;
         let geoLayer;
@@ -124,21 +124,24 @@
         let audioContext = null;
 
         const indiaBounds = [
-            [4, 67],
+            [6, 67],
             [38, 98]
         ];
 
         const MARKER_VISUALS = {
-            default: { size: 20, fill: "#228B22", stroke: "#145214" },
-            hover: { size: 24, fill: "#32CD32", stroke: "#145214" },
-            correct: { size: 24, fill: "#1e9d46", stroke: "#0e6128" },
-            wrong: { size: 24, fill: "#d33a32", stroke: "#8a1f1a" },
-            target: { size: 28, fill: "#d33a32", stroke: "#8a1f1a" }
+            default: { size: 18, fill: "#0077be", stroke: "#004e7c" },
+            hover: { size: 22, fill: "#0099ff", stroke: "#004e7c" },
+            correct: { size: 22, fill: "#1e9d46", stroke: "#0e6128" },
+            wrong: { size: 22, fill: "#d33a32", stroke: "#8a1f1a" },
+            target: { size: 26, fill: "#d33a32", stroke: "#8a1f1a" }
         };
 
         function initAudio() {
             if (!audioContext) {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
             }
         }
 
@@ -221,7 +224,7 @@
 
             const header = rows[0].map(h => (h || '').replace(/^\uFEFF/, '').trim());
             const idx = {
-                name: header.indexOf('NP_NAME'),
+                name: header.indexOf('LAKE_NAME'),
                 state: header.indexOf('STATE/UT'),
                 lat: header.indexOf('LATITUDE'),
                 lng: header.indexOf('LONGITUDE'),
@@ -243,7 +246,7 @@
                     type: 'Feature',
                     geometry: { type: 'Point', coordinates: [lng, lat] },
                     properties: {
-                        NP_NAME: name,
+                        LAKE_NAME: name,
                         State_UT: state,
                         Comment: comment
                     }
@@ -251,29 +254,24 @@
             }).filter(Boolean);
         }
 
-        // Tree / park icon SVG
-        function getParkIcon(state) {
+        function getLakeIcon(state) {
             const visual = MARKER_VISUALS[state] || MARKER_VISUALS.default;
             const size = visual.size;
-            const f = visual.fill;
-            const s = visual.stroke;
+            // A drop-like shape for lakes
             return L.divIcon({
-                className: 'park-icon',
+                className: 'lake-icon',
                 iconSize: [size, size],
-                iconAnchor: [size / 2, size],
+                iconAnchor: [size / 2, size / 2],
                 html:
                     '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" aria-hidden="true">' +
-                    // trunk
-                    '<rect x="10.5" y="17" width="3" height="5" rx="1" fill="' + s + '"/>' +
-                    // canopy layers
-                    '<polygon points="12,2 20,12 4,12" fill="' + f + '" stroke="' + s + '" stroke-width="1" stroke-linejoin="round"/>' +
-                    '<polygon points="12,7 19,16 5,16" fill="' + f + '" stroke="' + s + '" stroke-width="1" stroke-linejoin="round"/>' +
+                    '<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="' + visual.fill + '" stroke="' + visual.stroke + '" stroke-width="1.5" stroke-linejoin="round"></path>' +
+                    '<path d="M12 5.5l2.5 2.5h-5z" fill="#ffffff" opacity="0.6"></path>' +
                     '</svg>'
             });
         }
 
         function setMarkerState(marker, state) {
-            marker.setIcon(getParkIcon(state));
+            marker.setIcon(getLakeIcon(state));
         }
 
         function resetMarkerStyle(marker) {
@@ -282,7 +280,7 @@
 
         function triggerRippleAt(latlng, color) {
             if (!map || !latlng) return;
-            const rippleColor = color || '#228B22';
+            const rippleColor = color || '#2a7fff';
 
             for (let i = 0; i < 4; i++) {
                 setTimeout(() => {
@@ -318,9 +316,9 @@
 
         function triggerCelebration(latlng) {
             if (!map || !latlng) return;
-            const colors = ['#ff0000', '#00cc00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff8800'];
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
 
-            for (let i = 0; i < 24; i++) {
+            for (let i = 0; i < 20; i++) {
                 const angle = Math.random() * Math.PI * 2;
                 const velocity = 2 + Math.random() * 4;
                 const color = colors[Math.floor(Math.random() * colors.length)];
@@ -340,15 +338,19 @@
                 const anim = setInterval(() => {
                     frame++;
                     const t = frame / maxFrames;
-                    const cur = particle.getLatLng();
-                    const newLat = cur.lat + (Math.sin(angle) * velocity * 0.0005);
-                    const newLng = cur.lng + (Math.cos(angle) * velocity * 0.0005);
+
+                    // Move particle outward
+                    const currentLatLng = particle.getLatLng();
+                    const newLat = currentLatLng.lat + (Math.sin(angle) * velocity * 0.0005);
+                    const newLng = currentLatLng.lng + (Math.cos(angle) * velocity * 0.0005);
+
                     particle.setLatLng([newLat, newLng]);
                     particle.setStyle({
                         opacity: 1 - t,
                         fillOpacity: 1 - t,
                         radius: 4 * (1 - t / 2)
                     });
+
                     if (frame >= maxFrames) {
                         clearInterval(anim);
                         if (map && map.hasLayer(particle)) map.removeLayer(particle);
@@ -358,18 +360,18 @@
         }
 
         window.addEventListener('DOMContentLoaded', function () {
-            fetch('national_parks_india.csv')
+            fetch('data/lakes_india.csv')
                 .then(response => response.text())
                 .then(csvText => {
                     allData = toFeaturesFromCSV(csvText);
                     if (allData.length > 0) {
                         initializeQuiz();
                     } else {
-                        alert('Invalid or empty national_parks_india.csv file');
+                        alert('Invalid or empty lakes_india.csv file');
                     }
                 })
                 .catch(error => {
-                    alert('Error loading national_parks_india.csv: ' + error.message);
+                    alert('Error loading lakes_india.csv: ' + error.message);
                 });
         });
 
@@ -377,7 +379,7 @@
             map = L.map('map', {
                 maxBounds: indiaBounds,
                 maxBoundsViscosity: 1.0
-            }).setView([20, 80], 5);
+            }).setView([20, 78], 5);
 
             map.createPane('ripplePane');
             map.getPane('ripplePane').style.zIndex = 700;
@@ -391,32 +393,32 @@
                 noWrap: true
             }).addTo(map);
 
-            fetch('india_states.geojson')
+            fetch('data/india_states.geojson')
                 .then(response => response.json())
                 .then(statesData => {
                     L.geoJSON(statesData, {
                         interactive: false,
                         style: {
-                            color: "#145214",
+                            color: "#004e7c",
                             weight: 1.5,
-                            opacity: 0.7,
-                            fillOpacity: 0.04,
-                            fillColor: "#228B22"
+                            opacity: 0.8,
+                            fillOpacity: 0.05,
+                            fillColor: "#0077be"
                         }
                     }).addTo(map);
                 });
 
-            parks = allData.map(f => f.properties.NP_NAME || 'Unknown Park');
-            maxQuestions = Math.min(parks.length, 25);
+            lakes = allData.map(f => f.properties.LAKE_NAME || 'Unknown Lake');
+            maxQuestions = Math.min(lakes.length, 25);
             geoLayer = L.featureGroup();
 
             allData.forEach(feature => {
                 const coords = feature.geometry.coordinates;
-                const parkName = feature.properties.NP_NAME || 'Unknown Park';
+                const lakeName = feature.properties.LAKE_NAME || 'Unknown Lake';
                 const comment = feature.properties.Comment;
 
                 const marker = L.marker([coords[1], coords[0]], {
-                    icon: getParkIcon('default'),
+                    icon: getLakeIcon('default'),
                     keyboard: false
                 });
 
@@ -432,14 +434,14 @@
                     click: function (e) {
                         attemptsCount++;
 
-                        if (parkName === currentPark) {
+                        if (lakeName === currentLake) {
                             correctAnswers++;
                             playCorrectSound();
                             updateScore();
                             setMarkerState(marker, 'correct');
                             triggerCelebration(marker.getLatLng());
 
-                            let details = "<b>" + parkName + "</b>";
+                            let details = "<b>" + lakeName + "</b>";
                             if (comment) details += "<br/>" + comment;
                             marker.bindTooltip(details, {
                                 permanent: false,
@@ -461,16 +463,13 @@
                         if (requireCorrectToAdvance) {
                             setMarkerState(marker, 'wrong');
                             setTimeout(() => resetMarkerStyle(marker), 1200);
-                            marker.bindTooltip("Incorrect: " + parkName, {
+                            marker.bindTooltip(lakeName, {
                                 permanent: false,
                                 className: 'wrong-tooltip',
                                 direction: 'top',
                                 offset: [0, -10]
                             }).openTooltip(e && e.latlng ? e.latlng : undefined);
-                            setTimeout(() => {
-                                marker.closeTooltip();
-                                marker.unbindTooltip();
-                            }, 1200);
+                            setTimeout(() => marker.closeTooltip(), 1200);
                             return;
                         }
 
@@ -481,8 +480,8 @@
                         } else {
                             let correctMarker = null;
                             geoLayer.eachLayer(function (lyr) {
-                                const nm = lyr.feature && lyr.feature.properties && lyr.feature.properties.NP_NAME;
-                                if (nm === currentPark) correctMarker = lyr;
+                                const nm = lyr.feature && lyr.feature.properties && lyr.feature.properties.LAKE_NAME;
+                                if (nm === currentLake) correctMarker = lyr;
                             });
                             if (correctMarker) {
                                 let on = true;
@@ -497,14 +496,14 @@
                                     setMarkerState(correctMarker, 'target');
                                     triggerRippleAt(correctMarker.getLatLng(), '#d33a32');
                                     const q = document.getElementById('question');
-                                    if (q) q.innerHTML = "Locate: <b>" + currentPark + "</b> (Click the highlighted park to continue)";
+                                    if (q) q.innerHTML = "Locate: <b>" + currentLake + "</b> (Click the highlighted lake to continue)";
                                 }, 2000);
                             } else {
                                 nextQuestion();
                             }
                         }
 
-                        let tooltipContent = "Incorrect: " + parkName;
+                        let tooltipContent = "Incorrect: " + lakeName;
                         marker.bindTooltip(tooltipContent, {
                             permanent: false,
                             className: 'wrong-tooltip',
@@ -541,18 +540,18 @@
                 return;
             }
 
-            if (!parks || parks.length === 0) {
+            if (!lakes || lakes.length === 0) {
                 endQuiz();
                 return;
             }
 
-            const idx = Math.floor(Math.random() * parks.length);
-            currentPark = parks.splice(idx, 1)[0];
+            const idx = Math.floor(Math.random() * lakes.length);
+            currentLake = lakes.splice(idx, 1)[0];
             attemptsLeft = 3;
             totalQuestions++;
 
             document.getElementById("question").innerHTML =
-                "Click on: <b>" + currentPark + "</b>";
+                "Click on: <b>" + currentLake + "</b>";
         }
 
         function updateScore() {
@@ -595,7 +594,7 @@
 
             const restart = document.createElement('button');
             restart.textContent = 'Restart Quiz';
-            restart.style.cssText = 'margin-left:15px; padding: 5px 12px; border-radius: 4px; border: 1px solid #228B22; background: #fff; color: #228B22; cursor: pointer; font-weight: bold;';
+            restart.style.cssText = 'margin-left:15px; padding: 5px 12px; border-radius: 4px; border: 1px solid #0077be; background: #fff; color: #0077be; cursor: pointer; font-weight: bold;';
             restart.onclick = function () { location.reload(); };
             const q = document.getElementById('question');
             if (q) q.appendChild(restart);
