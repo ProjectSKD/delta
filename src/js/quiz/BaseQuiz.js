@@ -133,6 +133,23 @@ export class BaseQuiz {
         if (questionEl) {
             questionEl.appendChild(restartBtn);
         }
+
+        // Save progress to local storage
+        try {
+            const path = window.location.pathname;
+            // For districts quiz where path is same but state changes, append selected state if available
+            const stateParams = new URLSearchParams(window.location.search);
+            const state = stateParams.get('state') || window.selectedStateForProgress || ''; // hack for districts map
+            const quizId = state ? `${path}?state=${state}` : path;
+            
+            let completed = JSON.parse(localStorage.getItem('completedQuizzes') || '[]');
+            if (!completed.includes(quizId)) {
+                completed.push(quizId);
+                localStorage.setItem('completedQuizzes', JSON.stringify(completed));
+            }
+        } catch (e) {
+            console.error('Error saving progress:', e);
+        }
     }
 
     /**

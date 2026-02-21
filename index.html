@@ -351,9 +351,90 @@
             margin-top: 48px;
         }
 
+        /* ── Progress Bar ── */
+        .progress-section { 
+            margin-bottom: 30px; 
+            display: none;
+        }
+        .progress-card {
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .progress-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #1e3a5f;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .progress-text {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #0077be;
+            background: rgba(0, 119, 190, 0.1);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        .progress-bar-bg {
+            height: 10px;
+            background: rgba(0, 119, 190, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            width: 100%;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0077be, #00a8ff);
+            border-radius: 10px;
+            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 0%;
+        }
+
         @media (max-width: 600px) {
             .quiz-grid, .ca-grid {
                 grid-template-columns: 1fr;
+            }
+            .quiz-card, .ca-card {
+                display: grid;
+                grid-template-columns: 1fr auto;
+                grid-template-areas: 
+                    "title icon"
+                    "desc icon"
+                    "badge icon";
+                gap: 4px 16px;
+                align-items: center;
+                padding: 18px 20px;
+            }
+            .quiz-card .icon, .ca-card .icon {
+                grid-area: icon;
+                margin: 0;
+            }
+            .quiz-card h3, .ca-card h3 {
+                grid-area: title;
+                margin: 0;
+            }
+            .quiz-card p, .ca-card p {
+                grid-area: desc;
+                margin: 0;
+            }
+            .ca-card .badge {
+                grid-area: badge;
+                justify-self: start;
+                margin-top: 6px;
             }
             header h1 {
                 font-size: 1.6rem;
@@ -383,6 +464,21 @@
             <h1>India Geography Quiz Hub</h1>
             <p>Interactive map-based quizzes on India's geography</p>
         </header>
+
+        <!-- Progress Bar -->
+        <div class="progress-section" id="progress-section">
+            <div class="progress-card">
+                <div class="progress-header">
+                    <div class="progress-title">
+                        <span>🏆</span> Your Journey
+                    </div>
+                    <div class="progress-text" id="progress-text">0/0</div>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progress-bar-fill"></div>
+                </div>
+            </div>
+        </div>
 
         <!-- India-level quizzes -->
         <div class="section">
@@ -484,6 +580,52 @@
 
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const validBasePaths = new Set();
+            const quizLinks = document.querySelectorAll('.quiz-card[href], .state-link[href]');
+            
+            quizLinks.forEach(el => {
+                const href = el.getAttribute('href');
+                if (href && href !== '#' && !href.startsWith('http')) {
+                    const normalized = href.startsWith('/') ? href : '/' + href;
+                    validBasePaths.add(normalized);
+                }
+            });
+
+            const total = validBasePaths.size;
+            if (total === 0) return;
+
+            let completedArr = [];
+            try {
+                completedArr = JSON.parse(localStorage.getItem('completedQuizzes') || '[]');
+            } catch(e) {}
+            
+            const uniqueCompleted = new Set();
+            completedArr.forEach(id => {
+                const base = id.split('?')[0]; 
+                if (validBasePaths.has(base)) {
+                    uniqueCompleted.add(base); 
+                }
+            });
+
+            const completed = uniqueCompleted.size;
+            const percentage = Math.round((completed / total) * 100) || 0;
+
+            const progressSection = document.getElementById('progress-section');
+            const progressText = document.getElementById('progress-text');
+            const progressBarFill = document.getElementById('progress-bar-fill');
+
+            if (progressSection && progressText && progressBarFill) {
+                progressSection.style.display = 'block';
+                progressText.textContent = `${completed}/${total} Completed`;
+                
+                setTimeout(() => {
+                    progressBarFill.style.width = `${percentage}%`;
+                }, 100);
+            }
+        });
+    </script>
 </body>
 
 </html>
