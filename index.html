@@ -343,6 +343,12 @@
             border: 1px solid rgba(59, 130, 246, 0.4);
         }
 
+        .badge-completed {
+            background: rgba(16, 185, 129, 0.15);
+            color: #047857;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
         /* ── Footer ── */
         .note {
             text-align: center;
@@ -431,7 +437,7 @@
                 grid-area: desc;
                 margin: 0;
             }
-            .ca-card .badge {
+            .ca-card .badge, .quiz-card .badge {
                 grid-area: badge;
                 justify-self: start;
                 margin-top: 6px;
@@ -582,14 +588,19 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const validBasePaths = new Set();
+            const validBasePaths = new Map();
             const quizLinks = document.querySelectorAll('.quiz-card[href], .state-link[href]');
             
             quizLinks.forEach(el => {
                 const href = el.getAttribute('href');
                 if (href && href !== '#' && !href.startsWith('http')) {
                     const normalized = href.startsWith('/') ? href : '/' + href;
-                    validBasePaths.add(normalized);
+                    
+                    // Exclude the India districts portal from the "total" progress, 
+                    // since it is a gateway, not a single playable quiz.
+                    if (normalized !== '/quizzes/india/districts.html') {
+                        validBasePaths.set(normalized, el);
+                    }
                 }
             });
 
@@ -602,10 +613,25 @@
             } catch(e) {}
             
             const uniqueCompleted = new Set();
+            
             completedArr.forEach(id => {
-                const base = id.split('?')[0]; 
-                if (validBasePaths.has(base)) {
-                    uniqueCompleted.add(base); 
+                // Exact match (so ?state=Assam won't map to the generic validBasePath)
+                if (validBasePaths.has(id)) {
+                    uniqueCompleted.add(id);
+                    
+                    const el = validBasePaths.get(id);
+                    if (el.classList.contains('quiz-card')) {
+                        if (!el.querySelector('.badge-completed')) {
+                            const badge = document.createElement('span');
+                            badge.className = 'badge badge-completed';
+                            badge.innerHTML = '✅ Completed';
+                            el.appendChild(badge);
+                        }
+                    } else if (el.classList.contains('state-link')) {
+                        if (!el.innerHTML.includes('✅')) {
+                            el.innerHTML += ' <span style="color:#10b981; font-weight:bold;">✅</span>';
+                        }
+                    }
                 }
             });
 
