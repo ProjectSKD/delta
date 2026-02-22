@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Rajasthan Lakes Quiz</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="../../../src/css/quiz.css" />
+    
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script type="module">
+        import { initLakesQuiz } from '../../../src/js/quiz/lakesQuiz.js';
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            initLakesQuiz({
+                quizTitle: 'Lakes of Rajasthan',
+                csvPath: '/data/lakes_rajasthan.csv',
+                nameProperty: 'LAKE_NAME',
+                latColumn: 'LATITUDE',
+                lngColumn: 'LONGITUDE',
+                center: [26.5, 73.5],
+                zoom: 7,
+                maxBounds: [
+                    [23.0, 69.5],
+                    [30.5, 78.5]
+                ],
+                columnMapping: {
+                    District: 'DISTRICT',
+                    Comment: 'COMMENT'
+                },
+                visuals: {
+                    default: { size: 14, fill: "#0077be", stroke: "#004e7c" },
+                    hover: { size: 18, fill: "#0099ff", stroke: "#004e7c" },
+                    correct: { size: 18, fill: "#1e9d46", stroke: "#0e6128" },
+                    wrong: { size: 18, fill: "#d33a32", stroke: "#8a1f1a" },
+                    target: { size: 22, fill: "#d33a32", stroke: "#8a1f1a" }
+                }
+            }).catch(error => {
+                console.error('Error initializing quiz:', error);
+                alert('Error loading quiz: ' + error.message);
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="map"></div>
+</body>
+</html>

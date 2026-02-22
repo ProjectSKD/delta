@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>India National Parks Quiz</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="../../src/css/quiz.css" />
+    
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script type="module">
+        import { initPointQuiz } from '../../src/js/quiz/pointQuiz.js';
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            initPointQuiz({
+                quizTitle: 'National Parks of India',
+                csvPath: '/data/national_parks_india.csv',
+                nameProperty: 'NP_NAME',
+                latColumn: 'LATITUDE',
+                lngColumn: 'LONGITUDE',
+                center: [20, 80],
+                zoom: 5,
+                columnMapping: {
+                    'STATE/UT': 'State_UT',
+                    'Comment': 'Comment'
+                },
+                markerType: 'park',
+                stateFillColor: '#228B22',
+                stateBorderColor: '#145214',
+                visuals: {
+                    default: { size: 20, fill: "#228B22", stroke: "#145214" },
+                    hover: { size: 24, fill: "#32CD32", stroke: "#145214" },
+                    correct: { size: 24, fill: "#1e9d46", stroke: "#0e6128" },
+                    wrong: { size: 24, fill: "#d33a32", stroke: "#8a1f1a" },
+                    target: { size: 28, fill: "#d33a32", stroke: "#8a1f1a" }
+                }
+            }).catch(error => {
+                console.error('Error initializing parks quiz:', error);
+                alert('Error loading quiz: ' + error.message);
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="map"></div>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>India Districts Quiz</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <link rel="stylesheet" href="../../src/css/quiz.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; text-align: center; margin: 0; padding: 0; background: #f4f4f4; }
+        
+        #state-selection {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; height: 100dvh;
+            background: rgba(0, 0, 0, 0.5); z-index: 1000;
+            overflow-y: auto; padding: 20px; box-sizing: border-box;
+        }
+        
+        .state-selection-box {
+            background: white; padding: 30px 20px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 600px; width: 100%; margin: 40px auto; text-align: center; box-sizing: border-box;
+        }
+        
+        .sel-header { display: flex; align-items: center; justify-content: center; position: relative; margin-bottom: 20px; }
+        .sel-back-btn {
+            position: absolute; left: 0; display: flex; align-items: center; justify-content: center;
+            color: #4a5568; background: #f0f4f8; border-radius: 4px; padding: 6px; text-decoration: none; transition: all 0.2s;
+        }
+        .sel-back-btn:hover { color: #004e7c; background: #e3f2fd; }
+        
+        .state-selection-box h1 { margin: 0; font-size: 28px; color: #333; }
+        .state-selection-box p { color: #666; font-size: 16px; margin-bottom: 20px; margin-top: 0; }
+        
+        .state-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-top: 20px; }
+        .state-btn {
+            padding: 12px; background: #f0f0f0; border: 2px solid #ddd; border-radius: 4px;
+            cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.3s;
+        }
+        .state-btn:hover { background: #e0e0e0; border-color: #999; }
+        .state-btn.selected { background: #0077be; color: white; border-color: #004e7c; }
+        
+        .start-btn {
+            margin-top: 25px; padding: 12px 30px; background: #0077be; color: white;
+            border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: 600;
+            transition: background 0.2s;
+        }
+        .start-btn:hover { background: #005a9e; }
+        .start-btn:disabled { background: #ccc; cursor: not-allowed; }
+        
+        #map { display: none; height: calc(100vh - 78px); margin-top: 8px; background: #e8edf2; }
+    </style>
+
+</head>
+<body>
+
+<div id="state-selection">
+    <div class="state-selection-box">
+        <div class="sel-header">
+            <a href="../../index.html" class="sel-back-btn" title="Back to Home">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            </a>
+            <h1>Select a State</h1>
+        </div>
+        <p>Choose a state to quiz on its districts:</p>
+        <div class="state-grid" id="state-grid"></div>
+        <button class="start-btn" id="start-btn" disabled>Start Quiz</button>
+    </div>
+</div>
+
+<div id="map"></div>
+
+<script type="module">
+import { initDistrictsQuiz } from '../../src/js/quiz/districtsQuiz.js';
+
+let allData = null;
+let selectedState = null;
+
+window.addEventListener('DOMContentLoaded', () => {
+    fetch('/data/india_districts.geojson')
+    .then(response => response.json())
+    .then(data => {
+        allData = data;
+        populateStateSelection();
+    })
+    .catch(err => {
+        alert("Error loading GeoJSON: " + err);
+    });
+});
+
+function populateStateSelection() {
+    if (!allData || !allData.features) return;
+    
+    const stateSet = new Set();
+    allData.features.forEach(feature => {
+        const state = feature.properties && (feature.properties.st_nm || feature.properties.ST_NM);
+        if (state) stateSet.add(state);
+    });
+    
+    const states = Array.from(stateSet).sort();
+    const stateGrid = document.getElementById("state-grid");
+    stateGrid.innerHTML = "";
+    
+    states.forEach(state => {
+        const btn = document.createElement("button");
+        btn.textContent = state;
+        btn.className = "state-btn";
+        btn.onclick = () => selectState(state, btn);
+        stateGrid.appendChild(btn);
+    });
+}
+
+function selectState(state, btn) {
+    document.querySelectorAll(".state-btn").forEach(b => b.classList.remove("selected"));
+    selectedState = state;
+    btn.classList.add("selected");
+    
+    const startBtn = document.getElementById("start-btn");
+    startBtn.disabled = false;
+    startBtn.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
+document.getElementById("start-btn").onclick = function() {
+    if (!selectedState) return;
+    
+    document.getElementById("state-selection").style.display = "none";
+    document.getElementById("map").style.display = "block";
+    
+    initDistrictsQuiz(selectedState, {
+        zoom: 6,
+        defaultStyle: {
+            color: 'black',
+            weight: 1,
+            fillColor: '#cccccc',
+            fillOpacity: 0.6
+        }
+    }).catch(error => {
+        console.error('Error initializing quiz:', error);
+        alert('Error loading quiz: ' + error.message);
+    });
+};
+</script>
+
+</body>
+</html>

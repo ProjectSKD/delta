@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Rajasthan Districts Quiz</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="../../../src/css/quiz.css" />
+    
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script type="module">
+        import { initDistrictsQuiz } from '../../../src/js/quiz/districtsQuiz.js';
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            initDistrictsQuiz('Rajasthan', {
+                center: [27.5, 74.5],
+                zoom: 6,
+                defaultStyle: {
+                    color: '#cc6600',
+                    weight: 2,
+                    fillColor: '#ffcc99',
+                    fillOpacity: 0.6
+                }
+            }).catch(error => {
+                console.error('Error initializing quiz:', error);
+                alert('Error loading quiz: ' + error.message);
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="map"></div>
+</body>
+</html>

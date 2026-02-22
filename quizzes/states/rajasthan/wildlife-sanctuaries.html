@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Rajasthan Wildlife Sanctuaries Quiz</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="../../../src/css/quiz.css" />
+    
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script type="module">
+        import { initPointQuiz } from '../../../src/js/quiz/pointQuiz.js';
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            initPointQuiz({
+                quizTitle: 'Wildlife Sanctuaries of Rajasthan',
+                csvPath: '/data/wildlife_sanctuaries_rajasthan.csv',
+                nameProperty: 'WILDLIFE_CENTURY_NAME', // CSV has a typo 'CENTURY' instead of SANTUARY
+                latColumn: 'LATITUDE',
+                lngColumn: 'LONGITUDE',
+                center: [27.5, 74.0],
+                zoom: 7,
+                maxBounds: [
+                    [23.0, 69.5],
+                    [30.5, 78.5]
+                ],
+                columnMapping: {
+                    Comment: 'COMMENT'
+                },
+                markerType: 'sanctuary',
+                stateFillColor: '#FF6B35',
+                stateBorderColor: '#8b2500',
+                visuals: {
+                    default: { size: 20, fill: "#FF6B35", stroke: "#8b2500" },
+                    hover: { size: 24, fill: "#ff8c5e", stroke: "#8b2500" },
+                    correct: { size: 24, fill: "#1e9d46", stroke: "#0e6128" },
+                    wrong: { size: 24, fill: "#d33a32", stroke: "#8a1f1a" },
+                    target: { size: 28, fill: "#d33a32", stroke: "#8a1f1a" }
+                }
+            }).catch(error => {
+                console.error('Error initializing sanctuaries quiz:', error);
+                alert('Error loading quiz: ' + error.message);
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="map"></div>
+</body>
+</html>

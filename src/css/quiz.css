@@ -1,0 +1,151 @@
+/**
+ * Shared styles for quiz pages
+ */
+
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    background: #f0f4f8;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+}
+
+#map-overlays {
+    position: relative;
+    flex-shrink: 0;
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+#map {
+    flex-grow: 1;
+    width: 100%;
+    background: #e3f2fd;
+}
+
+.overlay {
+    position: absolute;
+    z-index: 400;
+    padding: 8px 14px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    font-weight: 600;
+    color: #333;
+}
+
+.overlay.top-left {
+    left: 15px;
+    top: 12px;
+    border-left: 4px solid #0077be;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4a5568;
+    background: #f0f4f8;
+    border-radius: 4px;
+    padding: 4px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+    color: #004e7c;
+    background: #e3f2fd;
+    transform: scale(1.05);
+}
+
+.overlay.top-right {
+    right: 15px;
+    top: 12px;
+}
+
+.overlay.center-top {
+    left: 50%;
+    top: 12px;
+    transform: translateX(-50%);
+    font-size: 22px;
+    color: #004e7c;
+}
+
+#question {
+    font-size: 20px;
+}
+
+#score {
+    font-size: 16px;
+}
+
+/* Marker icon styles */
+.lake-icon,
+.mountain-icon,
+.default-icon {
+    background: transparent;
+    border: 0;
+}
+
+.lake-icon svg,
+.mountain-icon svg,
+.default-icon svg {
+    display: block;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+/* Wrong answer tooltip */
+.wrong-tooltip {
+    background-color: #d33a32 !important;
+    border: none !important;
+    color: white !important;
+    font-weight: bold;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.wrong-tooltip .leaflet-tooltip-tip {
+    border-top-color: #d33a32 !important;
+}
+
+@media (max-width: 650px) {
+    #map-overlays {
+        flex-direction: column;
+        height: auto;
+        padding: 15px 0 10px 0;
+        padding-top: max(15px, env(safe-area-inset-top));
+        gap: 8px;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+    .overlay {
+        position: static !important;
+        transform: none !important;
+        margin: 0 auto !important;
+        width: 92%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+    .overlay.center-top {
+        order: 3;
+        background: #004e7c !important;
+        color: white !important;
+        border: none !important;
+        padding: 12px !important;
+        border-radius: 6px;
+        font-size: 18px !important;
+    }
+}

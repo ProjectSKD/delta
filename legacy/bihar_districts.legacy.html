@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Rajasthan Districts Quiz</title>
+    <title>Bihar Districts Quiz</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -10,7 +10,6 @@
 
     <style>
         body { font-family: Arial; text-align: center; margin: 0; padding: 0; }
-        /* overlays sit above the map */
         #map-overlays { position: relative; height: 64px; }
         #map { height: 600px; margin-top: 8px; background: #f4f4f4; }
         .overlay { position: absolute; z-index: 400; padding: 6px 10px; background: rgba(255,255,255,0.95); border-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); font-weight: 600; }
@@ -24,7 +23,7 @@
 <body>
 
 <div id="map-overlays">
-    <div class="overlay top-left">Quiz : Rajasthan Districts</div>
+    <div class="overlay top-left">Quiz : Bihar Districts</div>
     <div id="score" class="overlay top-right"><span id="score-text">Score: 0%</span> <span id="timer" style="margin-left:12px;font-weight:400;font-size:15px;"></span></div>
     <div id="question" class="overlay center-top">Loading...</div>
 </div>
@@ -46,14 +45,12 @@ let correctLayerForCurrent = null;
 let map = null;
 let audioContext = null;
 
-// Initialize Web Audio context for sound effects
 function initAudio() {
     if (!audioContext) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
     }
 }
 
-// Play correct sound
 function playCorrectSound() {
     initAudio();
     const now = audioContext.currentTime;
@@ -69,7 +66,6 @@ function playCorrectSound() {
     osc.stop(now + 0.3);
 }
 
-// Play incorrect sound
 function playIncorrectSound() {
     initAudio();
     const now = audioContext.currentTime;
@@ -85,9 +81,8 @@ function playIncorrectSound() {
     osc.stop(now + 0.3);
 }
 
-// Load data on page load
 window.addEventListener('DOMContentLoaded', function() {
-    fetch('india_districts.geojson')
+    fetch('data/india_districts.geojson')
         .then(response => response.json())
         .then(data => {
             allData = data;
@@ -99,15 +94,13 @@ window.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeQuiz() {
-    map = L.map('map').setView([27.5, 74.5], 6);
+    map = L.map('map').setView([25.1, 85.3], 6);
     
-    // Filter districts for Rajasthan only
-    const rajasthanFeatures = allData.features.filter(f => 
-        f.properties && (f.properties.st_nm === 'Rajasthan' || f.properties.ST_NM === 'Rajasthan')
+    const biharFeatures = allData.features.filter(f => 
+        f.properties && (f.properties.st_nm === 'Bihar' || f.properties.ST_NM === 'Bihar')
     );
     
-    // Load background states layer
-    fetch('india_states.geojson')
+    fetch('data/india_states.geojson')
         .then(response => response.json())
         .then(statesData => {
             L.geoJSON(statesData, {
@@ -121,16 +114,16 @@ function initializeQuiz() {
             }).addTo(map);
         });
     
-    districts = rajasthanFeatures.map(f => f.properties.DISTRICT || f.properties.district || 'Unknown District');
+    districts = biharFeatures.map(f => f.properties.DISTRICT || f.properties.district || 'Unknown District');
     maxQuestions = Math.min(districts.length, 20);
     
     geoLayer = L.geoJSON(
-        { type: "FeatureCollection", features: rajasthanFeatures },
+        { type: "FeatureCollection", features: biharFeatures },
         {
             style: {
-                color: "#cc6600",
+                color: "#2e5090",
                 weight: 2,
-                fillColor: "#ffcc99",
+                fillColor: "#87ceeb",
                 fillOpacity: 0.6
             },
             onEachFeature: function (feature, layer) {
@@ -173,7 +166,7 @@ function initializeQuiz() {
                                 if (correctLayer) {
                                     let on = true;
                                     const iv = setInterval(() => {
-                                        correctLayer.setStyle({ fillColor: on ? 'red' : '#ffcc99' });
+                                        correctLayer.setStyle({ fillColor: on ? 'red' : '#87ceeb' });
                                         on = !on;
                                     }, 250);
                                     setTimeout(() => {

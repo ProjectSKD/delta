@@ -343,12 +343,112 @@
             border: 1px solid rgba(59, 130, 246, 0.4);
         }
 
+        .badge-completed {
+            background: rgba(16, 185, 129, 0.15);
+            color: #047857;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
         /* ── Footer ── */
         .note {
             text-align: center;
             font-size: 0.74rem;
             color: #8fa8c0;
             margin-top: 48px;
+        }
+
+        /* ── Progress Bar ── */
+        .progress-section { 
+            margin-bottom: 30px; 
+            display: none;
+        }
+        .progress-card {
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .progress-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #1e3a5f;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .progress-text {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #0077be;
+            background: rgba(0, 119, 190, 0.1);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        .progress-bar-bg {
+            height: 10px;
+            background: rgba(0, 119, 190, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            width: 100%;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0077be, #00a8ff);
+            border-radius: 10px;
+            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 0%;
+        }
+
+        @media (max-width: 600px) {
+            .quiz-grid, .ca-grid {
+                grid-template-columns: 1fr;
+            }
+            .quiz-card, .ca-card {
+                display: grid;
+                grid-template-columns: 1fr auto;
+                grid-template-areas: 
+                    "title icon"
+                    "desc icon"
+                    "badge icon";
+                gap: 4px 16px;
+                align-items: center;
+                padding: 18px 20px;
+            }
+            .quiz-card .icon, .ca-card .icon {
+                grid-area: icon;
+                margin: 0;
+            }
+            .quiz-card h3, .ca-card h3 {
+                grid-area: title;
+                margin: 0;
+            }
+            .quiz-card p, .ca-card p {
+                grid-area: desc;
+                margin: 0;
+            }
+            .ca-card .badge, .quiz-card .badge {
+                grid-area: badge;
+                justify-self: start;
+                margin-top: 6px;
+            }
+            header h1 {
+                font-size: 1.6rem;
+            }
+            .state-link {
+                padding: 10px 18px;
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
@@ -371,41 +471,56 @@
             <p>Interactive map-based quizzes on India's geography</p>
         </header>
 
+        <!-- Progress Bar -->
+        <div class="progress-section" id="progress-section">
+            <div class="progress-card">
+                <div class="progress-header">
+                    <div class="progress-title">
+                        <span>🏆</span> Your Journey
+                    </div>
+                    <div class="progress-text" id="progress-text">0/0</div>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progress-bar-fill"></div>
+                </div>
+            </div>
+        </div>
+
         <!-- India-level quizzes -->
         <div class="section">
             <div class="section-label">India-Level</div>
             <div class="quiz-grid">
-                <a href="index_india_final.html" class="quiz-card glass">
+                <a href="quizzes/india/states.html" class="quiz-card glass">
                     <div class="icon">🗺️</div>
                     <h3>States</h3>
                     <p>Identify Indian states on the map</p>
                 </a>
-                <a href="india_geojson_districts.html" class="quiz-card glass">
+                <a href="quizzes/india/districts.html" class="quiz-card glass">
                     <div class="icon">🏘️</div>
                     <h3>Districts</h3>
                     <p>Identify districts across India</p>
                 </a>
-                <a href="rivers_quiz.html" class="quiz-card glass">
+                <a href="quizzes/india/rivers.html" class="quiz-card glass">
                     <div class="icon">🌊</div>
                     <h3>Rivers</h3>
                     <p>Locate major rivers across India</p>
                 </a>
-                <a href="lakes_quiz.html" class="quiz-card glass">
+                <a href="quizzes/india/lakes.html" class="quiz-card glass">
                     <div class="icon">💧</div>
                     <h3>Lakes</h3>
                     <p>Find important lakes &amp; water bodies</p>
                 </a>
-                <a href="mountains_quiz.html" class="quiz-card glass">
+                <a href="quizzes/india/mountains.html" class="quiz-card glass">
                     <div class="icon">⛰️</div>
                     <h3>Mountains</h3>
                     <p>Locate major peaks across India</p>
                 </a>
-                <a href="national_parks_quiz.html" class="quiz-card glass">
+                <a href="quizzes/india/national-parks.html" class="quiz-card glass">
                     <div class="icon">🌲</div>
                     <h3>National Parks</h3>
                     <p>Explore India's protected parks</p>
                 </a>
-                <a href="wetlands_quiz.html" class="quiz-card glass">
+                <a href="quizzes/india/wetlands.html" class="quiz-card glass">
                     <div class="icon">🌾</div>
                     <h3>Wetlands</h3>
                     <p>Identify Ramsar wetland sites</p>
@@ -420,24 +535,24 @@
             <div class="state-block glass">
                 <div class="state-name">Rajasthan</div>
                 <div class="state-links">
-                    <a href="rajasthan_districts.html" class="state-link">🏘️ Districts</a>
-                    <a href="rajasthan_lakes.html" class="state-link">💧 Lakes</a>
-                    <a href="wildlife_century_rajasthan_quiz.html" class="state-link">🦁 Wildlife Sanctuaries</a>
-                    <a href="rajasthan_mountains.html" class="state-link">⛰️ Mountains</a>
+                    <a href="quizzes/states/rajasthan/districts.html" class="state-link">🏘️ Districts</a>
+                    <a href="quizzes/states/rajasthan/lakes.html" class="state-link">💧 Lakes</a>
+                    <a href="quizzes/states/rajasthan/wildlife-sanctuaries.html" class="state-link">🦁 Wildlife Sanctuaries</a>
+                    <a href="quizzes/states/rajasthan/mountains.html" class="state-link">⛰️ Mountains</a>
                 </div>
             </div>
 
             <div class="state-block glass">
                 <div class="state-name">Bihar</div>
                 <div class="state-links">
-                    <a href="bihar_districts.html" class="state-link">🏘️ Districts</a>
+                    <a href="quizzes/states/bihar/districts.html" class="state-link">🏘️ Districts</a>
                 </div>
             </div>
 
             <div class="state-block glass">
                 <div class="state-name">Uttar Pradesh</div>
                 <div class="state-links">
-                    <a href="uttar_pradesh_districts.html" class="state-link">🏘️ Districts</a>
+                    <a href="quizzes/states/uttar-pradesh/districts.html" class="state-link">🏘️ Districts</a>
                 </div>
             </div>
         </div>
@@ -446,19 +561,19 @@
         <div class="section">
             <div class="section-label">Current Affairs</div>
             <div class="ca-grid">
-                <a href="ca_places_quiz.html" class="ca-card glass">
+                <a href="#" class="ca-card glass" style="cursor: not-allowed; opacity: 0.8;" onclick="return false;">
                     <div class="icon">📍</div>
                     <h3>Places in News</h3>
                     <p>Locate places that have been in recent news &amp; events</p>
                     <span class="badge badge-soon">Coming Soon</span>
                 </a>
-                <a href="ca_features_quiz.html" class="ca-card glass">
+                <a href="#" class="ca-card glass" style="cursor: not-allowed; opacity: 0.8;" onclick="return false;">
                     <div class="icon">🏗️</div>
                     <h3>Features &amp; Projects</h3>
                     <p>Identify newly inaugurated projects, dams &amp; infrastructure</p>
                     <span class="badge badge-soon">Coming Soon</span>
                 </a>
-                <a href="ca_persons_quiz.html" class="ca-card glass">
+                <a href="#" class="ca-card glass" style="cursor: not-allowed; opacity: 0.8;" onclick="return false;">
                     <div class="icon">👤</div>
                     <h3>Persons in News</h3>
                     <p>Match prominent personalities to their role or place</p>
@@ -471,6 +586,72 @@
 
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const validBasePaths = new Map();
+            const quizLinks = document.querySelectorAll('.quiz-card[href], .state-link[href]');
+            
+            quizLinks.forEach(el => {
+                const href = el.getAttribute('href');
+                if (href && href !== '#' && !href.startsWith('http')) {
+                    const normalized = href.startsWith('/') ? href : '/' + href;
+                    
+                    // Exclude the India districts portal from the "total" progress, 
+                    // since it is a gateway, not a single playable quiz.
+                    if (normalized !== '/quizzes/india/districts.html') {
+                        validBasePaths.set(normalized, el);
+                    }
+                }
+            });
+
+            const total = validBasePaths.size;
+            if (total === 0) return;
+
+            let completedArr = [];
+            try {
+                completedArr = JSON.parse(localStorage.getItem('completedQuizzes') || '[]');
+            } catch(e) {}
+            
+            const uniqueCompleted = new Set();
+            
+            completedArr.forEach(id => {
+                // Exact match (so ?state=Assam won't map to the generic validBasePath)
+                if (validBasePaths.has(id)) {
+                    uniqueCompleted.add(id);
+                    
+                    const el = validBasePaths.get(id);
+                    if (el.classList.contains('quiz-card')) {
+                        if (!el.querySelector('.badge-completed')) {
+                            const badge = document.createElement('span');
+                            badge.className = 'badge badge-completed';
+                            badge.innerHTML = '✅ Completed';
+                            el.appendChild(badge);
+                        }
+                    } else if (el.classList.contains('state-link')) {
+                        if (!el.innerHTML.includes('✅')) {
+                            el.innerHTML += ' <span style="color:#10b981; font-weight:bold;">✅</span>';
+                        }
+                    }
+                }
+            });
+
+            const completed = uniqueCompleted.size;
+            const percentage = Math.round((completed / total) * 100) || 0;
+
+            const progressSection = document.getElementById('progress-section');
+            const progressText = document.getElementById('progress-text');
+            const progressBarFill = document.getElementById('progress-bar-fill');
+
+            if (progressSection && progressText && progressBarFill) {
+                progressSection.style.display = 'block';
+                progressText.textContent = `${completed}/${total} Completed`;
+                
+                setTimeout(() => {
+                    progressBarFill.style.width = `${percentage}%`;
+                }, 100);
+            }
+        });
+    </script>
 </body>
 
 </html>

@@ -78,7 +78,7 @@ L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_
 }).addTo(map);
 
 // Load and display India states GeoJSON
-fetch('india_states.geojson')
+fetch('../data/india_states.geojson')
     .then(response => response.json())
     .then(data => {
         stateLayer = L.geoJSON(data, {
