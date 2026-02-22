@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>India Lakes Quiz</title>
+    <title>India State Capitals Quiz</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -16,7 +16,7 @@
             text-align: center;
             margin: 0;
             padding: 0;
-            background: #f0f7ff;
+            background: #fdf6f0;
         }
 
         #map-overlays {
@@ -28,7 +28,7 @@
             justify-content: space-between;
             padding: 15px 20px;
             box-sizing: border-box;
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%) !important;
+            background: linear-gradient(135deg, #efebe9 0%, #d7ccc8 100%) !important;
             border-bottom: 1px solid rgba(255, 255, 255, 0.4);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
@@ -45,7 +45,7 @@
             border-left: 1px solid rgba(255, 255, 255, 1) !important;
             border-radius: 12px !important;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.02) !important;
-            color: #004e7c !important;
+            color: #4e342e !important;
             font-weight: 700 !important;
             padding: 10px 18px !important;
             transition: all 0.3s ease;
@@ -59,7 +59,7 @@
 
         .top-left {
             order: 1;
-            border-left: 4px solid #0077be !important;
+            border-left: 4px solid #fbc02d !important;
         }
 
         .top-right {
@@ -70,10 +70,10 @@
         }
 
         #timer {
-            background: rgba(0, 119, 190, 0.1);
+            background: rgba(251, 192, 45, 0.1);
             padding: 4px 10px;
             border-radius: 6px;
-            color: #0077be;
+            color: #f57f17;
             font-weight: 700 !important;
         }
 
@@ -84,7 +84,7 @@
             font-size: 20px !important;
             text-align: center;
             background: rgba(255, 255, 255, 0.75) !important;
-            color: #005a91 !important;
+            color: #3e2723 !important;
         }
 
         .center-top b {
@@ -95,17 +95,17 @@
 
         #map {
             height: calc(100vh - 120px) !important;
-            background: #e3f2fd;
+            background: #efebe9;
         }
 
-        .lake-icon {
+        .capital-icon {
             background: transparent;
             border: 0;
         }
 
-        .lake-icon svg {
+        .capital-icon svg {
             display: block;
-            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
         }
 
         .wrong-tooltip {
@@ -190,7 +190,7 @@
             padding: 8px 16px;
             font-size: 14px;
             font-weight: 700;
-            color: #005a91;
+            color: #f57f17;
             cursor: pointer;
             text-decoration: none;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
@@ -208,12 +208,12 @@
 <body>
 
     <div id="map-overlays">
-        <div class="overlay top-left">India Lakes</div>
+        <div class="overlay top-left">India State Capitals</div>
         <div id="score" class="overlay top-right">
             <span id="score-text">Score: 0%</span>
             <span id="timer" style="margin-left:12px;font-weight:400;font-size:15px;"></span>
         </div>
-        <div id="question" class="overlay center-top">Loading lakes...</div>
+        <div id="question" class="overlay center-top">Loading capitals...</div>
     </div>
     <div id="map"></div>
     <a href="index.html" class="back-btn">← Back</a>
@@ -221,8 +221,8 @@
     <script>
 
         let allData = [];
-        let lakes = [];
-        let currentLake = "";
+        let capitals = [];
+        let currentCapital = "";
         let totalQuestions = 0;
         let correctAnswers = 0;
         let geoLayer;
@@ -239,8 +239,8 @@
         ];
 
         const MARKER_VISUALS = {
-            default: { size: 20, fill: "#0077be", stroke: "#004e7c" },
-            hover: { size: 24, fill: "#00aaff", stroke: "#004e7c" },
+            default: { size: 20, fill: "#fbc02d", stroke: "#f57f17" },
+            hover: { size: 24, fill: "#fdd835", stroke: "#f57f17" },
             correct: { size: 24, fill: "#1e9d46", stroke: "#0e6128" },
             wrong: { size: 24, fill: "#d33a32", stroke: "#8a1f1a" },
             target: { size: 28, fill: "#d33a32", stroke: "#8a1f1a" }
@@ -252,9 +252,10 @@
 
             const header = rows[0].map(h => (h || '').replace(/^\uFEFF/, '').trim());
             const idx = {
-                name: header.indexOf('LAKE_NAME'),
+                name: header.indexOf('CAPITAL'),
                 lat: header.indexOf('LATITUDE'),
                 lng: header.indexOf('LONGITUDE'),
+                state: header.indexOf('STATE'),
                 comment: header.indexOf('COMMENT')
             };
 
@@ -264,6 +265,7 @@
                 const name = (cols[idx.name] || '').trim();
                 const lat = parseFloat((cols[idx.lat] || '').trim());
                 const lng = parseFloat((cols[idx.lng] || '').trim());
+                const state = idx.state !== -1 ? (cols[idx.state] || '').trim() : '';
                 const comment = idx.comment !== -1 ? (cols[idx.comment] || '').trim() : '';
 
                 if (!name || !Number.isFinite(lat) || !Number.isFinite(lng)) return null;
@@ -272,30 +274,30 @@
                     type: 'Feature',
                     geometry: { type: 'Point', coordinates: [lng, lat] },
                     properties: {
-                        LAKE_NAME: name,
+                        CAPITAL: name,
+                        STATE: state,
                         COMMENT: comment
                     }
                 };
             }).filter(Boolean);
         }
 
-        function getLakeIcon(state) {
+        function getCapitalIcon(state) {
             const visual = MARKER_VISUALS[state] || MARKER_VISUALS.default;
             const size = visual.size;
             return L.divIcon({
-                className: 'lake-icon',
+                className: 'capital-icon',
                 iconSize: [size, size],
                 iconAnchor: [size / 2, size / 2],
                 html:
                     '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" aria-hidden="true">' +
-                    '<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="' + visual.fill + '" stroke="' + visual.stroke + '" stroke-width="1.5" stroke-linejoin="round"></path>' +
-                    '<path d="M12 19a5 5 0 0 1-5-5c0-1.5.5-3.5 1.5-4.5S12 6.5 12 19z" fill="#ffffff" opacity="0.3"></path>' +
+                    '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.27 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z" fill="' + visual.fill + '" stroke="' + visual.stroke + '" stroke-width="1.5" stroke-linejoin="round"></path>' +
                     '</svg>'
             });
         }
 
         function setMarkerState(marker, state) {
-            marker.setIcon(getLakeIcon(state));
+            marker.setIcon(getCapitalIcon(state));
         }
 
         function resetMarkerStyle(marker) {
@@ -303,18 +305,18 @@
         }
 
         window.addEventListener('DOMContentLoaded', function () {
-            fetch('lakes_india.csv')
+            fetch('india_state_capitals.csv')
                 .then(response => response.text())
                 .then(csvText => {
                     allData = toFeaturesFromCSV(csvText);
                     if (allData.length > 0) {
                         initializeQuiz();
                     } else {
-                        alert('Invalid or empty lakes_india.csv file');
+                        alert('Invalid or empty india_state_capitals.csv file');
                     }
                 })
                 .catch(error => {
-                    alert('Error loading lakes_india.csv: ' + error.message);
+                    alert('Error loading india_state_capitals.csv: ' + error.message);
                 });
         });
 
@@ -342,25 +344,25 @@
                     L.geoJSON(statesData, {
                         interactive: false,
                         style: {
-                            color: "#004e7c",
+                            color: "#5d4037",
                             weight: 1.5,
                             opacity: 0.8,
                             fillOpacity: 0.05,
-                            fillColor: "#0077be"
+                            fillColor: "#d7ccc8"
                         }
                     }).addTo(map);
                 });
 
-            lakes = allData.map(f => f.properties.LAKE_NAME || 'Unknown Lake');
-            maxQuestions = lakes.length;
+            capitals = allData.map(f => f.properties.CAPITAL || 'Unknown Capital');
+            maxQuestions = capitals.length;
             geoLayer = L.featureGroup();
 
             allData.forEach(feature => {
                 const coords = feature.geometry.coordinates;
-                const lakeName = feature.properties.LAKE_NAME || 'Unknown Lake';
+                const capitalName = feature.properties.CAPITAL || 'Unknown Capital';
 
                 const marker = L.marker([coords[1], coords[0]], {
-                    icon: getLakeIcon('default'),
+                    icon: getCapitalIcon('default'),
                     keyboard: false
                 });
 
@@ -376,14 +378,15 @@
                     click: function (e) {
                         attemptsCount++;
 
-                        if (lakeName === currentLake) {
+                        if (capitalName === currentCapital) {
                             correctAnswers++;
                             playCorrectSound();
                             updateScore();
                             setMarkerState(marker, 'correct');
                             triggerCelebration(marker.getLatLng());
 
-                            let details = "<b>" + lakeName + "</b>";
+                            let details = "<b>" + capitalName + "</b>";
+                            if (feature.properties.STATE) details += " (" + feature.properties.STATE + ")";
                             if (feature.properties.COMMENT) details += "<br/>" + feature.properties.COMMENT;
 
                             marker.bindTooltip(details, {
@@ -406,7 +409,7 @@
                         if (requireCorrectToAdvance) {
                             setMarkerState(marker, 'wrong');
                             setTimeout(() => resetMarkerStyle(marker), 1200);
-                            marker.bindTooltip(lakeName, {
+                            marker.bindTooltip(capitalName, {
                                 permanent: false,
                                 className: 'wrong-tooltip',
                                 direction: 'top',
@@ -423,8 +426,8 @@
                         } else {
                             let correctMarker = null;
                             geoLayer.eachLayer(function (lyr) {
-                                const nm = lyr.feature && lyr.feature.properties && lyr.feature.properties.LAKE_NAME;
-                                if (nm === currentLake) correctMarker = lyr;
+                                const nm = lyr.feature && lyr.feature.properties && lyr.feature.properties.CAPITAL;
+                                if (nm === currentCapital) correctMarker = lyr;
                             });
                             if (correctMarker) {
                                 let on = true;
@@ -438,14 +441,14 @@
                                     correctMarkerForCurrent = correctMarker;
                                     setMarkerState(correctMarker, 'target');
                                     triggerRippleAt(correctMarker.getLatLng(), '#d33a32');
-                                    setQuestion(currentLake, totalQuestions, maxQuestions, true);
+                                    setQuestion(currentCapital, totalQuestions, maxQuestions, true);
                                 }, 2000);
                             } else {
                                 nextQuestion();
                             }
                         }
 
-                        let tooltipContent = "Incorrect: " + lakeName;
+                        let tooltipContent = "Incorrect: " + capitalName;
                         marker.bindTooltip(tooltipContent, {
                             permanent: false,
                             className: 'wrong-tooltip',
@@ -482,17 +485,17 @@
                 return;
             }
 
-            if (!lakes || lakes.length === 0) {
+            if (!capitals || capitals.length === 0) {
                 endQuiz();
                 return;
             }
 
-            const idx = Math.floor(Math.random() * lakes.length);
-            currentLake = lakes.splice(idx, 1)[0];
+            const idx = Math.floor(Math.random() * capitals.length);
+            currentCapital = capitals.splice(idx, 1)[0];
             attemptsLeft = 3;
             totalQuestions++;
 
-            setQuestion(currentLake, totalQuestions, maxQuestions);
+            setQuestion(currentCapital, totalQuestions, maxQuestions);
         }
 
         function updateScore() {
@@ -513,7 +516,7 @@
 
             const restart = document.createElement('button');
             restart.textContent = 'Restart Quiz';
-            restart.style.cssText = 'margin-left:15px; padding:5px 12px; border-radius:4px; border:1px solid #0077be; background:#fff; color:#0077be; cursor:pointer; font-weight:bold;';
+            restart.style.cssText = 'margin-left:15px; padding:5px 12px; border-radius:4px; border:1px solid #f57f17; background:#fff; color:#f57f17; cursor:pointer; font-weight:bold;';
             restart.onclick = function () { location.reload(); };
             const q = document.getElementById('question');
             if (q) q.appendChild(restart);

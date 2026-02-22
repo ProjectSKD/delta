@@ -1,0 +1,116 @@
+MINING_SITENAME,LATITUDE,LONGITUDE,MINERAL,COMMENT
+Jharia,23.75,86.42,Coal,Dhanbad; Jharkhand; Largest coalfield in India famous for premium coking coal
+Raniganj,23.63,87.13,Coal,Paschim Bardhaman; West Bengal; The birthplace of coal mining in India
+Bokaro,23.79,85.98,Coal,Bokaro; Jharkhand; Major producer of metallurgical coal
+Karanpura,23.82,85.05,Coal,Chatra; Jharkhand; Large operational blocks in the North and South Karanpura fields
+Singrauli,24.20,82.66,Coal,Singrauli; Madhya Pradesh; Known for its massive open-cast coal mines
+Talcher,20.95,85.23,Coal,Angul; Odisha; Houses some of the highest geological reserves of coal in India
+Ib Valley,21.82,83.86,Coal,Jharsuguda; Odisha; Rapidly expanding open-cast coalfields
+Korba,22.35,82.68,Coal,Korba; Chhattisgarh; Highly productive coal belt feeding major power plants
+Ramagundam,18.76,79.47,Coal,Peddapalli; Telangana; Key mining area operated by Singareni Collieries
+Makum,27.29,95.67,Coal,Tinsukia; Assam; High-sulphur tertiary coal mining area
+Dilli-Jeypore,27.15,95.38,Coal,Dibrugarh; Assam; Important regional coalfield in the Northeast
+Wardha,20.74,78.60,Coal,Chandrapur; Maharashtra; One of the oldest coal mining valleys in Maharashtra
+Kamptee,21.22,79.19,Coal,Nagpur; Maharashtra; Deep coal reserves near Nagpur
+Umrer,20.84,79.32,Coal,Nagpur; Maharashtra; Significant open-cast mining block
+Sohagpur,23.31,81.35,Coal,Shahdol; Madhya Pradesh; Important coalfield in the Rewa-Gondwana basin
+Bailadila,18.73,81.23,Iron Ore,Dantewada; Chhattisgarh; High-grade hematite deposits highly mechanized
+Dalli-Rajhara,20.58,81.08,Iron Ore,Balod; Chhattisgarh; Captive mines for the Bhilai Steel Plant
+Kudremukh,13.21,75.25,Iron Ore,Chikkamagaluru; Karnataka; Historic magnetite reserves
+Donimalai,15.06,76.61,Iron Ore,Bellary; Karnataka; Highly productive NMDC mining block
+Kemmangundi,13.54,75.75,Iron Ore,Chikkamagaluru; Karnataka; Historic mining region in the Baba Budan hills
+Noamundi,22.15,85.53,Iron Ore,West Singhbhum; Jharkhand; Premier captive mine operated by Tata Steel
+Joda,22.01,85.43,Iron Ore,Keonjhar; Odisha; One of the richest hematite blocks in Eastern India
+Barbil,22.12,85.40,Iron Ore,Keonjhar; Odisha; A major hub for iron ore pelletization and extraction
+Gurumahisani,22.30,86.17,Iron Ore,Mayurbhanj; Odisha; India's first commercially exploited iron ore mine
+Daitari,21.10,85.74,Iron Ore,Keonjhar; Odisha; Key supplier for steel plants in coastal Odisha
+Kiriburu,22.09,85.27,Iron Ore,West Singhbhum; Jharkhand; Operated by SAIL supplies to Bokaro steel plant
+Meghahatuburu,22.11,85.28,Iron Ore,West Singhbhum; Jharkhand; Adjoining Kiriburu major captive mine for SAIL
+Chiria,22.30,85.26,Iron Ore,West Singhbhum; Jharkhand; Holds some of the largest proven iron ore reserves in India
+Khetri,27.98,75.80,Copper,Jhunjhunu; Rajasthan; The anchor mine of the Khetri Copper Belt
+Kolihan,28.01,75.76,Copper,Jhunjhunu; Rajasthan; Highly productive underground mine near Khetri
+Banwas,28.04,75.78,Copper,Jhunjhunu; Rajasthan; A relatively newer extension of the Khetri deposits
+Chandmari,27.96,75.79,Copper,Jhunjhunu; Rajasthan; Open-cast copper mine in the Rajasthan belt
+Malanjkhand,22.02,80.71,Copper,Balaghat; Madhya Pradesh; The largest open-cast copper mine in India
+Rakha,22.63,86.38,Copper,East Singhbhum; Jharkhand; Historic copper mine in the Singhbhum shear zone
+Surda,22.56,86.43,Copper,East Singhbhum; Jharkhand; Active underground copper mine in Jharkhand
+Kendadih,22.59,86.41,Copper,East Singhbhum; Jharkhand; Reopened underground mine to boost domestic supply
+Mosabani,22.51,86.46,Copper,East Singhbhum; Jharkhand; Historic deep underground copper mine
+Bhotang,27.17,88.52,Copper,Pakyong; Sikkim; Multi-metal deposit primarily mined for copper
+Dikchu,27.40,88.52,Copper,Gangtok; Sikkim; Significant copper deposit in the Himalayan belt
+Sindesar Khurd,25.01,74.15,Zinc/Lead/Silver,Rajsamand; Rajasthan; India's largest standalone silver-producing mine
+Rampura Agucha,25.83,74.74,Zinc/Lead/Silver,Bhilwara; Rajasthan; The largest zinc-producing mine in India
+Rajpura Dariba,24.95,74.13,Zinc/Lead/Silver,Rajsamand; Rajasthan; Extensive underground poly-metallic mine
+Zawar-Mochia,24.35,73.71,Zinc/Lead/Silver,Udaipur; Rajasthan; The main historically active block in the Zawar belt
+Zawar-Balaria,24.36,73.73,Zinc/Lead/Silver,Udaipur; Rajasthan; Highly mechanized underground mine in Zawar
+Zawar-Zawarmala,24.33,73.68,Zinc/Lead/Silver,Udaipur; Rajasthan; Another key deposit in the ancient Zawar cluster
+Zawar-Baroi,24.32,73.70,Zinc/Lead/Silver,Udaipur; Rajasthan; Known for high lead and silver grades
+Kayad,26.53,74.68,Zinc/Lead/Silver,Ajmer; Rajasthan; Modern underground mine located near Ajmer
+Bamnia Kalan,24.98,74.16,Zinc/Lead/Silver,Rajsamand; Rajasthan; Part of the Rajpura Dariba mineralized belt
+Pur-Banera,25.35,74.65,Zinc/Lead/Silver,Bhilwara; Rajasthan; A multi-metal belt with significant lead-zinc-silver reserves
+Jaduguda,22.64,86.35,Uranium,East Singhbhum; Jharkhand; The first and oldest operational uranium mine in India
+Bhatin,22.66,86.33,Uranium,East Singhbhum; Jharkhand; Small underground mine sharing infrastructure with Jaduguda
+Narwapahar,22.70,86.26,Uranium,East Singhbhum; Jharkhand; Highly modern and mechanized underground uranium mine
+Turamdih,22.72,86.19,Uranium,East Singhbhum; Jharkhand; Large capacity underground mine accessed via a decline
+Bagjata,22.46,86.48,Uranium,East Singhbhum; Jharkhand; Underground mine developed in the Singhbhum shear zone
+Banduhurang,22.71,86.17,Uranium,East Singhbhum; Jharkhand; A low-grade but high-tonnage open-pit uranium mine
+Mohuldih,22.74,86.14,Uranium,East Singhbhum; Jharkhand; Modern underground mine feeding the Turamdih plant
+Tummalapalle,14.31,78.27,Uranium,YSR Kadapa; Andhra Pradesh; Massive stratabound uranium deposit one of the largest globally
+Gogi,16.73,76.74,Uranium,Yadgir; Karnataka; Developing high-grade uranium project in the Bhima basin
+Rohil,27.60,75.54,Uranium,Sikar; Rajasthan; Significant emerging uranium block in Sikar district
+Hutti,16.20,76.65,Gold,Raichur; Karnataka; The most prominent active underground gold mine in India
+Uti,16.29,76.73,Gold,Raichur; Karnataka; Open-pit gold mine operating near the main Hutti deposits
+Hirabuddini,16.15,76.68,Gold,Raichur; Karnataka; Satellite gold mining block in the Raichur district
+Ramagiri,14.30,77.49,Gold,Sri Sathya Sai; Andhra Pradesh; Historic goldfield known for ancient and modern exploration
+Jonnagiri,15.23,77.58,Gold,Kurnool; Andhra Pradesh; India's first private sector open-pit gold mining project
+Kolar,12.95,78.26,Gold,Kolar; Karnataka; Historic KGF once one of the deepest gold mines in the world
+Sonbhadra,24.42,82.88,Gold,Sonbhadra; Uttar Pradesh; Region of recent significant gold reserve discoveries
+Lava,23.05,86.05,Gold,West Singhbhum; Jharkhand; Historic gold mining block in the Singhbhum region
+Ajjanahalli,13.88,76.71,Gold,Tumkur; Karnataka; Exploratory and historical gold block in Tumkur
+Wynad,11.55,76.25,Gold,Wayanad; Kerala; Historic gold panning and hard-rock mining district
+Panchpatmali,18.85,83.02,Bauxite,Koraput; Odisha; Massive highly mechanized reserves operated by NALCO
+Gandhamardan,20.87,82.83,Bauxite,Bargarh; Odisha; Holds some of the most significant bauxite reserves in India
+Kodingamali,19.04,83.05,Bauxite,Koraput; Odisha; Highly productive plateau deposit in Koraput
+Baphlimali,19.33,82.97,Bauxite,Rayagada; Odisha; Captive bauxite mine for Utkal Alumina
+Lohardaga,23.43,84.68,Bauxite,Lohardaga; Jharkhand; The premier bauxite mining hub of Jharkhand
+Mainpat,22.81,83.28,Bauxite,Surguja; Chhattisgarh; Key bauxite plateau supplying the Korba aluminum plants
+Amarkantak,22.67,81.75,Bauxite,Anuppur; Madhya Pradesh; High-grade bauxite deposits feeding BALCO
+Katni,23.83,80.39,Bauxite,Katni; Madhya Pradesh; Region famous for both bauxite and limestone
+Jamnagar,22.47,70.05,Bauxite,Jamnagar; Gujarat; Coastal bauxite reserves mostly used in non-metallurgical industries
+Kolhapur,16.70,74.24,Bauxite,Kolhapur; Maharashtra; West coast bauxite deposits found under laterite cappings
+Jerrela,17.86,82.23,Bauxite,Visakhapatnam; Andhra Pradesh; Massive bauxite blocks located in the Eastern Ghats
+Balaghat,21.80,80.18,Manganese,Balaghat; Madhya Pradesh; The deepest underground manganese mine in Asia
+Tirodi,21.68,79.94,Manganese,Balaghat; Madhya Pradesh; Famous for large-scale open-cast manganese operations
+Ukwa,21.96,80.46,Manganese,Balaghat; Madhya Pradesh; High-grade underground manganese mine operated by MOIL
+Dongri Buzurg,21.53,79.69,Manganese,Bhandara; Maharashtra; Known for highly prized manganese dioxide (battery grade)
+Mansar,21.40,79.25,Manganese,Nagpur; Maharashtra; Historic mine known for high-grade ore and geological significance
+Kandri,21.42,79.27,Manganese,Nagpur; Maharashtra; Deep and highly mechanized underground mine
+Gumgaon,21.37,78.98,Manganese,Nagpur; Maharashtra; Important underground manganese producer near Nagpur
+Sandur,15.09,76.54,Manganese,Bellary; Karnataka; Private sector manganese mining hub in Bellary district
+Joda West,22.02,85.42,Manganese,Keonjhar; Odisha; High-grade manganese mine operated by Tata Steel
+Banswara,23.54,74.45,Manganese,Banswara; Rajasthan; The primary manganese mining belt in Rajasthan
+Digboi,27.38,95.63,Petroleum,Tinsukia; Assam; The oldest continuously operating oil well in India
+Naharkatia,27.28,95.33,Petroleum,Dibrugarh; Assam; First major oil discovery in India post-independence
+Moran,27.18,94.92,Petroleum,Dibrugarh; Assam; Important onshore oilfield in the Upper Assam basin
+Ankleshwar,21.63,73.01,Petroleum,Bharuch; Gujarat; Highly productive onshore oilfield in the Cambay basin
+Kalol,23.23,72.49,Petroleum,Gandhinagar; Gujarat; Significant oil and gas producing block near Ahmedabad
+Mumbai High,19.41,71.33,Petroleum,Offshore; Maharashtra; India's largest offshore oilfield in the Arabian Sea
+Ravva,16.42,82.24,Petroleum,East Godavari; Andhra Pradesh; Shallow-water offshore oil and gas field
+KG Basin,16.51,82.16,Petroleum/Gas,East Godavari; Andhra Pradesh; Deepwater gas and oil basin (Krishna-Godavari)
+Jhamarkotra,24.47,73.85,Rock Phosphate,Udaipur; Rajasthan; India's largest open-cast rock phosphate mine
+Maton,24.53,73.78,Rock Phosphate,Udaipur; Rajasthan; Captive rock phosphate mine for fertilizer production
+Jhabua,22.76,74.59,Rock Phosphate,Jhabua; Madhya Pradesh; Major phosphate reserves outside Rajasthan
+Kapurdi,25.86,71.39,Lignite,Barmer; Rajasthan; Feeds the massive Raj West power project
+Jalipa,25.84,71.40,Lignite,Barmer; Rajasthan; Contiguous lignite block to Kapurdi in Barmer
+Giral,26.04,71.25,Lignite,Barmer; Rajasthan; State-operated lignite mining project
+Barsingsar,27.83,73.20,Lignite,Bikaner; Rajasthan; Integrated lignite mine and power plant in Bikaner
+Palana,27.84,73.26,Lignite,Bikaner; Rajasthan; Historic lignite mining area known for high-quality deposits
+Neyveli,11.60,79.48,Lignite,Cuddalore; Tamil Nadu; India's largest open-cast lignite mining complex
+Panna,24.27,80.17,Diamond,Panna; Madhya Pradesh; The only active historic diamond mining site in India
+Bunder,24.38,79.35,Diamond,Chhatarpur; Madhya Pradesh; Massive greenfield diamond project site
+Kollur,16.71,80.02,Diamond,Guntur; Andhra Pradesh; Historic Golconda diamond mine (now largely exhausted)
+Sukinda,21.03,85.80,Chromite,Jajpur; Odisha; Holds nearly 98% of India's proven chromite reserves
+Boula,21.25,86.32,Chromite,Keonjhar; Odisha; Underground chromite mine known for platinum group metals
+Nuasahi,21.27,86.33,Chromite,Keonjhar; Odisha; Significant chromite deposits adjacent to Boula
+Koderma,24.46,85.59,Mica,Koderma; Jharkhand; Once known as the mica capital of the world
+Nellore,14.44,79.98,Mica,Nellore; Andhra Pradesh; Major producer of green-tinted muscovite mica

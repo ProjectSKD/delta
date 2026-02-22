@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Uttar Pradesh Districts Quiz</title>
+    <title>India States Quiz</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -12,56 +12,78 @@
 
     <style>
         body {
-            font-family: Arial;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
             margin: 0;
             padding: 0;
+            background: #f0f4f8;
         }
 
         #map-overlays {
             position: relative;
-            height: 64px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         #map {
-            height: 600px;
+            height: calc(100vh - 78px);
             margin-top: 8px;
-            background: #f4f4f4;
+            background: #e8edf2;
         }
 
         .overlay {
             position: absolute;
             z-index: 400;
-            padding: 6px 10px;
+            padding: 8px 14px;
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 4px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             font-weight: 600;
+            color: #333;
         }
 
         .top-left {
-            left: 8px;
-            top: 8px;
+            left: 15px;
+            top: 12px;
+            border-left: 4px solid #0077be;
         }
 
         .top-right {
-            right: 8px;
-            top: 8px;
+            right: 15px;
+            top: 12px;
         }
 
         .center-top {
             left: 50%;
-            top: 8px;
+            top: 12px;
             transform: translateX(-50%);
-            font-size: 20px;
+            font-size: 22px;
+            color: #004e7c;
         }
 
         #question {
-            font-size: 18px;
+            font-size: 20px;
         }
 
         #score {
             font-size: 16px;
+        }
+
+        .wrong-tooltip {
+            background-color: #d33a32 !important;
+            border: none !important;
+            color: white !important;
+            font-weight: bold;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .wrong-tooltip .leaflet-tooltip-tip {
+            border-top-color: #d33a32 !important;
         }
 
         .back-btn {
@@ -275,18 +297,20 @@
 <body>
 
     <div id="map-overlays">
-        <div class="overlay top-left">Uttar Pradesh Districts</div>
-        <div id="score" class="overlay top-right"><span id="score-text">Score: 0%</span> <span id="timer"
-                style="margin-left:12px;font-weight:400;font-size:15px;"></span></div>
-        <div id="question" class="overlay center-top">Loading...</div>
+        <div class="overlay top-left">States of India</div>
+        <div id="score" class="overlay top-right">
+            <span id="score-text">Score: 0%</span>
+            <span id="timer" style="margin-left:12px;font-weight:400;font-size:15px;"></span>
+        </div>
+        <div id="question" class="overlay center-top">Loading states...</div>
     </div>
     <div id="map"></div>
 
     <script>
 
-        let allData = null;
-        let districts = [];
-        let currentDistrict = "";
+        let map = null;
+        let states = [];
+        let currentState = "";
         let totalQuestions = 0;
         let correctAnswers = 0;
         let geoLayer;
@@ -295,175 +319,173 @@
         let attemptsCount = 0;
         let requireCorrectToAdvance = false;
         let correctLayerForCurrent = null;
-        let map = null;
 
-        window.addEventListener('DOMContentLoaded', function () {
-            fetch('india_districts.geojson')
-                .then(response => response.json())
-                .then(data => {
-                    allData = data;
-                    initializeQuiz();
-                })
-                .catch(error => {
-                    alert('Error loading district data: ' + error.message);
-                });
-        });
+        const DEFAULT_STYLE = { color: "#004e7c", weight: 1.2, fillColor: "#0077be", fillOpacity: 0.35 };
+        const HOVER_STYLE = { weight: 2.5, color: "#004e7c", fillColor: "#0099ff", fillOpacity: 0.55 };
+        const CORRECT_STYLE = { fillColor: "#1e9d46", fillOpacity: 0.85, color: "#0e6128", weight: 2 };
+        const WRONG_STYLE = { fillColor: "#d33a32", fillOpacity: 0.75, color: "#8a1f1a", weight: 2 };
+        const TARGET_STYLE = { fillColor: "#d33a32", fillOpacity: 0.85, color: "#8a1f1a", weight: 3 };
 
-        function initializeQuiz() {
-            map = L.map('map').setView([26.8, 80.9], 6);
+        // Get centroid of a Leaflet layer's bounds
+        function layerCenter(layer) {
+            try { return layer.getBounds().getCenter(); } catch (e) { return null; }
+        }
 
-            const utpFeatures = allData.features.filter(f =>
-                f.properties && (f.properties.st_nm === 'Uttar Pradesh' || f.properties.ST_NM === 'Uttar Pradesh')
-            );
+        // Initialise map and load GeoJSON
+        map = L.map('map', {
+            maxBoundsViscosity: 0.8
+        }).setView([22, 80], 5);
 
-            fetch('india_states.geojson')
-                .then(response => response.json())
-                .then(statesData => {
-                    L.geoJSON(statesData, {
-                        interactive: false,
-                        style: {
-                            color: "#cccccc",
-                            weight: 1,
-                            fillColor: "#e8e8e8",
-                            fillOpacity: 0.4
-                        }
-                    }).addTo(map);
-                });
+        map.createPane('ripplePane');
+        map.getPane('ripplePane').style.zIndex = 700;
+        map.getPane('ripplePane').style.pointerEvents = 'none';
 
-            districts = utpFeatures.map(f => f.properties.DISTRICT || f.properties.district || 'Unknown District');
-            maxQuestions = Math.min(districts.length, 20);
+        // Label-free terrain basemap
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}', {
+            attribution: '© Esri',
+            maxZoom: 9, minZoom: 4,
+            noWrap: true
+        }).addTo(map);
 
-            geoLayer = L.geoJSON(
-                { type: "FeatureCollection", features: utpFeatures },
-                {
-                    style: {
-                        color: "#8b4513",
-                        weight: 2,
-                        fillColor: "#dcc9a8",
-                        fillOpacity: 0.6
-                    },
+        fetch("india_states.geojson")
+            .then(response => response.json())
+            .then(data => {
+
+                states = data.features.map(f => f.properties.ST_NM);
+                maxQuestions = states.length;
+
+                geoLayer = L.geoJSON(data, {
+                    style: DEFAULT_STYLE,
                     onEachFeature: function (feature, layer) {
-                        const districtName = feature.properties.DISTRICT || feature.properties.district || 'Unknown District';
-
                         layer.on({
-                            mouseover: function (e) {
-                                layer.setStyle({ weight: 3, fillOpacity: 0.8 });
+                            mouseover: function () {
+                                if (layer === correctLayerForCurrent) return;
+                                layer.setStyle(HOVER_STYLE);
                             },
-                            mouseout: function (e) {
+                            mouseout: function () {
+                                if (layer === correctLayerForCurrent) return;
                                 geoLayer.resetStyle(layer);
                             },
                             click: function (e) {
+                                const stateName = feature && feature.properties && feature.properties.ST_NM;
                                 attemptsCount++;
 
-                                if (districtName === currentDistrict) {
+                                if (stateName === currentState) {
+                                    // ── Correct ──
                                     correctAnswers++;
                                     playCorrectSound();
                                     updateScore();
-                                    layer.setStyle({ fillColor: 'green' });
+                                    layer.setStyle(CORRECT_STYLE);
+                                    triggerCelebration(layerCenter(layer) || e.latlng, ['#ff0000', '#00cc00', '#0055ff', '#ffff00', '#ff00ff', '#00ffff', '#ff8800']);
+
+                                    const details = "<b>" + stateName + "</b>";
+                                    layer.bindTooltip(details, {
+                                        permanent: false, direction: 'top'
+                                    }).openTooltip(layerCenter(layer));
+
                                     setTimeout(() => {
+                                        layer.closeTooltip();
                                         geoLayer.resetStyle(layer);
                                         nextQuestion();
-                                    }, 2000);
+                                    }, 2500);
+                                    return;
+                                }
 
-                                } else {
-                                    playIncorrectSound();
-                                    updateScore();
-                                    attemptsLeft = Math.max(0, attemptsLeft - 1);
-                                    if (attemptsLeft > 0) {
-                                        layer.setStyle({ fillColor: 'red' });
-                                        setTimeout(() => geoLayer.resetStyle(layer), 2000);
+                                // ── Incorrect ──
+                                playIncorrectSound();
+                                updateScore();
+
+                                if (requireCorrectToAdvance) {
+                                    // already revealed — just flash wrong
+                                    layer.setStyle(WRONG_STYLE);
+                                    setTimeout(() => geoLayer.resetStyle(layer), 1200);
+                                    layer.bindTooltip("Incorrect: " + stateName, {
+                                        permanent: false, className: 'wrong-tooltip', direction: 'top'
+                                    }).openTooltip(e.latlng);
+                                    setTimeout(() => { layer.closeTooltip(); layer.unbindTooltip(); }, 1200);
+                                    return;
+                                }
+
+                                attemptsLeft = Math.max(0, attemptsLeft - 1);
+                                layer.setStyle(WRONG_STYLE);
+                                setTimeout(() => geoLayer.resetStyle(layer), 1800);
+
+                                layer.bindTooltip("Incorrect: " + stateName, {
+                                    permanent: false, className: 'wrong-tooltip', direction: 'top'
+                                }).openTooltip(e.latlng);
+                                setTimeout(() => { layer.closeTooltip(); layer.unbindTooltip(); }, 1200);
+
+                                if (attemptsLeft === 0) {
+                                    // Reveal correct state
+                                    let correctLayer = null;
+                                    geoLayer.eachLayer(function (lyr) {
+                                        const nm = lyr.feature && lyr.feature.properties && lyr.feature.properties.ST_NM;
+                                        if (nm === currentState) correctLayer = lyr;
+                                    });
+                                    if (correctLayer) {
+                                        let on = true;
+                                        const iv = setInterval(() => {
+                                            correctLayer.setStyle(on ? WRONG_STYLE : DEFAULT_STYLE);
+                                            on = !on;
+                                        }, 250);
+                                        setTimeout(() => {
+                                            clearInterval(iv);
+                                            requireCorrectToAdvance = true;
+                                            correctLayerForCurrent = correctLayer;
+                                            correctLayer.setStyle(TARGET_STYLE);
+                                            triggerRippleAt(layerCenter(correctLayer), '#d33a32');
+                                            const q = document.getElementById('question');
+                                            setQuestion(currentState, totalQuestions, maxQuestions, true);
+                                        }, 2000);
                                     } else {
-                                        let correctLayer = null;
-                                        geoLayer.eachLayer(function (lyr) {
-                                            const nm = lyr.feature && lyr.feature.properties &&
-                                                (lyr.feature.properties.DISTRICT || lyr.feature.properties.district);
-                                            if (nm === currentDistrict) correctLayer = lyr;
-                                        });
-                                        if (correctLayer) {
-                                            let on = true;
-                                            const iv = setInterval(() => {
-                                                correctLayer.setStyle({ fillColor: on ? 'red' : '#dcc9a8' });
-                                                on = !on;
-                                            }, 250);
-                                            setTimeout(() => {
-                                                clearInterval(iv);
-                                                geoLayer.resetStyle(correctLayer);
-                                                requireCorrectToAdvance = true;
-                                                correctLayerForCurrent = correctLayer;
-                                                try { correctLayer.setStyle({ weight: 4, color: '#2a7fff' }); } catch (e) { }
-                                                const q = document.getElementById('question');
-                                                setQuestion(currentDistrict, totalQuestions, maxQuestions, true);
-                                            }, 3000);
-                                        } else {
-                                            nextQuestion();
-                                        }
+                                        nextQuestion();
                                     }
-                                    let tooltipContent = districtName || 'Unknown';
-                                    layer.bindTooltip(tooltipContent, {
-                                        permanent: false,
-                                        direction: 'top',
-                                        offset: [0, -10]
-                                    }).openTooltip(e && e.latlng ? e.latlng : undefined);
-                                    setTimeout(() => layer.closeTooltip(), 1200);
                                 }
                             }
                         });
                     }
-                }
-            ).addTo(map);
+                }).addTo(map);
 
-            try { map.fitBounds(geoLayer.getBounds()); } catch (e) { }
-
-            startTimer();
-            nextQuestion();
-        }
+                try { map.fitBounds(geoLayer.getBounds()); } catch (e) { }
+                startTimer();
+                nextQuestion();
+            })
+            .catch(err => {
+                document.getElementById('question').textContent = 'Error loading map data.';
+            });
 
         function nextQuestion() {
             requireCorrectToAdvance = false;
             if (correctLayerForCurrent) {
-                try { geoLayer.resetStyle(correctLayerForCurrent); } catch (e) { }
+                geoLayer.resetStyle(correctLayerForCurrent);
                 correctLayerForCurrent = null;
             }
 
-            if (maxQuestions > 0 && totalQuestions >= maxQuestions) {
-                endQuiz();
-                return;
-            }
+            if (maxQuestions > 0 && totalQuestions >= maxQuestions) { endQuiz(); return; }
+            if (!states || states.length === 0) { endQuiz(); return; }
 
-            if (!districts || districts.length === 0) {
-                endQuiz();
-                return;
-            }
-
-            const idx = Math.floor(Math.random() * districts.length);
-            currentDistrict = districts.splice(idx, 1)[0];
+            const idx = Math.floor(Math.random() * states.length);
+            currentState = states.splice(idx, 1)[0];
             attemptsLeft = 3;
             totalQuestions++;
-
-            setQuestion(currentDistrict, totalQuestions, maxQuestions);
+            setQuestion(currentState, totalQuestions, maxQuestions);
         }
 
         function updateScore() {
-            let percentage = attemptsCount === 0 ? 0 : Math.round((correctAnswers / attemptsCount) * 100);
-            document.getElementById("score-text").innerHTML = "Score: " + percentage + "%";
+            const pct = attemptsCount === 0 ? 0 : Math.round((correctAnswers / attemptsCount) * 100);
+            document.getElementById("score-text").innerHTML = "Score: " + pct + "%";
         }
 
         function endQuiz() {
             stopTimer();
             const percent = attemptsCount === 0 ? 0 : Math.round((correctAnswers / attemptsCount) * 100);
-            document.getElementById("question").innerHTML =
-                "Quiz finished! Final score: <b>" + percent + "%</b>";
-
-            if (geoLayer) {
-                geoLayer.eachLayer(function (layer) {
-                    layer.off();
-                });
-            }
+            document.getElementById("question").innerHTML = "Quiz finished! Final score: <b>" + percent + "%</b>";
+            if (geoLayer) geoLayer.eachLayer(l => l.off());
 
             const restart = document.createElement('button');
             restart.textContent = 'Restart Quiz';
-            restart.style.marginLeft = '10px';
-            restart.onclick = function () { location.reload(); };
+            restart.style.cssText = 'margin-left:15px; padding:5px 12px; border-radius:4px; border:1px solid #0077be; background:#fff; color:#0077be; cursor:pointer; font-weight:bold;';
+            restart.onclick = () => location.reload();
             const q = document.getElementById('question');
             if (q) q.appendChild(restart);
         }

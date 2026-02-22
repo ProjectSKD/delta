@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>India Lakes Quiz</title>
+    <title>Rajasthan Wildlife Sanctuaries Quiz</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -16,9 +16,118 @@
             text-align: center;
             margin: 0;
             padding: 0;
-            background: #f0f7ff;
+            background: #fdf6ee;
         }
 
+        #map-overlays {
+            position: relative;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #map {
+            height: calc(100vh - 78px);
+            margin-top: 8px;
+            background: #fce5d2;
+        }
+
+        .overlay {
+            position: absolute;
+            z-index: 400;
+            padding: 8px 14px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            font-weight: 600;
+            color: #333;
+        }
+
+        .top-left {
+            left: 15px;
+            top: 12px;
+            border-left: 4px solid #c2371a;
+        }
+
+        .top-right {
+            right: 15px;
+            top: 12px;
+        }
+
+        .center-top {
+            left: 50%;
+            top: 12px;
+            transform: translateX(-50%);
+            font-size: 22px;
+            color: #8b2500;
+        }
+
+        #question {
+            font-size: 20px;
+        }
+
+        #score {
+            font-size: 16px;
+        }
+
+        .sanctuary-icon {
+            background: transparent;
+            border: 0;
+        }
+
+        .sanctuary-icon svg {
+            display: block;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+        }
+
+        .wrong-tooltip {
+            background-color: #d33a32 !important;
+            border: none !important;
+            color: white !important;
+            font-weight: bold;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .wrong-tooltip .leaflet-tooltip-tip {
+            border-top-color: #d33a32 !important;
+        }
+
+        .back-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #005a91;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+        }
+    </style>
+
+
+
+    <!-- UI Enhancements: Glassmorphism & Mobile Responsiveness -->
+    <style>
+        /* Base overlay container */
         #map-overlays {
             height: auto !important;
             min-height: 70px;
@@ -33,10 +142,17 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
 
+        /* Glassmorphism Cards */
         .overlay {
             position: relative !important;
+            top: auto !important;
+            left: auto !important;
+            right: auto !important;
+            transform: none !important;
             margin: 5px;
             box-sizing: border-box;
+
+            /* Liquid Glass Effect */
             background: rgba(255, 255, 255, 0.65) !important;
             backdrop-filter: blur(12px) !important;
             -webkit-backdrop-filter: blur(12px) !important;
@@ -44,8 +160,10 @@
             border-top: 1px solid rgba(255, 255, 255, 1) !important;
             border-left: 1px solid rgba(255, 255, 255, 1) !important;
             border-radius: 12px !important;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.02) !important;
-            color: #004e7c !important;
+            box-shadow:
+                0 4px 6px rgba(0, 0, 0, 0.05),
+                0 10px 15px rgba(0, 0, 0, 0.02) !important;
+            color: #1a4d6e !important;
             font-weight: 700 !important;
             padding: 10px 18px !important;
             transition: all 0.3s ease;
@@ -53,13 +171,16 @@
 
         .overlay:hover {
             background: rgba(255, 255, 255, 0.8) !important;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08) !important;
+            box-shadow:
+                0 6px 12px rgba(0, 0, 0, 0.08),
+                0 12px 20px rgba(0, 0, 0, 0.04) !important;
             transform: translateY(-2px) !important;
         }
 
         .top-left {
             order: 1;
             border-left: 4px solid #0077be !important;
+            /* Keep the accent */
         }
 
         .top-right {
@@ -93,34 +214,12 @@
             padding: 0 4px;
         }
 
+
         #map {
             height: calc(100vh - 120px) !important;
-            background: #e3f2fd;
         }
 
-        .lake-icon {
-            background: transparent;
-            border: 0;
-        }
-
-        .lake-icon svg {
-            display: block;
-            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
-        }
-
-        .wrong-tooltip {
-            background-color: #d33a32 !important;
-            border: none !important;
-            color: white !important;
-            font-weight: bold;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .wrong-tooltip .leaflet-tooltip-tip {
-            border-top-color: #d33a32 !important;
-        }
-
+        /* Desktop Layout */
         @media (min-width: 800px) {
             #map-overlays {
                 flex-wrap: nowrap;
@@ -154,6 +253,7 @@
             }
         }
 
+        /* Mobile Layout */
         @media (max-width: 600px) {
             .overlay {
                 padding: 8px 12px !important;
@@ -208,21 +308,20 @@
 <body>
 
     <div id="map-overlays">
-        <div class="overlay top-left">India Lakes</div>
+        <div class="overlay top-left">Rajasthan Wildlife Sanctuaries</div>
         <div id="score" class="overlay top-right">
             <span id="score-text">Score: 0%</span>
             <span id="timer" style="margin-left:12px;font-weight:400;font-size:15px;"></span>
         </div>
-        <div id="question" class="overlay center-top">Loading lakes...</div>
+        <div id="question" class="overlay center-top">Loading sanctuaries...</div>
     </div>
     <div id="map"></div>
-    <a href="index.html" class="back-btn">← Back</a>
 
     <script>
 
         let allData = [];
-        let lakes = [];
-        let currentLake = "";
+        let sanctuaries = [];
+        let currentSanctuary = "";
         let totalQuestions = 0;
         let correctAnswers = 0;
         let geoLayer;
@@ -233,14 +332,15 @@
         let correctMarkerForCurrent = null;
         let map = null;
 
-        const indiaBounds = [
-            [6, 67],
-            [38, 98]
+        // Rajasthan bounding box
+        const rajBounds = [
+            [23.0, 69.5],
+            [30.5, 78.5]
         ];
 
         const MARKER_VISUALS = {
-            default: { size: 20, fill: "#0077be", stroke: "#004e7c" },
-            hover: { size: 24, fill: "#00aaff", stroke: "#004e7c" },
+            default: { size: 20, fill: "#FF6B35", stroke: "#8b2500" },
+            hover: { size: 24, fill: "#ff8c5e", stroke: "#8b2500" },
             correct: { size: 24, fill: "#1e9d46", stroke: "#0e6128" },
             wrong: { size: 24, fill: "#d33a32", stroke: "#8a1f1a" },
             target: { size: 28, fill: "#d33a32", stroke: "#8a1f1a" }
@@ -249,80 +349,75 @@
         function toFeaturesFromCSV(csvText) {
             const rows = parseCSV(csvText);
             if (!rows.length) return [];
-
             const header = rows[0].map(h => (h || '').replace(/^\uFEFF/, '').trim());
             const idx = {
-                name: header.indexOf('LAKE_NAME'),
+                name: header.indexOf('WILDLIFE_CENTURY_NAME'),
                 lat: header.indexOf('LATITUDE'),
                 lng: header.indexOf('LONGITUDE'),
                 comment: header.indexOf('COMMENT')
             };
-
             if (idx.name === -1 || idx.lat === -1 || idx.lng === -1) return [];
-
             return rows.slice(1).map(cols => {
                 const name = (cols[idx.name] || '').trim();
                 const lat = parseFloat((cols[idx.lat] || '').trim());
                 const lng = parseFloat((cols[idx.lng] || '').trim());
-                const comment = idx.comment !== -1 ? (cols[idx.comment] || '').trim() : '';
-
+                const comment = (cols[idx.comment] || '').trim();
                 if (!name || !Number.isFinite(lat) || !Number.isFinite(lng)) return null;
-
                 return {
                     type: 'Feature',
                     geometry: { type: 'Point', coordinates: [lng, lat] },
-                    properties: {
-                        LAKE_NAME: name,
-                        COMMENT: comment
-                    }
+                    properties: { SANCTUARY_NAME: name, Comment: comment }
                 };
             }).filter(Boolean);
         }
 
-        function getLakeIcon(state) {
+        // Paw-print inspired icon for wildlife sanctuary
+        function getSanctuaryIcon(state) {
             const visual = MARKER_VISUALS[state] || MARKER_VISUALS.default;
-            const size = visual.size;
+            const sz = visual.size;
+            const f = visual.fill, s = visual.stroke;
             return L.divIcon({
-                className: 'lake-icon',
-                iconSize: [size, size],
-                iconAnchor: [size / 2, size / 2],
+                className: 'sanctuary-icon',
+                iconSize: [sz, sz],
+                iconAnchor: [sz / 2, sz / 2],
                 html:
-                    '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" aria-hidden="true">' +
-                    '<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="' + visual.fill + '" stroke="' + visual.stroke + '" stroke-width="1.5" stroke-linejoin="round"></path>' +
-                    '<path d="M12 19a5 5 0 0 1-5-5c0-1.5.5-3.5 1.5-4.5S12 6.5 12 19z" fill="#ffffff" opacity="0.3"></path>' +
+                    '<svg width="' + sz + '" height="' + sz + '" viewBox="0 0 24 24" aria-hidden="true">' +
+                    // main body (large central ellipse)
+                    '<ellipse cx="12" cy="14" rx="5" ry="6" fill="' + f + '" stroke="' + s + '" stroke-width="1.5"/>' +
+                    // three toe pads
+                    '<circle cx="8"  cy="8"  r="2.2" fill="' + f + '" stroke="' + s + '" stroke-width="1"/>' +
+                    '<circle cx="12" cy="6"  r="2.2" fill="' + f + '" stroke="' + s + '" stroke-width="1"/>' +
+                    '<circle cx="16" cy="8"  r="2.2" fill="' + f + '" stroke="' + s + '" stroke-width="1"/>' +
+                    // highlight
+                    '<ellipse cx="10.5" cy="12.5" rx="2" ry="2.5" fill="#fff" opacity="0.25"/>' +
                     '</svg>'
             });
         }
 
-        function setMarkerState(marker, state) {
-            marker.setIcon(getLakeIcon(state));
-        }
-
-        function resetMarkerStyle(marker) {
-            setMarkerState(marker, 'default');
-        }
+        function setMarkerState(marker, state) { marker.setIcon(getSanctuaryIcon(state)); }
+        function resetMarkerStyle(marker) { setMarkerState(marker, 'default'); }
 
         window.addEventListener('DOMContentLoaded', function () {
-            fetch('lakes_india.csv')
+            fetch('wildlife_sanctuaries_rajasthan.csv')
                 .then(response => response.text())
                 .then(csvText => {
                     allData = toFeaturesFromCSV(csvText);
                     if (allData.length > 0) {
                         initializeQuiz();
                     } else {
-                        alert('Invalid or empty lakes_india.csv file');
+                        alert('Invalid or empty wildlife_sanctuaries_rajasthan.csv file');
                     }
                 })
                 .catch(error => {
-                    alert('Error loading lakes_india.csv: ' + error.message);
+                    alert('Error loading wildlife_sanctuaries_rajasthan.csv: ' + error.message);
                 });
         });
 
         function initializeQuiz() {
             map = L.map('map', {
-                maxBounds: indiaBounds,
+                maxBounds: rajBounds,
                 maxBoundsViscosity: 1.0
-            }).setView([20, 78], 5);
+            }).setView([27.5, 74.0], 7);
 
             map.createPane('ripplePane');
             map.getPane('ripplePane').style.zIndex = 700;
@@ -330,37 +425,44 @@
 
             L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}', {
                 attribution: '© Esri',
-                maxZoom: 9,
-                minZoom: 4,
-                bounds: indiaBounds,
-                noWrap: true
+                maxZoom: 10, minZoom: 6,
+                bounds: rajBounds, noWrap: true
             }).addTo(map);
 
-            fetch('india_states.geojson')
-                .then(response => response.json())
-                .then(statesData => {
-                    L.geoJSON(statesData, {
+            // Load Rajasthan district boundaries from india_districts.geojson
+            fetch('india_districts.geojson')
+                .then(r => r.json())
+                .then(districtData => {
+                    // Filter only Rajasthan districts
+                    const rajDistricts = {
+                        type: 'FeatureCollection',
+                        features: districtData.features.filter(
+                            f => f.properties && f.properties.st_nm === 'Rajasthan'
+                        )
+                    };
+                    L.geoJSON(rajDistricts, {
                         interactive: false,
                         style: {
-                            color: "#004e7c",
-                            weight: 1.5,
-                            opacity: 0.8,
-                            fillOpacity: 0.05,
-                            fillColor: "#0077be"
+                            color: "#8b2500",
+                            weight: 1.2,
+                            opacity: 0.75,
+                            fillColor: "#FF6B35",
+                            fillOpacity: 0.08
                         }
                     }).addTo(map);
                 });
 
-            lakes = allData.map(f => f.properties.LAKE_NAME || 'Unknown Lake');
-            maxQuestions = lakes.length;
+            sanctuaries = allData.map(f => f.properties.SANCTUARY_NAME || 'Unknown Sanctuary');
+            maxQuestions = sanctuaries.length;
             geoLayer = L.featureGroup();
 
             allData.forEach(feature => {
                 const coords = feature.geometry.coordinates;
-                const lakeName = feature.properties.LAKE_NAME || 'Unknown Lake';
+                const sanctuaryName = feature.properties.SANCTUARY_NAME || 'Unknown Sanctuary';
+                const comment = feature.properties.Comment;
 
                 const marker = L.marker([coords[1], coords[0]], {
-                    icon: getLakeIcon('default'),
+                    icon: getSanctuaryIcon('default'),
                     keyboard: false
                 });
 
@@ -376,20 +478,17 @@
                     click: function (e) {
                         attemptsCount++;
 
-                        if (lakeName === currentLake) {
+                        if (sanctuaryName === currentSanctuary) {
                             correctAnswers++;
                             playCorrectSound();
                             updateScore();
                             setMarkerState(marker, 'correct');
-                            triggerCelebration(marker.getLatLng());
+                            triggerCelebration(marker.getLatLng(), ['#ff0000', '#ff8800', '#ffff00', '#00cc00', '#00aaff', '#ff00ff', '#ffffff']);
 
-                            let details = "<b>" + lakeName + "</b>";
-                            if (feature.properties.COMMENT) details += "<br/>" + feature.properties.COMMENT;
-
+                            let details = "<b>" + sanctuaryName + "</b>";
+                            if (comment) details += "<br/>" + comment;
                             marker.bindTooltip(details, {
-                                permanent: false,
-                                direction: 'top',
-                                offset: [0, -10]
+                                permanent: false, direction: 'top', offset: [0, -10]
                             }).openTooltip();
 
                             setTimeout(() => {
@@ -406,13 +505,10 @@
                         if (requireCorrectToAdvance) {
                             setMarkerState(marker, 'wrong');
                             setTimeout(() => resetMarkerStyle(marker), 1200);
-                            marker.bindTooltip(lakeName, {
-                                permanent: false,
-                                className: 'wrong-tooltip',
-                                direction: 'top',
-                                offset: [0, -10]
+                            marker.bindTooltip("Incorrect: " + sanctuaryName, {
+                                permanent: false, className: 'wrong-tooltip', direction: 'top', offset: [0, -10]
                             }).openTooltip(e && e.latlng ? e.latlng : undefined);
-                            setTimeout(() => marker.closeTooltip(), 1200);
+                            setTimeout(() => { marker.closeTooltip(); marker.unbindTooltip(); }, 1200);
                             return;
                         }
 
@@ -423,8 +519,8 @@
                         } else {
                             let correctMarker = null;
                             geoLayer.eachLayer(function (lyr) {
-                                const nm = lyr.feature && lyr.feature.properties && lyr.feature.properties.LAKE_NAME;
-                                if (nm === currentLake) correctMarker = lyr;
+                                const nm = lyr.feature && lyr.feature.properties && lyr.feature.properties.SANCTUARY_NAME;
+                                if (nm === currentSanctuary) correctMarker = lyr;
                             });
                             if (correctMarker) {
                                 let on = true;
@@ -438,24 +534,18 @@
                                     correctMarkerForCurrent = correctMarker;
                                     setMarkerState(correctMarker, 'target');
                                     triggerRippleAt(correctMarker.getLatLng(), '#d33a32');
-                                    setQuestion(currentLake, totalQuestions, maxQuestions, true);
+                                    const q = document.getElementById('question');
+                                    setQuestion(currentSanctuary, totalQuestions, maxQuestions, true);
                                 }, 2000);
                             } else {
                                 nextQuestion();
                             }
                         }
 
-                        let tooltipContent = "Incorrect: " + lakeName;
-                        marker.bindTooltip(tooltipContent, {
-                            permanent: false,
-                            className: 'wrong-tooltip',
-                            direction: 'top',
-                            offset: [0, -10]
+                        marker.bindTooltip("Incorrect: " + sanctuaryName, {
+                            permanent: false, className: 'wrong-tooltip', direction: 'top', offset: [0, -10]
                         }).openTooltip(e && e.latlng ? e.latlng : undefined);
-                        setTimeout(() => {
-                            marker.closeTooltip();
-                            marker.unbindTooltip();
-                        }, 1200);
+                        setTimeout(() => { marker.closeTooltip(); marker.unbindTooltip(); }, 1200);
                     }
                 });
 
@@ -476,50 +566,38 @@
                 resetMarkerStyle(correctMarkerForCurrent);
                 correctMarkerForCurrent = null;
             }
+            if (maxQuestions > 0 && totalQuestions >= maxQuestions) { endQuiz(); return; }
+            if (!sanctuaries || sanctuaries.length === 0) { endQuiz(); return; }
 
-            if (maxQuestions > 0 && totalQuestions >= maxQuestions) {
-                endQuiz();
-                return;
-            }
-
-            if (!lakes || lakes.length === 0) {
-                endQuiz();
-                return;
-            }
-
-            const idx = Math.floor(Math.random() * lakes.length);
-            currentLake = lakes.splice(idx, 1)[0];
+            const idx = Math.floor(Math.random() * sanctuaries.length);
+            currentSanctuary = sanctuaries.splice(idx, 1)[0];
             attemptsLeft = 3;
             totalQuestions++;
-
-            setQuestion(currentLake, totalQuestions, maxQuestions);
+            setQuestion(currentSanctuary, totalQuestions, maxQuestions);
         }
 
         function updateScore() {
-            let percentage = attemptsCount === 0 ? 0 : Math.round((correctAnswers / attemptsCount) * 100);
-            document.getElementById("score-text").innerHTML = "Score: " + percentage + "%";
+            const pct = attemptsCount === 0 ? 0 : Math.round((correctAnswers / attemptsCount) * 100);
+            document.getElementById("score-text").innerHTML = "Score: " + pct + "%";
         }
 
         function endQuiz() {
             stopTimer();
             const percent = attemptsCount === 0 ? 0 : Math.round((correctAnswers / attemptsCount) * 100);
             document.getElementById("question").innerHTML = "Quiz finished! Final score: <b>" + percent + "%</b>";
-
-            if (geoLayer) {
-                geoLayer.eachLayer(function (layer) {
-                    layer.off();
-                });
-            }
+            if (geoLayer) geoLayer.eachLayer(l => l.off());
 
             const restart = document.createElement('button');
             restart.textContent = 'Restart Quiz';
-            restart.style.cssText = 'margin-left:15px; padding:5px 12px; border-radius:4px; border:1px solid #0077be; background:#fff; color:#0077be; cursor:pointer; font-weight:bold;';
-            restart.onclick = function () { location.reload(); };
+            restart.style.cssText = 'margin-left:15px; padding:5px 12px; border-radius:4px; border:1px solid #c2371a; background:#fff; color:#c2371a; cursor:pointer; font-weight:bold;';
+            restart.onclick = () => location.reload();
             const q = document.getElementById('question');
             if (q) q.appendChild(restart);
         }
 
     </script>
+
+    <a href="index.html" class="back-btn">← Back</a>
 </body>
 
 </html>
