@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>India National Parks Quiz</title>
+    <title>India Rivers Quiz</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -16,7 +16,7 @@
             text-align: center;
             margin: 0;
             padding: 0;
-            background: #f0f7f0;
+            background: #f0f8ff;
         }
 
         #map-overlays {
@@ -32,7 +32,7 @@
         #map {
             height: calc(100vh - 78px);
             margin-top: 8px;
-            background: #e8f5e9;
+            background: #e1f5fe;
         }
 
         .overlay {
@@ -49,7 +49,7 @@
         .top-left {
             left: 15px;
             top: 12px;
-            border-left: 4px solid #228B22;
+            border-left: 4px solid #01579b;
         }
 
         .top-right {
@@ -62,7 +62,7 @@
             top: 12px;
             transform: translateX(-50%);
             font-size: 22px;
-            color: #1a5c1a;
+            color: #01579b;
         }
 
         #question {
@@ -73,14 +73,14 @@
             font-size: 16px;
         }
 
-        .park-icon {
+        .river-icon {
             background: transparent;
             border: 0;
         }
 
-        .park-icon svg {
+        .river-icon svg {
             display: block;
-            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
         }
 
         .wrong-tooltip {
@@ -307,18 +307,18 @@
 <body>
 
     <div id="map-overlays">
-        <div class="overlay top-left">National Parks of India</div>
+        <div class="overlay top-left">Rivers of India</div>
         <div id="score" class="overlay top-right"><span id="score-text">Score: 0%</span> <span id="timer"
                 style="margin-left:12px;font-weight:400;font-size:15px;"></span></div>
-        <div id="question" class="overlay center-top">Loading parks...</div>
+        <div id="question" class="overlay center-top">Loading rivers...</div>
     </div>
     <div id="map"></div>
 
     <script>
 
-        let allData = [];
-        let parks = [];
-        let currentPark = "";
+        let allData = null;
+        let rivers = [];
+        let currentRiver = "";
         let totalQuestions = 0;
         let correctAnswers = 0;
         let geoLayer;
@@ -326,100 +326,27 @@
         let attemptsLeft = 3;
         let attemptsCount = 0;
         let requireCorrectToAdvance = false;
-        let correctMarkerForCurrent = null;
+        let correctLayerForCurrent = null;
         let map = null;
 
         const indiaBounds = [
-            [4, 67],
+            [6, 67],
             [38, 98]
         ];
 
-        const MARKER_VISUALS = {
-            default: { size: 20, fill: "#228B22", stroke: "#145214" },
-            hover: { size: 24, fill: "#32CD32", stroke: "#145214" },
-            correct: { size: 24, fill: "#1e9d46", stroke: "#0e6128" },
-            wrong: { size: 24, fill: "#d33a32", stroke: "#8a1f1a" },
-            target: { size: 28, fill: "#d33a32", stroke: "#8a1f1a" }
-        };
-
-        function toFeaturesFromCSV(csvText) {
-            const rows = parseCSV(csvText);
-            if (!rows.length) return [];
-
-            const header = rows[0].map(h => (h || '').replace(/^\uFEFF/, '').trim());
-            const idx = {
-                name: header.indexOf('NP_NAME'),
-                state: header.indexOf('STATE/UT'),
-                lat: header.indexOf('LATITUDE'),
-                lng: header.indexOf('LONGITUDE'),
-                comment: header.indexOf('COMMENT')
-            };
-
-            if (idx.name === -1 || idx.lat === -1 || idx.lng === -1) return [];
-
-            return rows.slice(1).map(cols => {
-                const name = (cols[idx.name] || '').trim();
-                const lat = parseFloat((cols[idx.lat] || '').trim());
-                const lng = parseFloat((cols[idx.lng] || '').trim());
-                const state = (cols[idx.state] || '').trim();
-                const comment = (cols[idx.comment] || '').trim();
-
-                if (!name || !Number.isFinite(lat) || !Number.isFinite(lng)) return null;
-
-                return {
-                    type: 'Feature',
-                    geometry: { type: 'Point', coordinates: [lng, lat] },
-                    properties: {
-                        NP_NAME: name,
-                        State_UT: state,
-                        Comment: comment
-                    }
-                };
-            }).filter(Boolean);
-        }
-
-        // Tree / park icon SVG
-        function getParkIcon(state) {
-            const visual = MARKER_VISUALS[state] || MARKER_VISUALS.default;
-            const size = visual.size;
-            const f = visual.fill;
-            const s = visual.stroke;
-            return L.divIcon({
-                className: 'park-icon',
-                iconSize: [size, size],
-                iconAnchor: [size / 2, size],
-                html:
-                    '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" aria-hidden="true">' +
-                    // trunk
-                    '<rect x="10.5" y="17" width="3" height="5" rx="1" fill="' + s + '"/>' +
-                    // canopy layers
-                    '<polygon points="12,2 20,12 4,12" fill="' + f + '" stroke="' + s + '" stroke-width="1" stroke-linejoin="round"/>' +
-                    '<polygon points="12,7 19,16 5,16" fill="' + f + '" stroke="' + s + '" stroke-width="1" stroke-linejoin="round"/>' +
-                    '</svg>'
-            });
-        }
-
-        function setMarkerState(marker, state) {
-            marker.setIcon(getParkIcon(state));
-        }
-
-        function resetMarkerStyle(marker) {
-            setMarkerState(marker, 'default');
-        }
-
         window.addEventListener('DOMContentLoaded', function () {
-            fetch('national_parks_india.csv')
-                .then(response => response.text())
-                .then(csvText => {
-                    allData = toFeaturesFromCSV(csvText);
-                    if (allData.length > 0) {
+            fetch('Rivers_compressed.geojson')
+                .then(response => response.json())
+                .then(data => {
+                    allData = data;
+                    if (allData && allData.features) {
                         initializeQuiz();
                     } else {
-                        alert('Invalid or empty national_parks_india.csv file');
+                        alert('Invalid GeoJSON file');
                     }
                 })
                 .catch(error => {
-                    alert('Error loading national_parks_india.csv: ' + error.message);
+                    alert('Error loading Rivers_compressed.geojson: ' + error.message);
                 });
         });
 
@@ -427,7 +354,7 @@
             map = L.map('map', {
                 maxBounds: indiaBounds,
                 maxBoundsViscosity: 1.0
-            }).setView([20, 80], 5);
+            }).setView([20, 78], 5);
 
             map.createPane('ripplePane');
             map.getPane('ripplePane').style.zIndex = 700;
@@ -447,132 +374,150 @@
                     L.geoJSON(statesData, {
                         interactive: false,
                         style: {
-                            color: "#145214",
+                            color: "#d3d3d3",
                             weight: 1.5,
-                            opacity: 0.7,
-                            fillOpacity: 0.04,
-                            fillColor: "#228B22"
+                            opacity: 0.8,
+                            fillOpacity: 0.05,
+                            fillColor: "#f5f5f5"
                         }
                     }).addTo(map);
                 });
 
-            parks = allData.map(f => f.properties.NP_NAME || 'Unknown Park');
-            maxQuestions = parks.length;
-            geoLayer = L.featureGroup();
+            rivers = allData.features.map(f => f.properties.rivname || f.properties.name || 'Unknown River');
+            maxQuestions = Math.min(rivers.length, 25);
 
-            allData.forEach(feature => {
-                const coords = feature.geometry.coordinates;
-                const parkName = feature.properties.NP_NAME || 'Unknown Park';
-                const comment = feature.properties.Comment;
+            geoLayer = L.geoJSON(allData, {
+                style: {
+                    color: "#3a86ff",
+                    weight: 2.5,
+                    opacity: 0.8
+                },
+                interactive: true,
+                onEachFeature: function (feature, layer) {
+                    const riverName = feature.properties.rivname || feature.properties.name || 'Unknown River';
+                    layer._riverName = riverName;
 
-                const marker = L.marker([coords[1], coords[0]], {
-                    icon: getParkIcon('default'),
-                    keyboard: false
-                });
+                    layer.on({
+                        mouseover: function (e) {
+                            if (layer === correctLayerForCurrent || layer._isCorrectlyAnswered) return;
+                            layer.setStyle({
+                                color: '#9c27b0',
+                                weight: 5,
+                                opacity: 1
+                            });
+                            layer.bringToFront();
+                        },
+                        mouseout: function (e) {
+                            if (layer === correctLayerForCurrent || layer._isCorrectlyAnswered) return;
+                            geoLayer.resetStyle(layer);
+                        },
+                        click: function (e) {
+                            if (layer._isCorrectlyAnswered) return;
 
-                marker.on({
-                    mouseover: function () {
-                        if (marker === correctMarkerForCurrent) return;
-                        setMarkerState(marker, 'hover');
-                    },
-                    mouseout: function () {
-                        if (marker === correctMarkerForCurrent) return;
-                        resetMarkerStyle(marker);
-                    },
-                    click: function (e) {
-                        attemptsCount++;
+                            attemptsCount++;
 
-                        if (parkName === currentPark) {
-                            correctAnswers++;
-                            playCorrectSound();
+                            if (riverName === currentRiver) {
+                                correctAnswers++;
+                                playCorrectSound();
+                                updateScore();
+
+                                layer.setStyle({
+                                    color: '#1e9d46',
+                                    weight: 5,
+                                    opacity: 1
+                                });
+                                layer._isCorrectlyAnswered = true;
+                                triggerCelebration(e.latlng, ['#0288d1', '#03a9f4', '#4fc3f7', '#00bcd4', '#26c6da', '#80deea']);
+
+                                let details = "<b>" + riverName + "</b>";
+                                if (feature.properties.ba_name) details += "<br/>Basin: " + feature.properties.ba_name;
+                                if (feature.properties.origin) details += "<br/>Origin: " + feature.properties.origin;
+
+                                layer.bindTooltip(details, {
+                                    permanent: false,
+                                    direction: 'top',
+                                    offset: [0, -10]
+                                }).openTooltip(e.latlng);
+
+                                setTimeout(() => {
+                                    layer.closeTooltip();
+                                    layer.unbindTooltip();
+                                    layer._isCorrectlyAnswered = false;
+                                    geoLayer.resetStyle(layer);
+                                    nextQuestion();
+                                }, 2500);
+                                return;
+                            }
+
+                            playIncorrectSound();
                             updateScore();
-                            setMarkerState(marker, 'correct');
-                            triggerCelebration(marker.getLatLng(), ['#ff0000', '#00cc00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff8800']);
 
-                            let details = "<b>" + parkName + "</b>";
-                            if (comment) details += "<br/>" + comment;
-                            marker.bindTooltip(details, {
-                                permanent: false,
-                                direction: 'top',
-                                offset: [0, -10]
-                            }).openTooltip();
+                            if (requireCorrectToAdvance) {
+                                layer.setStyle({ color: '#d33a32', weight: 5, opacity: 1 });
+                                setTimeout(() => { if (layer !== correctLayerForCurrent) geoLayer.resetStyle(layer); }, 1200);
+                                layer.bindTooltip(riverName, {
+                                    permanent: false,
+                                    className: 'wrong-tooltip',
+                                    direction: 'top',
+                                    offset: [0, -10]
+                                }).openTooltip(e.latlng);
+                                setTimeout(() => { layer.closeTooltip(); layer.unbindTooltip(); }, 1200);
+                                return;
+                            }
 
-                            setTimeout(() => {
-                                marker.closeTooltip();
-                                resetMarkerStyle(marker);
-                                nextQuestion();
-                            }, 2500);
-                            return;
-                        }
+                            attemptsLeft = Math.max(0, attemptsLeft - 1);
+                            if (attemptsLeft > 0) {
+                                layer.setStyle({ color: '#d33a32', weight: 5, opacity: 1 });
+                                setTimeout(() => geoLayer.resetStyle(layer), 2000);
+                            } else {
+                                let correctLayer = null;
+                                geoLayer.eachLayer(function (lyr) {
+                                    if (lyr._riverName === currentRiver) correctLayer = lyr;
+                                });
+                                if (correctLayer) {
+                                    let on = true;
+                                    const iv = setInterval(() => {
+                                        if (on) {
+                                            correctLayer.setStyle({ color: '#d33a32', weight: 6, opacity: 1 });
+                                        } else {
+                                            geoLayer.resetStyle(correctLayer);
+                                        }
+                                        on = !on;
+                                    }, 250);
+                                    setTimeout(() => {
+                                        clearInterval(iv);
+                                        requireCorrectToAdvance = true;
+                                        correctLayerForCurrent = correctLayer;
+                                        correctLayer.setStyle({ color: '#d33a32', weight: 6, opacity: 1 });
+                                        correctLayer.bringToFront();
 
-                        playIncorrectSound();
-                        updateScore();
+                                        let bounds = correctLayer.getBounds();
+                                        triggerRippleAt(bounds.getCenter(), '#d33a32');
 
-                        if (requireCorrectToAdvance) {
-                            setMarkerState(marker, 'wrong');
-                            setTimeout(() => resetMarkerStyle(marker), 1200);
-                            marker.bindTooltip("Incorrect: " + parkName, {
+                                        const q = document.getElementById('question');
+                                        setQuestion(currentRiver, totalQuestions, maxQuestions, true);
+                                    }, 2000);
+                                } else {
+                                    nextQuestion();
+                                }
+                            }
+
+                            let tooltipContent = "Incorrect: " + riverName;
+                            layer.bindTooltip(tooltipContent, {
                                 permanent: false,
                                 className: 'wrong-tooltip',
                                 direction: 'top',
                                 offset: [0, -10]
-                            }).openTooltip(e && e.latlng ? e.latlng : undefined);
+                            }).openTooltip(e.latlng);
                             setTimeout(() => {
-                                marker.closeTooltip();
-                                marker.unbindTooltip();
+                                layer.closeTooltip();
+                                layer.unbindTooltip();
                             }, 1200);
-                            return;
                         }
+                    });
+                }
+            }).addTo(map);
 
-                        attemptsLeft = Math.max(0, attemptsLeft - 1);
-                        if (attemptsLeft > 0) {
-                            setMarkerState(marker, 'wrong');
-                            setTimeout(() => resetMarkerStyle(marker), 2000);
-                        } else {
-                            let correctMarker = null;
-                            geoLayer.eachLayer(function (lyr) {
-                                const nm = lyr.feature && lyr.feature.properties && lyr.feature.properties.NP_NAME;
-                                if (nm === currentPark) correctMarker = lyr;
-                            });
-                            if (correctMarker) {
-                                let on = true;
-                                const iv = setInterval(() => {
-                                    setMarkerState(correctMarker, on ? 'wrong' : 'default');
-                                    on = !on;
-                                }, 250);
-                                setTimeout(() => {
-                                    clearInterval(iv);
-                                    requireCorrectToAdvance = true;
-                                    correctMarkerForCurrent = correctMarker;
-                                    setMarkerState(correctMarker, 'target');
-                                    triggerRippleAt(correctMarker.getLatLng(), '#d33a32');
-                                    const q = document.getElementById('question');
-                                    setQuestion(currentPark, totalQuestions, maxQuestions, true);
-                                }, 2000);
-                            } else {
-                                nextQuestion();
-                            }
-                        }
-
-                        let tooltipContent = "Incorrect: " + parkName;
-                        marker.bindTooltip(tooltipContent, {
-                            permanent: false,
-                            className: 'wrong-tooltip',
-                            direction: 'top',
-                            offset: [0, -10]
-                        }).openTooltip(e && e.latlng ? e.latlng : undefined);
-                        setTimeout(() => {
-                            marker.closeTooltip();
-                            marker.unbindTooltip();
-                        }, 1200);
-                    }
-                });
-
-                marker.feature = feature;
-                geoLayer.addLayer(marker);
-            });
-
-            geoLayer.addTo(map);
             try { map.fitBounds(geoLayer.getBounds()); } catch (err) { }
 
             startTimer();
@@ -581,9 +526,9 @@
 
         function nextQuestion() {
             requireCorrectToAdvance = false;
-            if (correctMarkerForCurrent) {
-                resetMarkerStyle(correctMarkerForCurrent);
-                correctMarkerForCurrent = null;
+            if (correctLayerForCurrent) {
+                geoLayer.resetStyle(correctLayerForCurrent);
+                correctLayerForCurrent = null;
             }
 
             if (maxQuestions > 0 && totalQuestions >= maxQuestions) {
@@ -591,17 +536,17 @@
                 return;
             }
 
-            if (!parks || parks.length === 0) {
+            if (!rivers || rivers.length === 0) {
                 endQuiz();
                 return;
             }
 
-            const idx = Math.floor(Math.random() * parks.length);
-            currentPark = parks.splice(idx, 1)[0];
+            const idx = Math.floor(Math.random() * rivers.length);
+            currentRiver = rivers.splice(idx, 1)[0];
             attemptsLeft = 3;
             totalQuestions++;
 
-            setQuestion(currentPark, totalQuestions, maxQuestions);
+            setQuestion(currentRiver, totalQuestions, maxQuestions);
         }
 
         function updateScore() {
@@ -624,7 +569,7 @@
 
             const restart = document.createElement('button');
             restart.textContent = 'Restart Quiz';
-            restart.style.cssText = 'margin-left:15px; padding: 5px 12px; border-radius: 4px; border: 1px solid #228B22; background: #fff; color: #228B22; cursor: pointer; font-weight: bold;';
+            restart.style.cssText = 'margin-left:15px; padding: 5px 12px; border-radius: 4px; border: 1px solid #01579b; background: #fff; color: #01579b; cursor: pointer; font-weight: bold;';
             restart.onclick = function () { location.reload(); };
             const q = document.getElementById('question');
             if (q) q.appendChild(restart);

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>India Lakes Quiz</title>
+    <title>Monuments of India Quiz</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -16,7 +16,7 @@
             text-align: center;
             margin: 0;
             padding: 0;
-            background: #f0f7ff;
+            background: #fdf5e6;
         }
 
         #map-overlays {
@@ -28,7 +28,7 @@
             justify-content: space-between;
             padding: 15px 20px;
             box-sizing: border-box;
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%) !important;
+            background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%) !important;
             border-bottom: 1px solid rgba(255, 255, 255, 0.4);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
@@ -45,7 +45,7 @@
             border-left: 1px solid rgba(255, 255, 255, 1) !important;
             border-radius: 12px !important;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.02) !important;
-            color: #004e7c !important;
+            color: #880e4f !important;
             font-weight: 700 !important;
             padding: 10px 18px !important;
             transition: all 0.3s ease;
@@ -59,7 +59,7 @@
 
         .top-left {
             order: 1;
-            border-left: 4px solid #0077be !important;
+            border-left: 4px solid #e91e63 !important;
         }
 
         .top-right {
@@ -70,10 +70,10 @@
         }
 
         #timer {
-            background: rgba(0, 119, 190, 0.1);
+            background: rgba(233, 30, 99, 0.1);
             padding: 4px 10px;
             border-radius: 6px;
-            color: #0077be;
+            color: #c2185b;
             font-weight: 700 !important;
         }
 
@@ -84,7 +84,7 @@
             font-size: 20px !important;
             text-align: center;
             background: rgba(255, 255, 255, 0.75) !important;
-            color: #005a91 !important;
+            color: #ad1457 !important;
         }
 
         .center-top b {
@@ -95,17 +95,17 @@
 
         #map {
             height: calc(100vh - 120px) !important;
-            background: #e3f2fd;
+            background: #fdf5e6;
         }
 
-        .lake-icon {
+        .monument-icon {
             background: transparent;
             border: 0;
         }
 
-        .lake-icon svg {
+        .monument-icon svg {
             display: block;
-            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
         }
 
         .wrong-tooltip {
@@ -190,7 +190,7 @@
             padding: 8px 16px;
             font-size: 14px;
             font-weight: 700;
-            color: #005a91;
+            color: #c2185b;
             cursor: pointer;
             text-decoration: none;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
@@ -208,12 +208,12 @@
 <body>
 
     <div id="map-overlays">
-        <div class="overlay top-left">India Lakes</div>
+        <div class="overlay top-left">Monuments of India</div>
         <div id="score" class="overlay top-right">
             <span id="score-text">Score: 0%</span>
             <span id="timer" style="margin-left:12px;font-weight:400;font-size:15px;"></span>
         </div>
-        <div id="question" class="overlay center-top">Loading lakes...</div>
+        <div id="question" class="overlay center-top">Loading monuments...</div>
     </div>
     <div id="map"></div>
     <a href="index.html" class="back-btn">← Back</a>
@@ -221,8 +221,8 @@
     <script>
 
         let allData = [];
-        let lakes = [];
-        let currentLake = "";
+        let monuments = [];
+        let currentMonument = "";
         let totalQuestions = 0;
         let correctAnswers = 0;
         let geoLayer;
@@ -239,8 +239,8 @@
         ];
 
         const MARKER_VISUALS = {
-            default: { size: 20, fill: "#0077be", stroke: "#004e7c" },
-            hover: { size: 24, fill: "#00aaff", stroke: "#004e7c" },
+            default: { size: 20, fill: "#ad1457", stroke: "#880e4f" },
+            hover: { size: 24, fill: "#d81b60", stroke: "#880e4f" },
             correct: { size: 24, fill: "#1e9d46", stroke: "#0e6128" },
             wrong: { size: 24, fill: "#d33a32", stroke: "#8a1f1a" },
             target: { size: 28, fill: "#d33a32", stroke: "#8a1f1a" }
@@ -252,7 +252,7 @@
 
             const header = rows[0].map(h => (h || '').replace(/^\uFEFF/, '').trim());
             const idx = {
-                name: header.indexOf('LAKE_NAME'),
+                name: header.indexOf('NAME'),
                 lat: header.indexOf('LATITUDE'),
                 lng: header.indexOf('LONGITUDE'),
                 comment: header.indexOf('COMMENT')
@@ -272,30 +272,29 @@
                     type: 'Feature',
                     geometry: { type: 'Point', coordinates: [lng, lat] },
                     properties: {
-                        LAKE_NAME: name,
+                        NAME: name,
                         COMMENT: comment
                     }
                 };
             }).filter(Boolean);
         }
 
-        function getLakeIcon(state) {
+        function getMonumentIcon(state) {
             const visual = MARKER_VISUALS[state] || MARKER_VISUALS.default;
             const size = visual.size;
             return L.divIcon({
-                className: 'lake-icon',
+                className: 'monument-icon',
                 iconSize: [size, size],
                 iconAnchor: [size / 2, size / 2],
                 html:
                     '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" aria-hidden="true">' +
-                    '<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="' + visual.fill + '" stroke="' + visual.stroke + '" stroke-width="1.5" stroke-linejoin="round"></path>' +
-                    '<path d="M12 19a5 5 0 0 1-5-5c0-1.5.5-3.5 1.5-4.5S12 6.5 12 19z" fill="#ffffff" opacity="0.3"></path>' +
+                    '<path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71L12 2z" fill="' + visual.fill + '" stroke="' + visual.stroke + '" stroke-width="1.5" stroke-linejoin="round"></path>' +
                     '</svg>'
             });
         }
 
         function setMarkerState(marker, state) {
-            marker.setIcon(getLakeIcon(state));
+            marker.setIcon(getMonumentIcon(state));
         }
 
         function resetMarkerStyle(marker) {
@@ -303,18 +302,18 @@
         }
 
         window.addEventListener('DOMContentLoaded', function () {
-            fetch('lakes_india.csv')
+            fetch('india_monuments.csv')
                 .then(response => response.text())
                 .then(csvText => {
                     allData = toFeaturesFromCSV(csvText);
                     if (allData.length > 0) {
                         initializeQuiz();
                     } else {
-                        alert('Invalid or empty lakes_india.csv file');
+                        alert('Invalid or empty india_monuments.csv file');
                     }
                 })
                 .catch(error => {
-                    alert('Error loading lakes_india.csv: ' + error.message);
+                    alert('Error loading india_monuments.csv: ' + error.message);
                 });
         });
 
@@ -342,25 +341,25 @@
                     L.geoJSON(statesData, {
                         interactive: false,
                         style: {
-                            color: "#004e7c",
+                            color: "#ad1457",
                             weight: 1.5,
                             opacity: 0.8,
                             fillOpacity: 0.05,
-                            fillColor: "#0077be"
+                            fillColor: "#f48fb1"
                         }
                     }).addTo(map);
                 });
 
-            lakes = allData.map(f => f.properties.LAKE_NAME || 'Unknown Lake');
-            maxQuestions = lakes.length;
+            monuments = allData.map(f => f.properties.NAME || 'Unknown Monument');
+            maxQuestions = monuments.length;
             geoLayer = L.featureGroup();
 
             allData.forEach(feature => {
                 const coords = feature.geometry.coordinates;
-                const lakeName = feature.properties.LAKE_NAME || 'Unknown Lake';
+                const monumentName = feature.properties.NAME || 'Unknown Monument';
 
                 const marker = L.marker([coords[1], coords[0]], {
-                    icon: getLakeIcon('default'),
+                    icon: getMonumentIcon('default'),
                     keyboard: false
                 });
 
@@ -376,14 +375,14 @@
                     click: function (e) {
                         attemptsCount++;
 
-                        if (lakeName === currentLake) {
+                        if (monumentName === currentMonument) {
                             correctAnswers++;
                             playCorrectSound();
                             updateScore();
                             setMarkerState(marker, 'correct');
                             triggerCelebration(marker.getLatLng());
 
-                            let details = "<b>" + lakeName + "</b>";
+                            let details = "<b>" + monumentName + "</b>";
                             if (feature.properties.COMMENT) details += "<br/>" + feature.properties.COMMENT;
 
                             marker.bindTooltip(details, {
@@ -406,7 +405,7 @@
                         if (requireCorrectToAdvance) {
                             setMarkerState(marker, 'wrong');
                             setTimeout(() => resetMarkerStyle(marker), 1200);
-                            marker.bindTooltip(lakeName, {
+                            marker.bindTooltip(monumentName, {
                                 permanent: false,
                                 className: 'wrong-tooltip',
                                 direction: 'top',
@@ -423,8 +422,8 @@
                         } else {
                             let correctMarker = null;
                             geoLayer.eachLayer(function (lyr) {
-                                const nm = lyr.feature && lyr.feature.properties && lyr.feature.properties.LAKE_NAME;
-                                if (nm === currentLake) correctMarker = lyr;
+                                const nm = lyr.feature && lyr.feature.properties && lyr.feature.properties.NAME;
+                                if (nm === currentMonument) correctMarker = lyr;
                             });
                             if (correctMarker) {
                                 let on = true;
@@ -438,14 +437,14 @@
                                     correctMarkerForCurrent = correctMarker;
                                     setMarkerState(correctMarker, 'target');
                                     triggerRippleAt(correctMarker.getLatLng(), '#d33a32');
-                                    setQuestion(currentLake, totalQuestions, maxQuestions, true);
+                                    setQuestion(currentMonument, totalQuestions, maxQuestions, true);
                                 }, 2000);
                             } else {
                                 nextQuestion();
                             }
                         }
 
-                        let tooltipContent = "Incorrect: " + lakeName;
+                        let tooltipContent = "Incorrect: " + monumentName;
                         marker.bindTooltip(tooltipContent, {
                             permanent: false,
                             className: 'wrong-tooltip',
@@ -482,17 +481,17 @@
                 return;
             }
 
-            if (!lakes || lakes.length === 0) {
+            if (!monuments || monuments.length === 0) {
                 endQuiz();
                 return;
             }
 
-            const idx = Math.floor(Math.random() * lakes.length);
-            currentLake = lakes.splice(idx, 1)[0];
+            const idx = Math.floor(Math.random() * monuments.length);
+            currentMonument = monuments.splice(idx, 1)[0];
             attemptsLeft = 3;
             totalQuestions++;
 
-            setQuestion(currentLake, totalQuestions, maxQuestions);
+            setQuestion(currentMonument, totalQuestions, maxQuestions);
         }
 
         function updateScore() {
@@ -513,7 +512,7 @@
 
             const restart = document.createElement('button');
             restart.textContent = 'Restart Quiz';
-            restart.style.cssText = 'margin-left:15px; padding:5px 12px; border-radius:4px; border:1px solid #0077be; background:#fff; color:#0077be; cursor:pointer; font-weight:bold;';
+            restart.style.cssText = 'margin-left:15px; padding:5px 12px; border-radius:4px; border:1px solid #ad1457; background:#fff; color:#ad1457; cursor:pointer; font-weight:bold;';
             restart.onclick = function () { location.reload(); };
             const q = document.getElementById('question');
             if (q) q.appendChild(restart);

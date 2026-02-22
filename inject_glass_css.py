@@ -1,47 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Topographical Map - Leaflet</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+import os
+import glob
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+# NOTE: This script replaces the previous mobile overrides block with a new block 
+# that includes BOTH the mobile responsiveness AND the new glassmorphism UI styles.
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: Arial, sans-serif;
-            width: 100vw;
-            height: 100vh;
-        }
-        
-        #map {
-            width: 100%;
-            height: 100%;
-        }
-        
-        .info {
-            padding: 6px 8px;
-            font: 14px Arial, Helvetica, sans-serif;
-            background: white;
-            background: rgba(255,255,255,0.8);
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
-            border-radius: 5px;
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            z-index: 400;
-        }
-    </style>
-
-    
-
+css_to_inject = """
     <!-- UI Enhancements: Glassmorphism & Mobile Responsiveness -->
     <style>
         /* Base overlay container */
@@ -184,86 +147,31 @@
             }
         }
     </style>
-</head>
-<body>
+"""
 
-<div id="map"></div>
+files = glob.glob('*.html')
+modified_count = 0
 
-<div class="info">
-    <strong>Topographical Map</strong><br>
-    Zoom: <span id="zoom">5</span><br>
-    Center: <span id="center">[20, 78]</span><br>
-    State Border:
-    <input type="color" id="stateColorPicker" value="#2f5f9a" title="Pick state border color">
-</div>
+for f in files:
+    with open(f, 'r') as file:
+        content = file.read()
+    
+    # Remove the old mobile overrides block if it exists
+    if "<!-- Mobile responsiveness overrides -->" in content:
+        start_idx = content.find("<!-- Mobile responsiveness overrides -->")
+        end_idx = content.find("</style>", start_idx) + 8
+        content = content[:start_idx] + content[end_idx:]
 
-<script>
-
-// Initialize map centered on India
-const indiaBounds = [
-    [6, 67],   // Southwest: lat, lng
-    [38, 98]   // Northeast: lat, lng
-];
-
-const map = L.map('map', {
-    maxBounds: indiaBounds,
-    maxBoundsViscosity: 1.0
-}).setView([20, 78], 5);
-const defaultStateColor = '#2f5f9a';
-let stateLayer = null;
-
-// Add ESRI World_Terrain_Base - label-free topographic basemap
-L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}', {
-    attribution: '© Esri',
-    maxZoom: 9,
-    minZoom: 4,
-    opacity: 1,
-    bounds: indiaBounds,
-    noWrap: true
-}).addTo(map);
-
-// Load and display India states GeoJSON
-fetch('india_states.geojson')
-    .then(response => response.json())
-    .then(data => {
-        stateLayer = L.geoJSON(data, {
-            style: {
-                color: defaultStateColor,
-                weight: 1.7,
-                opacity: 0.9,
-                fillOpacity: 0.08,
-                fillColor: '#7fb5ff'
-            },
-            interactive: false
-        }).addTo(map);
-    })
-    .catch(err => console.log('Error loading india.geojson:', err));
-
-// Live state border color control
-document.getElementById('stateColorPicker').addEventListener('input', function(e) {
-    if (!stateLayer) return;
-    stateLayer.setStyle({
-        color: e.target.value
-    });
-});
-
-// Update displayed zoom and center on map changes
-map.on('zoomend', function() {
-    document.getElementById('zoom').textContent = map.getZoom();
-});
-
-map.on('moveend', function() {
-    const center = map.getCenter();
-    document.getElementById('center').textContent = 
-        '[' + center.lat.toFixed(2) + ', ' + center.lng.toFixed(2) + ']';
-});
-
-// Log initial center
-const center = map.getCenter();
-document.getElementById('center').textContent = 
-    '[' + center.lat.toFixed(2) + ', ' + center.lng.toFixed(2) + ']';
-
-</script>
-
-</body>
-</html>
+    # Remove existing Glassmorphism block if re-running
+    if "<!-- UI Enhancements: Glassmorphism & Mobile Responsiveness -->" in content:
+        start_idx = content.find("<!-- UI Enhancements: Glassmorphism & Mobile Responsiveness -->")
+        end_idx = content.find("</style>", start_idx) + 8
+        content = content[:start_idx] + content[end_idx:]
+        
+    new_content = content.replace('</head>', css_to_inject + '</head>')
+    
+    with open(f, 'w') as file:
+        file.write(new_content)
+    modified_count += 1
+        
+print(f"Applied Liquid Glass & Responsive styles to {modified_count} HTML files.")

@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="quiz_common.js"></script>
 
     <style>
         body {
@@ -94,13 +95,219 @@
         .wrong-tooltip .leaflet-tooltip-tip {
             border-top-color: #d33a32 !important;
         }
+
+        .back-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #005a91;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+        }
+    </style>
+
+
+
+    <!-- UI Enhancements: Glassmorphism & Mobile Responsiveness -->
+    <style>
+        /* Base overlay container */
+        #map-overlays {
+            height: auto !important;
+            min-height: 70px;
+            display: flex !important;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            box-sizing: border-box;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Glassmorphism Cards */
+        .overlay {
+            position: relative !important;
+            top: auto !important;
+            left: auto !important;
+            right: auto !important;
+            transform: none !important;
+            margin: 5px;
+            box-sizing: border-box;
+
+            /* Liquid Glass Effect */
+            background: rgba(255, 255, 255, 0.65) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.8) !important;
+            border-top: 1px solid rgba(255, 255, 255, 1) !important;
+            border-left: 1px solid rgba(255, 255, 255, 1) !important;
+            border-radius: 12px !important;
+            box-shadow:
+                0 4px 6px rgba(0, 0, 0, 0.05),
+                0 10px 15px rgba(0, 0, 0, 0.02) !important;
+            color: #1a4d6e !important;
+            font-weight: 700 !important;
+            padding: 10px 18px !important;
+            transition: all 0.3s ease;
+        }
+
+        .overlay:hover {
+            background: rgba(255, 255, 255, 0.8) !important;
+            box-shadow:
+                0 6px 12px rgba(0, 0, 0, 0.08),
+                0 12px 20px rgba(0, 0, 0, 0.04) !important;
+            transform: translateY(-2px) !important;
+        }
+
+        .top-left {
+            order: 1;
+            border-left: 4px solid #0077be !important;
+            /* Keep the accent */
+        }
+
+        .top-right {
+            order: 2;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        #timer {
+            background: rgba(0, 119, 190, 0.1);
+            padding: 4px 10px;
+            border-radius: 6px;
+            color: #0077be;
+            font-weight: 700 !important;
+        }
+
+        .center-top {
+            order: 3;
+            width: 100%;
+            margin-top: 10px !important;
+            font-size: 20px !important;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.75) !important;
+            color: #005a91 !important;
+        }
+
+        .center-top b {
+            color: #d33a32;
+            font-weight: 800;
+            padding: 0 4px;
+        }
+
+        #map {
+            height: calc(100vh - 120px) !important;
+        }
+
+        /* Desktop Layout */
+        @media (min-width: 800px) {
+            #map-overlays {
+                flex-wrap: nowrap;
+                padding: 12px 25px;
+            }
+
+            .top-left {
+                order: 1;
+                flex: 1;
+                text-align: left;
+                max-width: fit-content;
+            }
+
+            .center-top {
+                order: 2;
+                flex: 2;
+                width: auto;
+                margin-top: 0 !important;
+                font-size: 24px !important;
+                padding: 12px 30px !important;
+            }
+
+            .top-right {
+                order: 3;
+                flex: 1;
+                justify-content: flex-end;
+            }
+
+            #map {
+                height: calc(100vh - 85px) !important;
+            }
+        }
+
+        /* Mobile Layout */
+        @media (max-width: 600px) {
+            .overlay {
+                padding: 8px 12px !important;
+                font-size: 14px !important;
+            }
+
+            .center-top {
+                font-size: 16px !important;
+            }
+
+            .top-left,
+            .top-right {
+                flex: 1;
+                text-align: center;
+                margin: 4px 2px;
+                justify-content: center;
+            }
+
+            #map {
+                height: calc(100vh - 145px) !important;
+            }
+        }
+
+        .back-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #005a91;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+        }
     </style>
 </head>
 
 <body>
 
     <div id="map-overlays">
-        <div class="overlay top-left">Quiz : Ramsar Wetlands of India</div>
+        <div class="overlay top-left">Ramsar Wetlands of India</div>
         <div id="score" class="overlay top-right">
             <span id="score-text">Score: 0%</span>
             <span id="timer" style="margin-left:12px;font-weight:400;font-size:15px;"></span>
@@ -123,7 +330,6 @@
         let requireCorrectToAdvance = false;
         let correctMarkerForCurrent = null;
         let map = null;
-        let audioContext = null;
 
         const indiaBounds = [
             [4, 67],
@@ -137,60 +343,6 @@
             wrong: { size: 24, fill: "#d33a32", stroke: "#8a1f1a" },
             target: { size: 28, fill: "#d33a32", stroke: "#8a1f1a" }
         };
-
-        function initAudio() {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
-        }
-
-        function playCorrectSound() {
-            initAudio();
-            const now = audioContext.currentTime;
-            const osc = audioContext.createOscillator();
-            const gain = audioContext.createGain();
-            osc.connect(gain); gain.connect(audioContext.destination);
-            osc.frequency.value = 800; osc.type = 'sine';
-            gain.gain.setValueAtTime(0.3, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-            osc.start(now); osc.stop(now + 0.3);
-        }
-
-        function playIncorrectSound() {
-            initAudio();
-            const now = audioContext.currentTime;
-            const osc = audioContext.createOscillator();
-            const gain = audioContext.createGain();
-            osc.connect(gain); gain.connect(audioContext.destination);
-            osc.frequency.value = 400; osc.type = 'sine';
-            gain.gain.setValueAtTime(0.3, now);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-            osc.start(now); osc.stop(now + 0.3);
-        }
-
-        function parseCSV(text) {
-            const rows = [];
-            let row = [], cell = '', inQuotes = false;
-            for (let i = 0; i < text.length; i++) {
-                const ch = text[i], next = text[i + 1];
-                if (ch === '"') {
-                    if (inQuotes && next === '"') { cell += '"'; i++; }
-                    else { inQuotes = !inQuotes; }
-                    continue;
-                }
-                if (!inQuotes && ch === ',') { row.push(cell); cell = ''; continue; }
-                if (!inQuotes && (ch === '\n' || ch === '\r')) {
-                    if (ch === '\r' && next === '\n') i++;
-                    row.push(cell);
-                    if (row.some(v => (v || '').trim() !== '')) rows.push(row);
-                    row = []; cell = ''; continue;
-                }
-                cell += ch;
-            }
-            row.push(cell);
-            if (row.some(v => (v || '').trim() !== '')) rows.push(row);
-            return rows;
-        }
 
         function toFeaturesFromCSV(csvText) {
             const rows = parseCSV(csvText);
@@ -241,49 +393,6 @@
         function setMarkerState(marker, state) { marker.setIcon(getWetlandIcon(state)); }
         function resetMarkerStyle(marker) { setMarkerState(marker, 'default'); }
 
-        function triggerRippleAt(latlng, color) {
-            if (!map || !latlng) return;
-            const rippleColor = color || '#1a6eb5';
-            for (let i = 0; i < 4; i++) {
-                setTimeout(() => {
-                    const ripple = L.circleMarker(latlng, {
-                        pane: 'ripplePane', radius: 10, color: rippleColor,
-                        weight: 4, opacity: 1, fillColor: '#ffffff', fillOpacity: 0.08
-                    }).addTo(map);
-                    let frame = 0; const maxFrames = 34;
-                    const iv = setInterval(() => {
-                        frame++;
-                        const t = frame / maxFrames;
-                        ripple.setRadius(10 + (t * 85));
-                        ripple.setStyle({ opacity: 1 - t, weight: Math.max(1, 4 - (t * 2.4)), fillOpacity: Math.max(0, 0.08 * (1 - t)) });
-                        if (frame >= maxFrames) { clearInterval(iv); if (map && map.hasLayer(ripple)) map.removeLayer(ripple); }
-                    }, 30);
-                }, i * 180);
-            }
-        }
-
-        function triggerCelebration(latlng) {
-            if (!map || !latlng) return;
-            const colors = ['#ff0000', '#00aaff', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff8800'];
-            for (let i = 0; i < 24; i++) {
-                const angle = Math.random() * Math.PI * 2;
-                const velocity = 2 + Math.random() * 4;
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                const particle = L.circleMarker(latlng, {
-                    pane: 'ripplePane', radius: 4, color, fillColor: color, fillOpacity: 1, stroke: false
-                }).addTo(map);
-                let frame = 0; const maxFrames = 30;
-                const anim = setInterval(() => {
-                    frame++;
-                    const t = frame / maxFrames;
-                    const cur = particle.getLatLng();
-                    particle.setLatLng([cur.lat + Math.sin(angle) * velocity * 0.0005, cur.lng + Math.cos(angle) * velocity * 0.0005]);
-                    particle.setStyle({ opacity: 1 - t, fillOpacity: 1 - t, radius: 4 * (1 - t / 2) });
-                    if (frame >= maxFrames) { clearInterval(anim); if (map && map.hasLayer(particle)) map.removeLayer(particle); }
-                }, 20);
-            }
-        }
-
         window.addEventListener('DOMContentLoaded', function () {
             fetch('ramsar_wetlands_india.csv')
                 .then(response => response.text())
@@ -323,7 +432,7 @@
                 });
 
             wetlands = allData.map(f => f.properties.WETLAND_NAME || 'Unknown Wetland');
-            maxQuestions = Math.min(wetlands.length, 25);
+            maxQuestions = wetlands.length;
             geoLayer = L.featureGroup();
 
             allData.forEach(feature => {
@@ -353,7 +462,7 @@
                             playCorrectSound();
                             updateScore();
                             setMarkerState(marker, 'correct');
-                            triggerCelebration(marker.getLatLng());
+                            triggerCelebration(marker.getLatLng(), ['#ff0000', '#00aaff', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff8800']);
 
                             let details = "<b>" + wetlandName + "</b>";
                             if (comment) details += "<br/>" + comment;
@@ -405,7 +514,7 @@
                                     setMarkerState(correctMarker, 'target');
                                     triggerRippleAt(correctMarker.getLatLng(), '#d33a32');
                                     const q = document.getElementById('question');
-                                    if (q) q.innerHTML = "Locate: <b>" + currentWetland + "</b> (Click the highlighted wetland to continue)";
+                                    setQuestion(currentWetland, totalQuestions, maxQuestions, true);
                                 }, 2000);
                             } else {
                                 nextQuestion();
@@ -443,26 +552,13 @@
             currentWetland = wetlands.splice(idx, 1)[0];
             attemptsLeft = 3;
             totalQuestions++;
-            document.getElementById("question").innerHTML = "Click on: <b>" + currentWetland + "</b>";
+            setQuestion(currentWetland, totalQuestions, maxQuestions);
         }
 
         function updateScore() {
             const pct = attemptsCount === 0 ? 0 : Math.round((correctAnswers / attemptsCount) * 100);
             document.getElementById("score-text").innerHTML = "Score: " + pct + "%";
         }
-
-        let timerInterval = null, startTime = null;
-        function startTimer() {
-            startTime = Date.now();
-            timerInterval = setInterval(updateTimer, 1000);
-        }
-        function updateTimer() {
-            if (!startTime) return;
-            const elapsed = Math.floor((Date.now() - startTime) / 1000);
-            const mins = Math.floor(elapsed / 60), secs = elapsed % 60;
-            document.getElementById("timer").textContent = "Time: " + mins + ":" + (secs < 10 ? "0" : "") + secs;
-        }
-        function stopTimer() { if (timerInterval) clearInterval(timerInterval); timerInterval = null; }
 
         function endQuiz() {
             stopTimer();
@@ -480,6 +576,7 @@
 
     </script>
 
+    <a href="index.html" class="back-btn">← Back</a>
 </body>
 
 </html>
