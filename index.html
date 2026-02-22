@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Geography Quizzes - Unified Menu</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            margin-top: 40px;
+            text-align: center;
+            color: #1a4d6e;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 5px;
+            font-weight: 800;
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            color: #005a91;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        /* Top Level Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.4);
+            padding: 8px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #005a91;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .tab-btn.active {
+            background: #fff;
+            color: #0077be;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Sub Category Tabs (For States) */
+        .sub-tabs {
+            display: none;
+            /* hidden by default */
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .sub-tabs.active {
+            display: flex;
+        }
+
+        .sub-tab-btn {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(0, 119, 190, 0.2);
+            padding: 8px 18px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1a4d6e;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .sub-tab-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .sub-tab-btn.active {
+            background: #0077be;
+            color: #fff;
+            border-color: #0077be;
+            box-shadow: 0 4px 8px rgba(0, 119, 190, 0.3);
+        }
+
+        /* Content Grid */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            width: 90%;
+            max-width: 1200px;
+            margin-bottom: 60px;
+        }
+
+        /* Glassmorphism Cards */
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-top: 1px solid rgba(255, 255, 255, 1);
+            border-left: 1px solid rgba(255, 255, 255, 1);
+            border-radius: 16px;
+            padding: 20px;
+            text-decoration: none;
+            color: #1a4d6e;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.08);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .quiz-card.placeholder {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .quiz-card h2 {
+            margin: 0 0 8px 0;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .quiz-card p {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #004e7c;
+            opacity: 0.85;
+            line-height: 1.4;
+        }
+
+        .icon-container {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: rgba(0, 119, 190, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 3px 6px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            background: #e2e8f0;
+            color: #64748b;
+        }
+
+        .badge.playable {
+            background: #1e9d46;
+            color: white;
+        }
+
+        .badge.wip {
+            background: #f59e0b;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            .tabs {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .tab-btn {
+                padding: 8px 16px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Geography Explorer</h1>
+        <p class="subtitle">Select a category to test your knowledge</p>
+    </header>
+
+    <!-- Main Categories -->
+    <div class="tabs" id="main-tabs">
+        <button class="tab-btn active" data-category="POPULAR">⭐ POPULAR</button>
+        <button class="tab-btn" data-category="WORLD">WORLD</button>
+        <button class="tab-btn" data-category="INDIA">INDIA</button>
+        <button class="tab-btn" data-category="STATES">STATES</button>
+        <button class="tab-btn" data-category="PLACES_IN_NEWS">PLACES IN NEWS</button>
+        <button class="tab-btn" data-category="CUSTOM">🛠️ CUSTOM QUIZ</button>
+    </div>
+
+    <!-- Dynamic Subcategories -->
+    <div class="sub-tabs" id="sub-tabs-container"></div>
+
+    <!-- Generated Grid -->
+    <div class="grid-container" id="quiz-grid"></div>
+
+    <script src="quiz_config.js"></script>
+    <script>
+        let currentCategory = "POPULAR";
+        let currentSubcategory = null; // null means "show all" or "show top-level"
+
+        const grid = document.getElementById('quiz-grid');
+        const mainTabs = document.querySelectorAll('.tab-btn');
+        const subTabsContainer = document.getElementById('sub-tabs-container');
+
+        // Dynamically discover subcategories for a given category
+        function getSubcategories(category) {
+            const subs = new Set();
+            Object.values(QUIZ_CONFIG).forEach(config => {
+                if (config.category === category && config.subcategory) {
+                    subs.add(config.subcategory);
+                }
+            });
+            return Array.from(subs);
+        }
+
+        // Build subcategory tab buttons
+        function buildSubTabs(category) {
+            const subs = getSubcategories(category);
+            subTabsContainer.innerHTML = '';
+
+            if (subs.length === 0) {
+                subTabsContainer.classList.remove('active');
+                currentSubcategory = null;
+                return;
+            }
+
+            // Add an "All" button first
+            const allBtn = document.createElement('button');
+            allBtn.className = 'sub-tab-btn active';
+            allBtn.textContent = 'All';
+            allBtn.setAttribute('data-subcategory', '__ALL__');
+            subTabsContainer.appendChild(allBtn);
+            currentSubcategory = '__ALL__';
+
+            subs.forEach(sub => {
+                const btn = document.createElement('button');
+                btn.className = 'sub-tab-btn';
+                btn.textContent = sub.charAt(0) + sub.slice(1).toLowerCase();
+                btn.setAttribute('data-subcategory', sub);
+                subTabsContainer.appendChild(btn);
+            });
+
+            subTabsContainer.classList.add('active');
+
+            // Attach click handlers
+            subTabsContainer.querySelectorAll('.sub-tab-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    subTabsContainer.querySelectorAll('.sub-tab-btn').forEach(t => t.classList.remove('active'));
+                    e.target.classList.add('active');
+                    currentSubcategory = e.target.getAttribute('data-subcategory');
+                    renderGrid();
+                });
+            });
+        }
+
+        function renderGrid() {
+            grid.innerHTML = '';
+
+            /* Special: CUSTOM tab shows the quiz builder card */
+            if (currentCategory === 'CUSTOM') {
+                const card = document.createElement('a');
+                card.href = 'custom_quiz.html';
+                card.className = 'quiz-card';
+                card.style.cssText = 'background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.15)); border: 1px solid rgba(99,102,241,0.3);';
+                card.innerHTML = `
+                    <div class="badge playable" style="background: #6366f1;">BUILD</div>
+                    <div class="icon-container" style="background: rgba(99,102,241,0.15);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                    </div>
+                    <h2>🛠️ Build Custom Quiz</h2>
+                    <p>Pick your topics, set the number of questions, and create a personalised geography quiz.</p>
+                `;
+                grid.appendChild(card);
+                return;
+            }
+
+            Object.keys(QUIZ_CONFIG).forEach(id => {
+                const config = QUIZ_CONFIG[id];
+
+                if (config.category !== currentCategory) return;
+
+                // Subcategory filtering
+                if (currentSubcategory && currentSubcategory !== '__ALL__') {
+                    if (config.subcategory !== currentSubcategory) return;
+                }
+
+                const card = document.createElement(config.is_placeholder ? 'div' : 'a');
+
+                if (!config.is_placeholder) {
+                    card.href = config.external_url ? config.external_url : `quiz.html?id=${id}`;
+                }
+
+                card.className = `quiz-card ${config.is_placeholder ? 'placeholder' : ''}`;
+
+                const badgeText = config.is_placeholder ? "Coming Soon" : "Play";
+                const badgeClass = config.is_placeholder ? "wip" : "playable";
+
+                let iconSvg = "";
+                if (config.icon_svg && config.visuals && config.visuals.default) {
+                    iconSvg = config.icon_svg
+                        .replace(/\{SIZE\}/g, 24)
+                        .replace(/\{FILL\}/g, config.visuals.default.fill || "#0077be")
+                        .replace(/\{STROKE\}/g, config.visuals.default.stroke || "#004e7c");
+                } else {
+                    iconSvg = SVG_ICONS.drop.replace(/\{SIZE\}/g, 24).replace(/\{FILL\}/g, "#0077be").replace(/\{STROKE\}/g, "#004e7c");
+                }
+
+                card.innerHTML = `
+                    <div class="badge ${badgeClass}">${badgeText}</div>
+                    <div class="icon-container">${iconSvg}</div>
+                    <h2>${config.title}</h2>
+                    <p>${config.desc || ''}</p>
+                `;
+                grid.appendChild(card);
+            });
+
+            if (grid.innerHTML === '') {
+                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #005a91;">No quizzes available in this category yet. Check back soon!</p>`;
+            }
+        }
+
+        // Main Tab Click
+        mainTabs.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                mainTabs.forEach(t => t.classList.remove('active'));
+                e.target.classList.add('active');
+                currentCategory = e.target.getAttribute('data-category');
+                buildSubTabs(currentCategory);
+                renderGrid();
+            });
+        });
+
+        // Initial Load
+        buildSubTabs(currentCategory);
+        renderGrid();
+    </script>
+</body>
+
+</html>
