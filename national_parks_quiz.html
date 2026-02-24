@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>India National Parks Quiz</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="quiz_common.js"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background: #f0f7f0;
+        }
+
+        #map-overlays {
+            position: relative;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #map {
+            height: calc(100vh - 78px);
+            margin-top: 8px;
+            background: #e8f5e9;
+        }
+
+        .overlay {
+            position: absolute;
+            z-index: 400;
+            padding: 8px 14px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            font-weight: 600;
+            color: #333;
+        }
+
+        .top-left {
+            left: 15px;
+            top: 12px;
+            border-left: 4px solid #228B22;
+        }
+
+        .top-right {
+            right: 15px;
+            top: 12px;
+        }
+
+        .center-top {
+            left: 50%;
+            top: 12px;
+            transform: translateX(-50%);
+            font-size: 22px;
+            color: #1a5c1a;
+        }
+
+        #question {
+            font-size: 20px;
+        }
+
+        #score {
+            font-size: 16px;
+        }
+
+        .park-icon {
+            background: transparent;
+            border: 0;
+        }
+
+        .park-icon svg {
+            display: block;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+        }
+
+        .wrong-tooltip {
+            background-color: #d33a32 !important;
+            border: none !important;
+            color: white !important;
+            font-weight: bold;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .wrong-tooltip .leaflet-tooltip-tip {
+            border-top-color: #d33a32 !important;
+        }
+
+        .back-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #005a91;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+        }
+    </style>
+
+
+
+    <!-- UI Enhancements: Glassmorphism & Mobile Responsiveness -->
+    <style>
+        /* Base overlay container */
+        #map-overlays {
+            height: auto !important;
+            min-height: 70px;
+            display: flex !important;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            box-sizing: border-box;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Glassmorphism Cards */
+        .overlay {
+            position: relative !important;
+            top: auto !important;
+            left: auto !important;
+            right: auto !important;
+            transform: none !important;
+            margin: 5px;
+            box-sizing: border-box;
+
+            /* Liquid Glass Effect */
+            background: rgba(255, 255, 255, 0.65) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.8) !important;
+            border-top: 1px solid rgba(255, 255, 255, 1) !important;
+            border-left: 1px solid rgba(255, 255, 255, 1) !important;
+            border-radius: 12px !important;
+            box-shadow:
+                0 4px 6px rgba(0, 0, 0, 0.05),
+                0 10px 15px rgba(0, 0, 0, 0.02) !important;
+            color: #1a4d6e !important;
+            font-weight: 700 !important;
+            padding: 10px 18px !important;
+            transition: all 0.3s ease;
+        }
+
+        .overlay:hover {
+            background: rgba(255, 255, 255, 0.8) !important;
+            box-shadow:
+                0 6px 12px rgba(0, 0, 0, 0.08),
+                0 12px 20px rgba(0, 0, 0, 0.04) !important;
+            transform: translateY(-2px) !important;
+        }
+
+        .top-left {
+            order: 1;
+            border-left: 4px solid #0077be !important;
+            /* Keep the accent */
+        }
+
+        .top-right {
+            order: 2;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        #timer {
+            background: rgba(0, 119, 190, 0.1);
+            padding: 4px 10px;
+            border-radius: 6px;
+            color: #0077be;
+            font-weight: 700 !important;
+        }
+
+        .center-top {
+            order: 3;
+            width: 100%;
+            margin-top: 10px !important;
+            font-size: 20px !important;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.75) !important;
+            color: #005a91 !important;
+        }
+
+        .center-top b {
+            color: #d33a32;
+            font-weight: 800;
+            padding: 0 4px;
+        }
+
+        #map {
+            height: calc(100vh - 120px) !important;
+        }
+
+        /* Desktop Layout */
+        @media (min-width: 800px) {
+            #map-overlays {
+                flex-wrap: nowrap;
+                padding: 12px 25px;
+            }
+
+            .top-left {
+                order: 1;
+                flex: 1;
+                text-align: left;
+                max-width: fit-content;
+            }
+
+            .center-top {
+                order: 2;
+                flex: 2;
+                width: auto;
+                margin-top: 0 !important;
+                font-size: 24px !important;
+                padding: 12px 30px !important;
+            }
+
+            .top-right {
+                order: 3;
+                flex: 1;
+                justify-content: flex-end;
+            }
+
+            #map {
+                height: calc(100vh - 85px) !important;
+            }
+        }
+
+        /* Mobile Layout */
+        @media (max-width: 600px) {
+            .overlay {
+                padding: 8px 12px !important;
+                font-size: 14px !important;
+            }
+
+            .center-top {
+                font-size: 16px !important;
+            }
+
+            .top-left,
+            .top-right {
+                flex: 1;
+                text-align: center;
+                margin: 4px 2px;
+                justify-content: center;
+            }
+
+            #map {
+                height: calc(100vh - 145px) !important;
+            }
+        }
+
+        .back-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #005a91;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="map-overlays">
+        <div class="overlay top-left">National Parks of India</div>
+        <div id="score" class="overlay top-right"><span id="score-text">Score: 0%</span> <span id="timer"
+                style="margin-left:12px;font-weight:400;font-size:15px;"></span></div>
+        <div id="question" class="overlay center-top">Loading parks...</div>
+    </div>
+    <div id="map"></div>
+
+    <script>
+
+        let allData = [];
+        let parks = [];
+        let currentPark = "";
+        let totalQuestions = 0;
+        let correctAnswers = 0;
+        let geoLayer;
+        let maxQuestions = 0;
+        let attemptsLeft = 3;
+        let attemptsCount = 0;
+        let requireCorrectToAdvance = false;
+        let correctMarkerForCurrent = null;
+        let map = null;
+
+        const indiaBounds = [
+            [4, 67],
+            [38, 98]
+        ];
+
+        const MARKER_VISUALS = {
+            default: { size: 20, fill: "#228B22", stroke: "#145214" },
+            hover: { size: 24, fill: "#32CD32", stroke: "#145214" },
+            correct: { size: 24, fill: "#1e9d46", stroke: "#0e6128" },
+            wrong: { size: 24, fill: "#d33a32", stroke: "#8a1f1a" },
+            target: { size: 28, fill: "#d33a32", stroke: "#8a1f1a" }
+        };
+
+        function toFeaturesFromCSV(csvText) {
+            const rows = parseCSV(csvText);
+            if (!rows.length) return [];
+
+            const header = rows[0].map(h => (h || '').replace(/^\uFEFF/, '').trim());
+            const idx = {
+                name: header.indexOf('NP_NAME'),
+                state: header.indexOf('STATE/UT'),
+                lat: header.indexOf('LATITUDE'),
+                lng: header.indexOf('LONGITUDE'),
+                comment: header.indexOf('COMMENT')
+            };
+
+            if (idx.name === -1 || idx.lat === -1 || idx.lng === -1) return [];
+
+            return rows.slice(1).map(cols => {
+                const name = (cols[idx.name] || '').trim();
+                const lat = parseFloat((cols[idx.lat] || '').trim());
+                const lng = parseFloat((cols[idx.lng] || '').trim());
+                const state = (cols[idx.state] || '').trim();
+                const comment = (cols[idx.comment] || '').trim();
+
+                if (!name || !Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+
+                return {
+                    type: 'Feature',
+                    geometry: { type: 'Point', coordinates: [lng, lat] },
+                    properties: {
+                        NP_NAME: name,
+                        State_UT: state,
+                        Comment: comment
+                    }
+                };
+            }).filter(Boolean);
+        }
+
+        // Tree / park icon SVG
+        function getParkIcon(state) {
+            const visual = MARKER_VISUALS[state] || MARKER_VISUALS.default;
+            const size = visual.size;
+            const f = visual.fill;
+            const s = visual.stroke;
+            return L.divIcon({
+                className: 'park-icon',
+                iconSize: [size, size],
+                iconAnchor: [size / 2, size],
+                html:
+                    '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" aria-hidden="true">' +
+                    // trunk
+                    '<rect x="10.5" y="17" width="3" height="5" rx="1" fill="' + s + '"/>' +
+                    // canopy layers
+                    '<polygon points="12,2 20,12 4,12" fill="' + f + '" stroke="' + s + '" stroke-width="1" stroke-linejoin="round"/>' +
+                    '<polygon points="12,7 19,16 5,16" fill="' + f + '" stroke="' + s + '" stroke-width="1" stroke-linejoin="round"/>' +
+                    '</svg>'
+            });
+        }
+
+        function setMarkerState(marker, state) {
+            marker.setIcon(getParkIcon(state));
+        }
+
+        function resetMarkerStyle(marker) {
+            setMarkerState(marker, 'default');
+        }
+
+        window.addEventListener('DOMContentLoaded', function () {
+            fetch('national_parks_india.csv')
+                .then(response => response.text())
+                .then(csvText => {
+                    allData = toFeaturesFromCSV(csvText);
+                    if (allData.length > 0) {
+                        initializeQuiz();
+                    } else {
+                        alert('Invalid or empty national_parks_india.csv file');
+                    }
+                })
+                .catch(error => {
+                    alert('Error loading national_parks_india.csv: ' + error.message);
+                });
+        });
+
+        function initializeQuiz() {
+            map = L.map('map', {
+                maxBounds: indiaBounds,
+                maxBoundsViscosity: 1.0
+            }).setView([20, 80], 5);
+
+            map.createPane('ripplePane');
+            map.getPane('ripplePane').style.zIndex = 700;
+            map.getPane('ripplePane').style.pointerEvents = 'none';
+
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '© Esri',
+                maxZoom: 9,
+                minZoom: 4,
+                bounds: indiaBounds,
+                noWrap: true
+            }).addTo(map);
+
+            fetch('india_states.geojson')
+                .then(response => response.json())
+                .then(statesData => {
+                    L.geoJSON(statesData, {
+                        interactive: false,
+                        style: {
+                            color: "#145214",
+                            weight: 1.5,
+                            opacity: 0.7,
+                            fillOpacity: 0.04,
+                            fillColor: "#228B22"
+                        }
+                    }).addTo(map);
+                });
+
+            parks = allData.map(f => f.properties.NP_NAME || 'Unknown Park');
+            maxQuestions = parks.length;
+            geoLayer = L.featureGroup();
+
+            allData.forEach(feature => {
+                const coords = feature.geometry.coordinates;
+                const parkName = feature.properties.NP_NAME || 'Unknown Park';
+                const comment = feature.properties.Comment;
+
+                const marker = L.marker([coords[1], coords[0]], {
+                    icon: getParkIcon('default'),
+                    keyboard: false
+                });
+
+                marker.on({
+                    mouseover: function () {
+                        if (marker === correctMarkerForCurrent) return;
+                        setMarkerState(marker, 'hover');
+                    },
+                    mouseout: function () {
+                        if (marker === correctMarkerForCurrent) return;
+                        resetMarkerStyle(marker);
+                    },
+                    click: function (e) {
+                        attemptsCount++;
+
+                        if (parkName === currentPark) {
+                            correctAnswers++;
+                            playCorrectSound();
+                            updateScore();
+                            setMarkerState(marker, 'correct');
+                            triggerCelebration(marker.getLatLng(), ['#ff0000', '#00cc00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff8800']);
+
+                            let details = "<b>" + parkName + "</b>";
+                            if (comment) details += "<br/>" + comment;
+                            marker.bindTooltip(details, {
+                                permanent: false,
+                                direction: 'top',
+                                offset: [0, -10]
+                            }).openTooltip();
+
+                            setTimeout(() => {
+                                marker.closeTooltip();
+                                resetMarkerStyle(marker);
+                                nextQuestion();
+                            }, 2500);
+                            return;
+                        }
+
+                        playIncorrectSound();
+                        updateScore();
+
+                        if (requireCorrectToAdvance) {
+                            setMarkerState(marker, 'wrong');
+                            setTimeout(() => resetMarkerStyle(marker), 1200);
+                            marker.bindTooltip("Incorrect: " + parkName, {
+                                permanent: false,
+                                className: 'wrong-tooltip',
+                                direction: 'top',
+                                offset: [0, -10]
+                            }).openTooltip(e && e.latlng ? e.latlng : undefined);
+                            setTimeout(() => {
+                                marker.closeTooltip();
+                                marker.unbindTooltip();
+                            }, 1200);
+                            return;
+                        }
+
+                        attemptsLeft = Math.max(0, attemptsLeft - 1);
+                        if (attemptsLeft > 0) {
+                            setMarkerState(marker, 'wrong');
+                            setTimeout(() => resetMarkerStyle(marker), 2000);
+                        } else {
+                            let correctMarker = null;
+                            geoLayer.eachLayer(function (lyr) {
+                                const nm = lyr.feature && lyr.feature.properties && lyr.feature.properties.NP_NAME;
+                                if (nm === currentPark) correctMarker = lyr;
+                            });
+                            if (correctMarker) {
+                                let on = true;
+                                const iv = setInterval(() => {
+                                    setMarkerState(correctMarker, on ? 'wrong' : 'default');
+                                    on = !on;
+                                }, 250);
+                                setTimeout(() => {
+                                    clearInterval(iv);
+                                    requireCorrectToAdvance = true;
+                                    correctMarkerForCurrent = correctMarker;
+                                    setMarkerState(correctMarker, 'target');
+                                    triggerRippleAt(correctMarker.getLatLng(), '#d33a32');
+                                    const q = document.getElementById('question');
+                                    setQuestion(currentPark, totalQuestions, maxQuestions, true);
+                                }, 2000);
+                            } else {
+                                nextQuestion();
+                            }
+                        }
+
+                        let tooltipContent = "Incorrect: " + parkName;
+                        marker.bindTooltip(tooltipContent, {
+                            permanent: false,
+                            className: 'wrong-tooltip',
+                            direction: 'top',
+                            offset: [0, -10]
+                        }).openTooltip(e && e.latlng ? e.latlng : undefined);
+                        setTimeout(() => {
+                            marker.closeTooltip();
+                            marker.unbindTooltip();
+                        }, 1200);
+                    }
+                });
+
+                marker.feature = feature;
+                geoLayer.addLayer(marker);
+            });
+
+            geoLayer.addTo(map);
+            try { map.fitBounds(geoLayer.getBounds()); } catch (err) { }
+
+            startTimer();
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            requireCorrectToAdvance = false;
+            if (correctMarkerForCurrent) {
+                resetMarkerStyle(correctMarkerForCurrent);
+                correctMarkerForCurrent = null;
+            }
+
+            if (maxQuestions > 0 && totalQuestions >= maxQuestions) {
+                endQuiz();
+                return;
+            }
+
+            if (!parks || parks.length === 0) {
+                endQuiz();
+                return;
+            }
+
+            const idx = Math.floor(Math.random() * parks.length);
+            currentPark = parks.splice(idx, 1)[0];
+            attemptsLeft = 3;
+            totalQuestions++;
+
+            setQuestion(currentPark, totalQuestions, maxQuestions);
+        }
+
+        function updateScore() {
+            let percentage = attemptsCount === 0 ? 0 : Math.round((correctAnswers / attemptsCount) * 100);
+            document.getElementById("score-text").innerHTML =
+                "Score: " + percentage + "%";
+        }
+
+        function endQuiz() {
+            stopTimer();
+            const percent = attemptsCount === 0 ? 0 : Math.round((correctAnswers / attemptsCount) * 100);
+            document.getElementById("question").innerHTML =
+                "Quiz finished! Final score: <b>" + percent + "%</b>";
+
+            if (geoLayer) {
+                geoLayer.eachLayer(function (layer) {
+                    layer.off();
+                });
+            }
+
+            const restart = document.createElement('button');
+            restart.textContent = 'Restart Quiz';
+            restart.style.cssText = 'margin-left:15px; padding: 5px 12px; border-radius: 4px; border: 1px solid #228B22; background: #fff; color: #228B22; cursor: pointer; font-weight: bold;';
+            restart.onclick = function () { location.reload(); };
+            const q = document.getElementById('question');
+            if (q) q.appendChild(restart);
+        }
+
+    </script>
+
+    <a href="index.html" class="back-btn">← Back</a>
+</body>
+
+</html>

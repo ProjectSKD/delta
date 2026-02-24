@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rivers Map</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    
+    <style>
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+        .control-panel {
+            position: absolute;
+            top: 10px;
+            left: 50px;
+            background: white;
+            padding: 15px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border-radius: 5px;
+            z-index: 400;
+            font-size: 14px;
+        }
+        .control-panel input[type="file"] {
+            margin: 5px 0;
+        }
+        .control-panel button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        .control-panel button:hover {
+            background: #0052a3;
+        }
+        #info {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #333;
+        }
+    </style>
+
+    
+
+    <!-- UI Enhancements: Glassmorphism & Mobile Responsiveness -->
+    <style>
+        /* Base overlay container */
+        #map-overlays {
+            height: auto !important;
+            min-height: 70px;
+            display: flex !important;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            box-sizing: border-box;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Glassmorphism Cards */
+        .overlay {
+            position: relative !important;
+            top: auto !important;
+            left: auto !important;
+            right: auto !important;
+            transform: none !important;
+            margin: 5px;
+            box-sizing: border-box;
+            
+            /* Liquid Glass Effect */
+            background: rgba(255, 255, 255, 0.65) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.8) !important;
+            border-top: 1px solid rgba(255, 255, 255, 1) !important;
+            border-left: 1px solid rgba(255, 255, 255, 1) !important;
+            border-radius: 12px !important;
+            box-shadow: 
+                0 4px 6px rgba(0, 0, 0, 0.05),
+                0 10px 15px rgba(0, 0, 0, 0.02) !important;
+            color: #1a4d6e !important;
+            font-weight: 700 !important;
+            padding: 10px 18px !important;
+            transition: all 0.3s ease;
+        }
+
+        .overlay:hover {
+            background: rgba(255, 255, 255, 0.8) !important;
+            box-shadow: 
+                0 6px 12px rgba(0, 0, 0, 0.08),
+                0 12px 20px rgba(0, 0, 0, 0.04) !important;
+            transform: translateY(-2px) !important;
+        }
+
+        .top-left {
+            order: 1;
+            border-left: 4px solid #0077be !important; /* Keep the accent */
+        }
+
+        .top-right {
+            order: 2;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        #timer {
+            background: rgba(0, 119, 190, 0.1);
+            padding: 4px 10px;
+            border-radius: 6px;
+            color: #0077be;
+            font-weight: 700 !important;
+        }
+
+        .center-top {
+            order: 3;
+            width: 100%;
+            margin-top: 10px !important;
+            font-size: 20px !important;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.75) !important;
+            color: #005a91 !important;
+        }
+        
+        .center-top b {
+            color: #d33a32;
+            font-weight: 800;
+            padding: 0 4px;
+        }
+
+        #map {
+            height: calc(100vh - 120px) !important;
+        }
+
+        /* Desktop Layout */
+        @media (min-width: 800px) {
+            #map-overlays {
+                flex-wrap: nowrap;
+                padding: 12px 25px;
+            }
+            .top-left {
+                order: 1;
+                flex: 1;
+                text-align: left;
+                max-width: fit-content;
+            }
+            .center-top {
+                order: 2;
+                flex: 2;
+                width: auto;
+                margin-top: 0 !important;
+                font-size: 24px !important;
+                padding: 12px 30px !important;
+            }
+            .top-right {
+                order: 3;
+                flex: 1;
+                justify-content: flex-end;
+            }
+            #map {
+                height: calc(100vh - 85px) !important;
+            }
+        }
+
+        /* Mobile Layout */
+        @media (max-width: 600px) {
+            .overlay {
+                padding: 8px 12px !important;
+                font-size: 14px !important;
+            }
+            .center-top {
+                font-size: 16px !important;
+            }
+            .top-left, .top-right {
+                flex: 1;
+                text-align: center;
+                margin: 4px 2px;
+                justify-content: center;
+            }
+            #map {
+                height: calc(100vh - 145px) !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div class="control-panel">
+        <h4>Upload Rivers GeoJSON</h4>
+        <input type="file" id="fileInput" accept=".geojson,.json" />
+        <button onclick="loadFromFile()">Load Map</button>
+        <div id="info">Select a GeoJSON file</div>
+    </div>
+
+    <script>
+        let map;
+        let geojsonLayer;
+        
+        // Initialize map
+        function initMap() {
+            map = L.map('map').setView([20, 78], 5);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap',
+                maxZoom: 19
+            }).addTo(map);
+        }
+        
+        // Load GeoJSON from file input
+        function loadFromFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                document.getElementById('info').textContent = '❌ No file selected';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const geojson = JSON.parse(e.target.result);
+                    displayRivers(geojson);
+                } catch (error) {
+                    document.getElementById('info').textContent = '❌ Invalid JSON: ' + error.message;
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        // Display rivers on map
+        function displayRivers(geojson) {
+            if (!geojson.features || geojson.features.length === 0) {
+                document.getElementById('info').textContent = '❌ No features found';
+                return;
+            }
+            
+            // Remove previous layer
+            if (geojsonLayer) map.removeLayer(geojsonLayer);
+            
+            // Add new layer
+            geojsonLayer = L.geoJSON(geojson, {
+                style: {
+                    color: '#0066cc',
+                    weight: 2,
+                    opacity: 0.8
+                },
+                onEachFeature: function(feature, layer) {
+                    const props = feature.properties || {};
+                    let popup = '';
+                    
+                    if (props.rivname) popup += `<b>${props.rivname}</b><br>`;
+                    if (props.origin) popup += `Origin: ${props.origin}<br>`;
+                    if (props.ba_name) popup += `Basin: ${props.ba_name}<br>`;
+                    if (props.sub_basin) popup += `Sub-basin: ${props.sub_basin}`;
+                    
+                    if (popup) layer.bindPopup(popup);
+                }
+            }).addTo(map);
+            
+            // Fit map to bounds
+            const bounds = geojsonLayer.getBounds();
+            if (bounds.isValid()) {
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
+            
+            document.getElementById('info').textContent = `✓ Loaded ${geojson.features.length} rivers`;
+        }
+        
+        // Initialize on load
+        window.addEventListener('load', initMap);
+    </script>
+</body>
+</html>
