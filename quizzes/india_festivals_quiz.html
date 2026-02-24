@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>India Famous Festivals Quiz</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="../css/quiz-shared.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="../js/quiz_common.js">
+    </script>
+    <script src="../js/quiz_status.js"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background: #fff3e0;
+        }
+
+        #map-overlays {
+            height: auto !important;
+            min-height: 70px;
+            display: flex !important;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            box-sizing: border-box;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .overlay {
+            position: relative !important;
+            margin: 5px;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.7) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.8) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+            color: #e65100 !important;
+            font-weight: 700 !important;
+            padding: 10px 18px !important;
+            transition: all 0.3s ease;
+        }
+
+        .overlay:hover {
+            background: rgba(255, 255, 255, 0.9) !important;
+            transform: translateY(-2px) !important;
+        }
+
+        .top-left {
+            order: 1;
+            border-left: 4px solid #e65100 !important;
+        }
+
+        .top-right {
+            order: 2;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        #timer {
+            background: rgba(230, 81, 0, 0.1);
+            padding: 4px 10px;
+            border-radius: 6px;
+            color: #e65100;
+            font-weight: 700 !important;
+        }
+
+        .center-top {
+            order: 3;
+            width: 100%;
+            margin-top: 10px !important;
+            font-size: 20px !important;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.85) !important;
+        }
+
+        .center-top b {
+            color: #d33a32;
+            font-weight: 800;
+            padding: 0 4px;
+        }
+
+        #map {
+            height: calc(100vh - 120px) !important;
+            background: #fff3e0;
+        }
+
+        .festival-icon {
+            background: transparent;
+            border: 0;
+        }
+
+        .festival-icon svg {
+            display: block;
+            filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
+        }
+
+        /* City label below the marker */
+        .city-label {
+            background: rgba(230, 81, 0, 0.85) !important;
+            border: none !important;
+            color: white !important;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .city-label::before {
+            border: none !important;
+        }
+
+        .wrong-tooltip {
+            background-color: #d33a32 !important;
+            border: none !important;
+            color: white !important;
+            font-weight: bold;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .wrong-tooltip .leaflet-tooltip-tip {
+            border-top-color: #d33a32 !important;
+        }
+
+        @media (min-width: 800px) {
+            #map-overlays {
+                flex-wrap: nowrap;
+                padding: 12px 25px;
+            }
+
+            .top-left {
+                order: 1;
+                flex: 1;
+                text-align: left;
+                max-width: fit-content;
+            }
+
+            .center-top {
+                order: 2;
+                flex: 2;
+                width: auto;
+                margin-top: 0 !important;
+                font-size: 24px !important;
+                padding: 12px 30px !important;
+            }
+
+            .top-right {
+                order: 3;
+                flex: 1;
+                justify-content: flex-end;
+            }
+
+            #map {
+                height: calc(100vh - 85px) !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .overlay {
+                padding: 8px 12px !important;
+                font-size: 14px !important;
+            }
+
+            .center-top {
+                font-size: 16px !important;
+            }
+
+            #map {
+                height: calc(100vh - 145px) !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="map-overlays">
+        <div class="overlay top-left quiz-title-card">
+            <a href="../index.html" class="back-btn title-back-btn" aria-label="Back to home" title="Back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7" /></svg></a>
+            <span class="title-text">Famous Festivals</span>
+        </div>
+        <div id="score" class="overlay top-right">
+            <span id="score-text">0%</span>
+            <span id="timer" style="margin-left:12px;font-weight:400;font-size:15px;">0:00</span>
+        </div>
+        <div id="question" class="overlay center-top">Loading festivals...</div>
+    </div>
+    <div id="map"></div>
+    
+
+    <script>
+        // Festival / celebration icon (star-burst)
+        const FEST_ICON = "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z";
+
+        let allData = [];
+        let festivals = [];
+        let currentFestival = "";
+        let totalQuestions = 0;
+        let correctAnswers = 0;
+        let geoLayer;
+        let maxQuestions = 0;
+        let attemptsLeft = 3;
+        let attemptsCount = 0;
+        let requireCorrectToAdvance = false;
+        let correctMarkerForCurrent = null;
+        let map = null;
+
+        const indiaBounds = [[6, 67], [38, 98]];
+
+        function getIcon(state) {
+            const colors = {
+                default: { fill: '#e65100', stroke: '#bf360c' },
+                hover: { fill: '#ff9800', stroke: '#e65100' },
+                correct: { fill: '#1e9d46', stroke: '#0e6128' },
+                wrong: { fill: '#d33a32', stroke: '#8a1f1a' },
+                target: { fill: '#d33a32', stroke: '#000' }
+            };
+            const visual = colors[state] || colors.default;
+            const size = (state === 'target') ? 28 : (state === 'hover' ? 24 : 20);
+
+            return L.divIcon({
+                className: 'festival-icon',
+                iconSize: [size, size],
+                iconAnchor: [size / 2, size / 2],
+                html: `<svg width="${size}" height="${size}" viewBox="0 0 24 24"><path d="${FEST_ICON}" fill="${visual.fill}" stroke="${visual.stroke}" stroke-width="1.5" stroke-linejoin="round"></path></svg>`
+            });
+        }
+
+        function setMarkerState(marker, state) { marker.setIcon(getIcon(state)); }
+
+        window.addEventListener('DOMContentLoaded', function () {
+            fetch('../data/csv/india_festivals.csv')
+                .then(r => r.text())
+                .then(csvText => {
+                    const rows = parseCSV(csvText);
+                    const header = rows[0].map(h => (h || '').trim());
+                    const idx = {
+                        name: header.indexOf('FESTIVAL'),
+                        city: header.indexOf('CITY'),
+                        lat: header.indexOf('LATITUDE'),
+                        lng: header.indexOf('LONGITUDE'),
+                        comment: header.indexOf('COMMENT')
+                    };
+
+                    allData = rows.slice(1).map(cols => {
+                        const name = (cols[idx.name] || '').trim();
+                        const city = idx.city !== -1 ? (cols[idx.city] || '').trim() : '';
+                        const lat = parseFloat(cols[idx.lat]);
+                        const lng = parseFloat(cols[idx.lng]);
+                        const comment = idx.comment !== -1 ? (cols[idx.comment] || '').trim() : '';
+                        if (!name || isNaN(lat) || isNaN(lng)) return null;
+                        return { name, city, lat, lng, comment };
+                    }).filter(Boolean);
+
+                    if (allData.length > 0) initializeQuiz();
+                    else document.getElementById("question").innerHTML = "No festival data found. Please add data to india_festivals.csv.";
+                });
+        });
+
+        function initializeQuiz() {
+            map = L.map('map', { maxBounds: indiaBounds, maxBoundsViscosity: 1.0 }).setView([21, 78], 5);fetch('../data/geojson/india_states.geojson').then(r => r.json()).then(data => {
+                L.geoJSON(data, { interactive: false, style: { color: '#e65100', weight: 1.5, opacity: 0.4, fillOpacity: 0.05, fillColor: '#ffe0b2' } }).addTo(map);
+            });
+
+            festivals = allData.map(d => d.name);
+            maxQuestions = festivals.length;
+            geoLayer = L.featureGroup();
+
+            allData.forEach(d => {
+                const marker = L.marker([d.lat, d.lng], { icon: getIcon('default'), keyboard: false });
+                marker.siteData = d;
+
+                // Always show city name as a small label below the marker
+                if (d.city) {
+                    marker.bindTooltip(d.city, {
+                        permanent: true,
+                        direction: 'bottom',
+                        offset: [0, 8],
+                        className: 'city-label'
+                    });
+                }
+
+                marker.on({
+                    mouseover: () => { if (marker !== correctMarkerForCurrent) setMarkerState(marker, 'hover'); },
+                    mouseout: () => { if (marker !== correctMarkerForCurrent) setMarkerState(marker, 'default'); },
+                    click: (e) => handleClick(marker, e)
+                });
+                geoLayer.addLayer(marker);
+            });
+
+            geoLayer.addTo(map);
+            try { map.fitBounds(geoLayer.getBounds(), { padding: [40, 40] }); } catch (e) { }
+            startTimer();
+            nextQuestion();
+        }
+
+        function handleClick(marker, e) {
+            attemptsCount++;
+            const d = marker.siteData;
+
+            if (d.name === currentFestival) {
+                correctAnswers++;
+                playCorrectSound();
+                updateScore();
+                setMarkerState(marker, 'correct');
+                triggerCelebration(marker.getLatLng());
+
+                // Temporarily unbind the permanent city label and show detailed info
+                marker.unbindTooltip();
+                let tip = `<b>🎉 ${d.name}</b>`;
+                if (d.city) tip += `<br/>📍 ${d.city}`;
+                if (d.comment) tip += `<br/>${d.comment}`;
+                marker.bindTooltip(tip, { permanent: false, direction: 'top', offset: [0, -10] }).openTooltip();
+
+                setTimeout(() => {
+                    marker.closeTooltip();
+                    marker.unbindTooltip();
+                    // Rebind the permanent city label
+                    if (d.city) {
+                        marker.bindTooltip(d.city, { permanent: true, direction: 'bottom', offset: [0, 8], className: 'city-label' });
+                    }
+                    setMarkerState(marker, 'default');
+                    nextQuestion();
+                }, 3000);
+            } else {
+                playIncorrectSound();
+                updateScore();
+                if (requireCorrectToAdvance) {
+                    setMarkerState(marker, 'wrong');
+                    setTimeout(() => setMarkerState(marker, 'default'), 1200);
+                } else {
+                    attemptsLeft--;
+                    if (attemptsLeft === 0) {
+                        let correctM = null;
+                        geoLayer.eachLayer(l => { if (l.siteData.name === currentFestival) correctM = l; });
+                        if (correctM) {
+                            requireCorrectToAdvance = true;
+                            correctMarkerForCurrent = correctM;
+                            setMarkerState(correctM, 'target');
+                            triggerRippleAt(correctM.getLatLng(), '#d33a32');
+                            setQuestion(currentFestival, totalQuestions, maxQuestions, true);
+                        }
+                    }
+                }
+                // Show wrong with the festival name at that location
+                const wrongTip = `Incorrect: ${d.name}` + (d.city ? ` (${d.city})` : '');
+                marker.unbindTooltip();
+                marker.bindTooltip(wrongTip, { permanent: false, className: 'wrong-tooltip', direction: 'top', offset: [0, -10] }).openTooltip(e.latlng);
+                setTimeout(() => {
+                    marker.closeTooltip();
+                    marker.unbindTooltip();
+                    if (d.city) {
+                        marker.bindTooltip(d.city, { permanent: true, direction: 'bottom', offset: [0, 8], className: 'city-label' });
+                    }
+                }, 1200);
+            }
+        }
+
+        function nextQuestion() {
+            requireCorrectToAdvance = false;
+            if (correctMarkerForCurrent) { setMarkerState(correctMarkerForCurrent, 'default'); correctMarkerForCurrent = null; }
+            if (totalQuestions >= maxQuestions) { endQuiz(); return; }
+
+            const idx = Math.floor(Math.random() * festivals.length);
+            currentFestival = festivals.splice(idx, 1)[0];
+            attemptsLeft = 3;
+            totalQuestions++;
+            setQuestion(currentFestival, totalQuestions, maxQuestions);
+        }
+
+        function updateScore() {
+            const pct = attemptsCount === 0 ? 0 : Math.round((correctAnswers / attemptsCount) * 100);
+            document.getElementById("score-text").innerText = `${pct}%`;
+        }
+
+        function endQuiz() {
+            stopTimer();
+            const pct = attemptsCount === 0 ? 0 : Math.round((correctAnswers / attemptsCount) * 100);
+            if (typeof saveStandaloneQuizResult === 'function') saveStandaloneQuizResult(pct, totalQuestions || 0, correctAnswers || 0);
+            document.getElementById("question").innerHTML = `Quiz finished! Final score: <b>${pct}%</b>`;
+            geoLayer.eachLayer(l => l.off());
+            const btn = document.createElement('button');
+            btn.innerText = 'Restart';
+            btn.style.cssText = 'margin-left:15px; padding:5px 12px; border-radius:4px; border:1px solid #e65100; background:white; color:#e65100; cursor:pointer; font-weight:bold;';
+            btn.onclick = () => location.reload();
+            document.getElementById('question').appendChild(btn);
+        }
+    </script>
+</body>
+
+</html>

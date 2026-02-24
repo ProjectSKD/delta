@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+
+  <defs>
+    <linearGradient id="glassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="rgba(0, 200, 100, 0.8)" />
+      <stop offset="50%" stop-color="rgba(0, 200, 100, 0.4)" />
+      <stop offset="100%" stop-color="rgba(0, 200, 100, 0.2)" />
+    </linearGradient>
+    
+    <filter id="glassShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000000" flood-opacity="0.15" />
+    </filter>
+  </defs>
+
+  <path d="M169,435 L117,444 L94,435 L70,399 L72,294 L101,236 L135,167 L138,104 L246,73 L257,58 L308,40 L364,49 L399,83 L396,109 L418,139 L404,155 L401,216 L367,258 L379,319 L430,358 L424,378 L383,388 L378,413 L349,432 L299,412 L272,417 L228,460 L169,435 Z" 
+        fill="url(#glassGradient)" 
+        stroke="rgba(255, 255, 255, 0.6)" 
+        stroke-width="2" 
+        filter="url(#glassShadow)" />
+</svg>

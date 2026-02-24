@@ -1,0 +1,290 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.6833,
+                    24.5854
+                ]
+            },
+            "properties": {
+                "question": "Manikyalal Verma founded Prajamandal in which princely state?",
+                "hint": "Mewar (1938)",
+                "brief": "Udaipur; Tribal mobilization; Anti-feudal; Responsible govt demand"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    75.7873,
+                    26.9124
+                ]
+            },
+            "properties": {
+                "question": "Jamnalal Bajaj was associated with Prajamandal of which princely state?",
+                "hint": "Jaipur (1931)",
+                "brief": "Civil rights; Political reform; Jaipur state movement"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.0243,
+                    26.2389
+                ]
+            },
+            "properties": {
+                "question": "Jai Narayan Vyas founded Prajamandal in which princely state?",
+                "hint": "Marwar (1934)",
+                "brief": "Jodhpur; Anti-autocracy; Democratic reform demand"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.3119,
+                    28.0229
+                ]
+            },
+            "properties": {
+                "question": "Machharam Vaidya led Prajamandal in which princely state?",
+                "hint": "Bikaner (1936)",
+                "brief": "Civil liberties; Political awareness"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    75.8648,
+                    25.2138
+                ]
+            },
+            "properties": {
+                "question": "Nathulal Jain was linked with Prajamandal of which princely state?",
+                "hint": "Kota (1939)",
+                "brief": "Responsible govt; Popular participation demand"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    75.6460,
+                    25.4305
+                ]
+            },
+            "properties": {
+                "question": "Rishidutt Mehta was associated with Prajamandal of which princely state?",
+                "hint": "Bundi (1931)",
+                "brief": "Early reform movement; Political awareness"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    76.6250,
+                    27.5667
+                ]
+            },
+            "properties": {
+                "question": "Harinarayan Sharma was active in Prajamandal of which princely state?",
+                "hint": "Alwar (1938)",
+                "brief": "Peasant grievances; Political rights"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    77.4896,
+                    27.2152
+                ]
+            },
+            "properties": {
+                "question": "Gopi Lal Yadav was associated with Prajamandal of which princely state?",
+                "hint": "Bharatpur (1938)",
+                "brief": "Civil rights; Popular govt demand"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    77.8930,
+                    26.7025
+                ]
+            },
+            "properties": {
+                "question": "Krishna Dutt Paliwal was linked with Prajamandal of which princely state?",
+                "hint": "Dholpur (1938)",
+                "brief": "Political reform; Democratic awakening"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    76.5040,
+                    26.4983
+                ]
+            },
+            "properties": {
+                "question": "Karauli Prajamandal movement started in which princely state?",
+                "hint": "Karauli (1938)",
+                "brief": "Civil liberties; Responsible governance demand"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    76.1552,
+                    24.5973
+                ]
+            },
+            "properties": {
+                "question": "Jhalawar Prajamandal emerged in which princely state?",
+                "hint": "Jhalawar (1938)",
+                "brief": "Political awareness; Reform movement"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    72.8346,
+                    24.8887
+                ]
+            },
+            "properties": {
+                "question": "Gokulbhai Bhatt led Prajamandal in which princely state?",
+                "hint": "Sirohi (1939)",
+                "brief": "Political rights; Integration demand"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.7167,
+                    23.8333
+                ]
+            },
+            "properties": {
+                "question": "Bhogilal Pandya founded Prajamandal in which princely state?",
+                "hint": "Dungarpur (1944)",
+                "brief": "Tribal uplift; Social reform; Anti-feudal"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    74.4333,
+                    23.5500
+                ]
+            },
+            "properties": {
+                "question": "Banswara Prajamandal developed in which princely state?",
+                "hint": "Banswara (1944)",
+                "brief": "Adivasi awakening; Civil rights demand"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    74.7833,
+                    24.0333
+                ]
+            },
+            "properties": {
+                "question": "Pratapgarh Prajamandal started in which princely state?",
+                "hint": "Pratapgarh (1944)",
+                "brief": "Reform movement; Political participation"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    74.0731,
+                    25.0222
+                ]
+            },
+            "properties": {
+                "question": "Shahpura Prajamandal was organized in which princely state?",
+                "hint": "Shahpura (1938)",
+                "brief": "Responsible govt demand; Political reform"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    75.0213,
+                    26.5887
+                ]
+            },
+            "properties": {
+                "question": "Kishangarh Prajamandal emerged in which princely state?",
+                "hint": "Kishangarh (1939)",
+                "brief": "Political awakening; Democratic reform"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    75.7885,
+                    26.1660
+                ]
+            },
+            "properties": {
+                "question": "Tonk Prajamandal movement took place in which princely state?",
+                "hint": "Tonk (1938)",
+                "brief": "Civil rights; Responsible govt demand"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    70.9083,
+                    26.9157
+                ]
+            },
+            "properties": {
+                "question": "Jaisalmer Prajamandal was formed in which princely state?",
+                "hint": "Jaisalmer (1938)",
+                "brief": "Political awakening; Reform demand; Desert state movement"
+            }
+        }
+    ]
+}

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+
+  <defs>
+    <linearGradient id="glassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="rgba(0, 200, 100, 0.8)" />
+      <stop offset="50%" stop-color="rgba(0, 200, 100, 0.4)" />
+      <stop offset="100%" stop-color="rgba(0, 200, 100, 0.2)" />
+    </linearGradient>
+    
+    <filter id="glassShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000000" flood-opacity="0.15" />
+    </filter>
+  </defs>
+
+  <path d="M297,293 L301,306 L293,330 L292,343 L300,364 L299,383 L308,391 L310,415 L304,432 L285,428 L276,453 L266,459 L252,451 L227,436 L224,455 L209,460 L210,441 L206,408 L194,337 L184,315 L171,305 L174,284 L167,254 L176,249 L170,240 L154,186 L153,172 L152,157 L163,141 L161,117 L164,95 L158,85 L180,84 L182,100 L198,96 L201,85 L211,83 L214,70 L224,67 L237,40 L243,56 L259,61 L278,57 L280,87 L272,107 L311,118 L319,123 L343,139 L348,185 L348,205 L342,211 L344,229 L337,238 L342,257 L336,282 L327,293 L309,285 L297,293 Z" 
+        fill="url(#glassGradient)" 
+        stroke="rgba(255, 255, 255, 0.6)" 
+        stroke-width="2" 
+        filter="url(#glassShadow)" />
+</svg>

@@ -1,0 +1,320 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    74.13,
+                    29.47
+                ]
+            },
+            "properties": {
+                "question": "Where is the Harappan site known for the world's earliest ploughed field?",
+                "hint": "Kalibangan",
+                "brief": "c. 2500 BCE; Located on the banks of the ancient Ghaggar River."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    70.50,
+                    31.00
+                ]
+            },
+            "properties": {
+                "question": "When did the Battle of Rajasthan (Pratihara vs Arabs) occur?",
+                "hint": "738",
+                "brief": "Nagabhata I defeated the Umayyad forces, halting the Arab expansion."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    76.33,
+                    26.89
+                ]
+            },
+            "properties": {
+                "question": "Where did Dulha Rai establish the first Kachwaha capital?",
+                "hint": "Dausa Fort",
+                "brief": "1137; The foundation of the Dhundhar kingdom on Devgiri Hill."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    72.00,
+                    31.00
+                ]
+            },
+            "properties": {
+                "question": "When was the first Battle of Tarain fought?",
+                "hint": "1191",
+                "brief": "Prithviraj Chauhan III defeated Muhammad Ghori near Thanesar."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    76.51,
+                    26.02
+                ]
+            },
+            "properties": {
+                "question": "Where did Hammir Dev Chauhan take his final stand?",
+                "hint": "Ranthambore",
+                "brief": "1301; Witnessed the first recorded Jauhar in Rajasthan."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.50,
+                    31.00
+                ]
+            },
+            "properties": {
+                "question": "When did Rana Hamir Singh recapture Chittorgarh?",
+                "hint": "1326",
+                "brief": "Founder of the Sisodia dynasty and 'Arimardan' (destroyer of enemies)."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.58,
+                    25.14
+                ]
+            },
+            "properties": {
+                "question": "Where is the fort built by Rana Kumbha with a 36km wall?",
+                "hint": "Kumbhalgarh",
+                "brief": "1458; The wall is known as the Great Wall of India."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    75.00,
+                    31.00
+                ]
+            },
+            "properties": {
+                "question": "When was the Vijay Stambh (Tower of Victory) completed?",
+                "hint": "1448",
+                "brief": "Built by Rana Kumbha to mark his win over the Malwa-Gujarat alliance."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    74.64,
+                    24.89
+                ]
+            },
+            "properties": {
+                "question": "Where did the Second Saka occur under Rani Karnavati?",
+                "hint": "Chittorgarh",
+                "brief": "1535; Followed by the invasion of Bahadur Shah of Gujarat."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    75.50,
+                    31.00
+                ]
+            },
+            "properties": {
+                "question": "When did the Battle of Giri-Sumel take place?",
+                "hint": "1544",
+                "brief": "Sher Shah Suri vs Rao Maldeo; Sher Shah nearly lost the battle."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    70.50,
+                    22.00
+                ]
+            },
+            "properties": {
+                "question": "When did Akbar hold the Nagaur Darbar?",
+                "hint": "1570",
+                "brief": "A major diplomatic event that brought most Rajputs into the Mughal fold."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.71,
+                    24.87
+                ]
+            },
+            "properties": {
+                "question": "Where did the forces of Maharana Pratap and Man Singh clash?",
+                "hint": "Haldighati",
+                "brief": "1576; The battle of 'Thermopylae of Mewar'."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    72.00,
+                    22.00
+                ]
+            },
+            "properties": {
+                "question": "When did the Battle of Dewair occur?",
+                "hint": "1582",
+                "brief": "Colonel Tod described this as the 'Marathon of Mewar'."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.31,
+                    28.02
+                ]
+            },
+            "properties": {
+                "question": "Where did Raja Rai Singh build the Junagarh Fort?",
+                "hint": "Bikaner",
+                "brief": "1594; Famous for its extensive art and lack of a hill site."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.50,
+                    22.00
+                ]
+            },
+            "properties": {
+                "question": "When was the Mughal-Mewar Treaty signed?",
+                "hint": "1615",
+                "brief": "Signed by Prince Khurram and Rana Amar Singh I."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    75.82,
+                    26.92
+                ]
+            },
+            "properties": {
+                "question": "Where did Sawai Jai Singh II establish the 'Pink City'?",
+                "hint": "Jaipur",
+                "brief": "1727; One of the earliest examples of grid-based town planning."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    7500,
+                    22.00
+                ]
+            },
+            "properties": {
+                "question": "When was the Hurda Conference held?",
+                "hint": "1734",
+                "brief": "Rajput rulers met to discuss the growing Maratha threat."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    77.50,
+                    27.22
+                ]
+            },
+            "properties": {
+                "question": "Where is the invincible 'Iron Fort' located?",
+                "hint": "Bharatpur",
+                "brief": "Lohagarh; Known for repelling Lord Lake's British siege in 1805."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    76.50,
+                    22.00
+                ]
+            },
+            "properties": {
+                "question": "When did the 1857 Uprising start in Nasirabad?",
+                "hint": "1857",
+                "brief": "Sparked on May 28th by the 15th Bengal Native Infantry."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    74.47,
+                    26.45
+                ]
+            },
+            "properties": {
+                "question": "Where did the Revolution of 1857 begin in Rajasthan?",
+                "hint": "Nasirabad",
+                "brief": "The first military cantonment in the state to revolt."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    78.00,
+                    22.00
+                ]
+            },
+            "properties": {
+                "question": "When was the modern state of Rajasthan fully integrated?",
+                "hint": "1956",
+                "brief": "Completed on November 1st with the merger of Ajmer and Abu."
+            }
+        }
+    ]
+}

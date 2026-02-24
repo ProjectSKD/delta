@@ -1,0 +1,605 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    72.35,
+                    23.48
+                ]
+            },
+            "properties": {
+                "question": "Where is the Rani ki Vav (Stepwell) located?",
+                "hint": "Patan",
+                "brief": "Built in 1063 CE; a UNESCO site representing the Solanki dynasty's peak."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    62.00,
+                    36.00
+                ]
+            },
+            "properties": {
+                "question": "When was the First Battle of Tarain fought?",
+                "hint": "1191 CE",
+                "brief": "Near Thanesar; Prithviraj Chauhan defeated Muhammad Ghori."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    77.21,
+                    28.52
+                ]
+            },
+            "properties": {
+                "question": "Where did the Slave Dynasty founder establish his first capital?",
+                "hint": "Mehrauli",
+                "brief": "1206 CE; Qutubuddin Aibak founded the Mamluk Sultanate here."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    62.00,
+                    34.00
+                ]
+            },
+            "properties": {
+                "question": "When did Iltutmish receive the investiture from the Caliph of Baghdad?",
+                "hint": "1229 CE",
+                "brief": "Formalized the Delhi Sultanate as a legal independent entity."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    79.41,
+                    10.78
+                ]
+            },
+            "properties": {
+                "question": "Where is the Brihadisvara Temple built by Rajaraja I?",
+                "hint": "Thanjavur",
+                "brief": "Completed in 1010 CE; a masterpiece of Chola granite architecture."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    62.00,
+                    32.00
+                ]
+            },
+            "properties": {
+                "question": "When did Marco Polo visit the Kakatiya Kingdom?",
+                "hint": "1289 CE",
+                "brief": "He described the prosperity of the port of Motupalli."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    74.88,
+                    24.88
+                ]
+            },
+            "properties": {
+                "question": "Where did Alauddin Khalji lead the 1303 siege against the Guhila rulers?",
+                "hint": "Chittorgarh Fort",
+                "brief": "1303 CE; led to the legendary Jauhar of Rani Padmini."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    62.00,
+                    30.00
+                ]
+            },
+            "properties": {
+                "question": "When did Ghiyasuddin Tughlaq found the Tughlaq Dynasty?",
+                "hint": "1320 CE",
+                "brief": "Followed the end of the Khalji Dynasty; he built the Tughlaqabad Fort."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    75.12,
+                    19.87
+                ]
+            },
+            "properties": {
+                "question": "Where did Muhammad bin Tughlaq shift the capital from Delhi?",
+                "hint": "Daulatabad",
+                "brief": "1327 CE; attempt to centralize administration in the Deccan."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    62.00,
+                    28.00
+                ]
+            },
+            "properties": {
+                "question": "When was the Vijayanagara Empire founded?",
+                "hint": "1336 CE",
+                "brief": "Established by Harihara and Bukka on the Tungabhadra River."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    76.46,
+                    15.33
+                ]
+            },
+            "properties": {
+                "question": "Where was the capital of the Vijayanagara Empire located?",
+                "hint": "Hampi",
+                "brief": "Destroyed in 1565; currently a sprawling UNESCO World Heritage site."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    62.00,
+                    26.00
+                ]
+            },
+            "properties": {
+                "question": "When did the Bahmani Kingdom break away from the Sultanate?",
+                "hint": "1347 CE",
+                "brief": "Founded by Hasan Gangu; the first independent Muslim state in the Deccan."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    77.10,
+                    28.70
+                ]
+            },
+            "properties": {
+                "question": "Where did Timur (Tamerlane) cause massive destruction in 1398?",
+                "hint": "Delhi",
+                "brief": "1398 CE; his invasion effectively ended the power of the Tughlaq Sultans."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    62.00,
+                    24.00
+                ]
+            },
+            "properties": {
+                "question": "When did the Persian traveler Abdur Razzaq visit the South?",
+                "hint": "1443 CE",
+                "brief": "He visited during the reign of Deva Raya II of Vijayanagara."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.02,
+                    26.23
+                ]
+            },
+            "properties": {
+                "question": "Where did Rao Jodha establish his capital in 1459?",
+                "hint": "Jodhpur",
+                "brief": "1459 CE; the seat of the Rathore clan of Marwar."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    62.00,
+                    22.00
+                ]
+            },
+            "properties": {
+                "question": "When did the Lodi Dynasty begin?",
+                "hint": "1451 CE",
+                "brief": "Founded by Bahlul Lodi; the first Afghan dynasty of the Delhi Sultanate."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    71.19,
+                    21.09
+                ]
+            },
+            "properties": {
+                "question": "Where did Mahmud Begada establish his secondary capital?",
+                "hint": "Champaner",
+                "brief": "Built in the late 15th century; a blend of Hindu and Islamic architecture."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    62.00,
+                    20.00
+                ]
+            },
+            "properties": {
+                "question": "When did Vasco da Gama arrive in Calicut?",
+                "hint": "1498 CE",
+                "brief": "Marked the beginning of direct European maritime trade with India."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.81,
+                    15.49
+                ]
+            },
+            "properties": {
+                "question": "Where did the Portuguese establish their primary enclave in 1510?",
+                "hint": "Goa",
+                "brief": "1510 CE; conquered from the Bijapur Sultanate by Albuquerque."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    62.00,
+                    18.00
+                ]
+            },
+            "properties": {
+                "question": "When did the Battle of Khanwa take place?",
+                "hint": "1527 CE",
+                "brief": "Babur defeated the Rajput confederacy led by Rana Sanga."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    100.00,
+                    36.00
+                ]
+            },
+            "properties": {
+                "question": "When was the First Battle of Panipat fought?",
+                "hint": "1526 CE",
+                "brief": "Establishment of the Mughal Empire; Babur defeated Ibrahim Lodi."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    85.12,
+                    25.59
+                ]
+            },
+            "properties": {
+                "question": "Where is the mausoleum of Sher Shah Suri?",
+                "hint": "Sasaram",
+                "brief": "1545 CE; an architectural masterpiece in the middle of a lake."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    100.00,
+                    34.00
+                ]
+            },
+            "properties": {
+                "question": "When was the Second Battle of Panipat fought?",
+                "hint": "1556 CE",
+                "brief": "Akbar's forces under Bairam Khan defeated the forces of Hemu."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    77.66,
+                    27.09
+                ]
+            },
+            "properties": {
+                "question": "Where did Akbar build the Ibadat Khana for religious discussion?",
+                "hint": "Fatehpur Sikri",
+                "brief": "1575 CE; where Akbar discussed theology with various religious leaders."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    100.00,
+                    32.00
+                ]
+            },
+            "properties": {
+                "question": "When was the Battle of Talikota fought?",
+                "hint": "1565 CE",
+                "brief": "The decisive defeat of Vijayanagara by the Deccan Sultanates."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.71,
+                    24.87
+                ]
+            },
+            "properties": {
+                "question": "Where did Maharana Pratap fight the Mughal army led by Man Singh?",
+                "hint": "Haldighati",
+                "brief": "1576 CE; one of the most famous battles in Rajput history."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    100.00,
+                    30.00
+                ]
+            },
+            "properties": {
+                "question": "When was the Mansabdari system organized by Akbar?",
+                "hint": "1571 CE",
+                "brief": "The unique military-administrative system of the Mughals."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    78.47,
+                    17.36
+                ]
+            },
+            "properties": {
+                "question": "Where is the Charminar located?",
+                "hint": "Hyderabad",
+                "brief": "1591 CE; built by the Qutb Shahi dynasty to mark the city's founding."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    100.00,
+                    28.00
+                ]
+            },
+            "properties": {
+                "question": "When did Sir Thomas Roe reach Jahangir's court?",
+                "hint": "1615 CE",
+                "brief": "He secured official trading rights for the East India Company."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    78.04,
+                    27.17
+                ]
+            },
+            "properties": {
+                "question": "Where is the tomb of Itmad-ud-Daula located?",
+                "hint": "Agra",
+                "brief": "1622 CE; first Mughal building to extensively use marble and pietra dura."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    100.00,
+                    26.00
+                ]
+            },
+            "properties": {
+                "question": "When was the Taj Mahal completed?",
+                "hint": "1653 CE",
+                "brief": "Shah Jahan's tribute to Mumtaz Mahal; took over 20 years to build."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.82,
+                    18.23
+                ]
+            },
+            "properties": {
+                "question": "Where was the coronation of Chhatrapati Shivaji Maharaj?",
+                "hint": "Raigad Fort",
+                "brief": "1674 CE; marks the formal birth of the Maratha Kingdom."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    100.00,
+                    24.00
+                ]
+            },
+            "properties": {
+                "question": "When did Aurangzeb re-impose the Jizya tax?",
+                "hint": "1679 CE",
+                "brief": "A policy that intensified regional resistance against Mughal rule."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    78.48,
+                    17.39
+                ]
+            },
+            "properties": {
+                "question": "Where was the capital of the Qutb Shahi dynasty captured in 1687?",
+                "hint": "Golconda Fort",
+                "brief": "1687 CE; the fortress fell to Aurangzeb after an 8-month siege."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    100.00,
+                    22.00
+                ]
+            },
+            "properties": {
+                "question": "When was the Khalsa Panth founded?",
+                "hint": "1699 CE",
+                "brief": "Guru Gobind Singh established the Sikh warrior code at Anandpur Sahib."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    77.75,
+                    20.93
+                ]
+            },
+            "properties": {
+                "question": "Where is the Bibi Ka Maqbara located?",
+                "hint": "Aurangabad",
+                "brief": "Built in 1660 CE; known as the Taj of the Deccan."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    100.00,
+                    20.00
+                ]
+            },
+            "properties": {
+                "question": "When did the Mughal Emperor Aurangzeb die?",
+                "hint": "1707 CE",
+                "brief": "His death in Ahmednagar led to the slow disintegration of the empire."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    76.58,
+                    30.93
+                ]
+            },
+            "properties": {
+                "question": "Where is the site of the Battle of Chappar Chiri?",
+                "hint": "Sirhind",
+                "brief": "1710 CE; Banda Singh Bahadur defeated the Mughal Governor Wazir Khan."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    100.00,
+                    18.00
+                ]
+            },
+            "properties": {
+                "question": "When did Nadir Shah invade Delhi?",
+                "hint": "1739 CE",
+                "brief": "He took the Peacock Throne and Koh-i-Noor diamond back to Persia."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    91.75,
+                    26.14
+                ]
+            },
+            "properties": {
+                "question": "Where did Lachit Borphukan defeat the Mughals?",
+                "hint": "Saraighat",
+                "brief": "1671 CE; the Ahom army secured the independence of the Brahmaputra valley."
+            }
+        }
+    ]
+}

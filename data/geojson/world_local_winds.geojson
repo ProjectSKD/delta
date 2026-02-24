@@ -1,0 +1,385 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Chinook",
+                "comment": "hot; dry; Rockies; snow-eater; temperature-rise"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        -117.0,
+                        51.5
+                    ],
+                    [
+                        -110.0,
+                        51.5
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Norther",
+                "comment": "cold; dry; Texas; US-central; high-pressure"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        -108.0,
+                        42.0
+                    ],
+                    [
+                        -108.0,
+                        35.0
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Nor'easter",
+                "comment": "cold; blizzard; snow; US-east-coast; southwesterly"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        -70.0,
+                        48.0
+                    ],
+                    [
+                        -75.0,
+                        43.0
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Norte",
+                "comment": "cold; Mexico; central-america; sudden-rain; southerly"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        -98.0,
+                        25.0
+                    ],
+                    [
+                        -98.0,
+                        18.0
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Pampero",
+                "comment": "cold; squall; pampas; Argentina; northeasterly"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        -65.0,
+                        -40.0
+                    ],
+                    [
+                        -60.0,
+                        -35.0
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Mistral",
+                "comment": "cold; northerly; Rhone-valley; Mediterranean; winter"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        4.5,
+                        48.0
+                    ],
+                    [
+                        4.5,
+                        41.0
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Fohn",
+                "comment": "warm; dry; leeward; Alps; avalanches; northerly"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        10.5,
+                        40.0
+                    ],
+                    [
+                        10.5,
+                        47.0
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Bora",
+                "comment": "cold; Adriatic; katabatic; gusty; southwesterly"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        18.0,
+                        48.0
+                    ],
+                    [
+                        13.0,
+                        43.0
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Levant",
+                "comment": "moist; Mediterranean; Gibraltar; gap-wind; westerly"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        5.0,
+                        37.0
+                    ],
+                    [
+                        -2.0,
+                        37.0
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Helm",
+                "comment": "cold; UK; Pennines; southwesterly"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        -2.0,
+                        55.0
+                    ],
+                    [
+                        -5.0,
+                        52.0
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Etesians",
+                "comment": "dry; summer; Greece; Aegean; southerly"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        25.0,
+                        40.0
+                    ],
+                    [
+                        25.0,
+                        33.0
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Sirocco",
+                "comment": "hot; dry; Sahara; blood-rain; Mediterranean; northerly"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        15.5,
+                        30.0
+                    ],
+                    [
+                        15.5,
+                        37.0
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Harmattan",
+                "comment": "dry; dusty; West-Africa; 'The Doctor'; southwesterly"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        10.0,
+                        20.0
+                    ],
+                    [
+                        -5.0,
+                        8.0
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Khamsin",
+                "comment": "hot; dusty; Egypt; 50-days; northeasterly"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        28.0,
+                        24.0
+                    ],
+                    [
+                        35.0,
+                        31.0
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Berg",
+                "comment": "hot; dry; South-Africa; plateau; southwesterly"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        25.0,
+                        -25.0
+                    ],
+                    [
+                        18.0,
+                        -32.0
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Karaburan",
+                "comment": "hot; black-blizzard; central-Asia; southwesterly"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        95.0,
+                        45.0
+                    ],
+                    [
+                        88.0,
+                        38.0
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Buran",
+                "comment": "cold; blizzard; Siberia; winter; southwesterly"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        110.0,
+                        55.0
+                    ],
+                    [
+                        100.0,
+                        45.0
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Brickfielder",
+                "comment": "hot; dry; dust; Australia interior; southerly"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        138.5,
+                        -31.0
+                    ],
+                    [
+                        138.5,
+                        -39.0
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Southerly",
+                "comment": "cold; buster; Australia coast; temperature-drop; northerly"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        145.5,
+                        -40.0
+                    ],
+                    [
+                        145.5,
+                        -32.0
+                    ]
+                ]
+            }
+        }
+    ]
+}
