@@ -1,0 +1,365 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    74.13,
+                    28.53
+                ]
+            },
+            "properties": {
+                "question": "Where is the Harappan site of Kalibangan located?",
+                "hint": "Hanumangarh",
+                "brief": "Evidence of the world's earliest ploughed field found here (c. 2500 BCE)."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    68,
+                    30
+                ]
+            },
+            "properties": {
+                "question": "When did the Battle of Rajasthan (Pratihara vs Arabs) occur?",
+                "hint": "738",
+                "brief": "Nagabhata I defeated the Umayyad Caliphate, halting the Arab advance."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    75.81,
+                    26.92
+                ]
+            },
+            "properties": {
+                "question": "Where did the Kachwaha ruler Dulha Rai establish his first capital?",
+                "hint": "Dausa",
+                "brief": "1137; the starting point of the Amber/Jaipur kingdom's history."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    68,
+                    29
+                ]
+            },
+            "properties": {
+                "question": "When was the Battle of Tarain fought by Prithviraj Chauhan III?",
+                "hint": "1191",
+                "brief": "The first major victory of the Ajmer-Delhi Chauhans against Ghori."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    76.51,
+                    26.02
+                ]
+            },
+            "properties": {
+                "question": "Where is the Ranthambore Fort that Alauddin Khalji captured in 1301?",
+                "hint": "Sawai Madhopur",
+                "brief": "1301; Hammir Dev Chauhan's final stand and the first recorded Jauhar."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    68,
+                    28
+                ]
+            },
+            "properties": {
+                "question": "When did Rana Hamir Singh recover Chittorgarh from the Sultanate?",
+                "hint": "1326",
+                "brief": "Established the Sisodia branch of the Guhila dynasty in Mewar."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.58,
+                    25.15
+                ]
+            },
+            "properties": {
+                "question": "Where is the invincible fort of Kumbhalgarh located?",
+                "hint": "Rajsamand",
+                "brief": "Built by Rana Kumbha (1458); features the second longest wall in the world."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    68,
+                    27
+                ]
+            },
+            "properties": {
+                "question": "When was the 'Kirti Stambh' (Tower of Victory) completed?",
+                "hint": "1448",
+                "brief": "Built by Rana Kumbha tolebrate victory over the Malwa and Gujarat Sultanates."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    74.64,
+                    24.89
+                ]
+            },
+            "properties": {
+                "question": "Where did the Second Saka of Chittorgarh occur under Rani Karnavati?",
+                "hint": "Chittorgarh",
+                "brief": "1535; during the invasion of Bahadur Shah of Gujarat."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    68,
+                    26
+                ]
+            },
+            "properties": {
+                "question": "When did the Battle of Sammel (Giri-Sumel) take place?",
+                "hint": "1544",
+                "brief": "Sher Shah Suri vs Rao Maldeo of Marwar; Sher Shah nearly lost his empire."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    75.308209,
+                    30.2665063
+                ]
+            },
+            "properties": {
+                "question": "When did Akbar hold the Nagaur Darbar?",
+                "hint": "1570",
+                "brief": "Most Rajput rulers (except Mewar) accepted Mughal suzerainty here."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.71,
+                    24.87
+                ]
+            },
+            "properties": {
+                "question": "Where is the battlefield of Haldighati located?",
+                "hint": "Khamnore",
+                "brief": "1576; Maharana Pratap's legendary battle against the Mughal army."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    76.0389426,
+                    29.9345858
+                ]
+            },
+            "properties": {
+                "question": "When did the Battle of Dewair (Mewar's Marathon) occur?",
+                "hint": "1582",
+                "brief": "Maharana Pratap's decisive victory in reclaiming the lost territories of Mewar."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.31,
+                    28.02
+                ]
+            },
+            "properties": {
+                "question": "Where is the Junagarh Fort, built by Raja Rai Singh, located?",
+                "hint": "Bikaner",
+                "brief": "1594; one of the few major forts in Rajasthan not built on a hilltop."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    76.6301958,
+                    29.5836717
+                ]
+            },
+            "properties": {
+                "question": "When was the Treaty of Amar Singh with Jahangir signed?",
+                "hint": "1615",
+                "brief": "Ended decades of Mughal-Mewar conflict on honorable terms."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    75.82,
+                    26.92
+                ]
+            },
+            "properties": {
+                "question": "Where did Sawai Jai Singh II found his new capital?",
+                "hint": "Jaipur",
+                "brief": "1727; India's first planned city based on Vastu Shastra."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    76.9899409,
+                    29.2026331
+                ]
+            },
+            "properties": {
+                "question": "When was the Hurda Conference held to unite Rajputs against Marathas?",
+                "hint": "1734",
+                "brief": "Organized by Sawai Jai Singh II, but failed due to mutual distrust."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    77.5,
+                    27.22
+                ]
+            },
+            "properties": {
+                "question": "Where is the Lohagarh Fort, which the British failed to capture in 1805?",
+                "hint": "Bharatpur",
+                "brief": "Built by Maharaja Suraj Mal; considered the only 'iron fort' (unconquerable)."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    77.3355663,
+                    28.7187957
+                ]
+            },
+            "properties": {
+                "question": "When did Mewar sign a Treaty of Subsidiary Alliance with the British?",
+                "hint": "1818",
+                "brief": "Signed during the reign of Maharana Bhim Singh, ending Maratha/Pindari raids."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    74.47,
+                    26.45
+                ]
+            },
+            "properties": {
+                "question": "Where did the 1857 Revolution begin in Rajasthan?",
+                "hint": "Nasirabad",
+                "brief": "May 28, 1857; the 15th Bengal Native Infantry revolted against British officers."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    77.9405405,
+                    28.2192119
+                ]
+            },
+            "properties": {
+                "question": "When was the first step of Rajasthan Integration taken (Matsya Union)?",
+                "hint": "1948",
+                "brief": "March 18, 1948; merged Alwar, Bharatpur, Dholpur, and Karauli."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.89,
+                    24.58
+                ]
+            },
+            "properties": {
+                "question": "Where did the Bijolia Peasant Movement, the longest non-violent struggle, start?",
+                "hint": "Bhilwara",
+                "brief": "1897; led by Sitaram Das and later Vijay Singh Pathik."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    78.7655053,
+                    27.3922186
+                ]
+            },
+            "properties": {
+                "question": "When was the modern state of Rajasthan fully formed?",
+                "hint": "1956",
+                "brief": "November 1, 1956; the final 7th stage including Ajmer-Merwara and Abu."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    74.63,
+                    26.45
+                ]
+            },
+            "properties": {
+                "question": "Where is the Dargah of Moinuddin Chishti located?",
+                "hint": "Ajmer",
+                "brief": "A major Sufi pilgrimage site since the 12thntury."
+            }
+        }
+    ]
+}

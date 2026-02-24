@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Rajasthan Prajamandal Quiz</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="../css/quiz-shared.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="../js/quiz_common.js"></script>
+    <script src="../js/quiz_status.js"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background: #fdf5e6;
+        }
+
+        #map-overlays {
+            height: auto !important;
+            min-height: 70px;
+            display: flex !important;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            box-sizing: border-box;
+            background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .overlay {
+            position: relative !important;
+            margin: 5px;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.65) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.8) !important;
+            border-top: 1px solid rgba(255, 255, 255, 1) !important;
+            border-left: 1px solid rgba(255, 255, 255, 1) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.02) !important;
+            color: #880e4f !important;
+            font-weight: 700 !important;
+            padding: 10px 18px !important;
+            transition: all 0.3s ease;
+        }
+
+        .overlay:hover {
+            background: rgba(255, 255, 255, 0.8) !important;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08) !important;
+            transform: translateY(-2px) !important;
+        }
+
+        .top-left {
+            order: 1;
+            border-left: 4px solid #e91e63 !important;
+        }
+
+        .top-right {
+            order: 2;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        #timer {
+            background: rgba(233, 30, 99, 0.1);
+            padding: 4px 10px;
+            border-radius: 6px;
+            color: #c2185b;
+            font-weight: 700 !important;
+        }
+
+        .center-top {
+            order: 3;
+            width: 100%;
+            margin-top: 10px !important;
+            font-size: 20px !important;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.75) !important;
+            color: #ad1457 !important;
+        }
+
+        .center-top b {
+            color: #d33a32;
+            font-weight: 800;
+            padding: 0 4px;
+        }
+
+        #map {
+            height: calc(100vh - 120px) !important;
+            background: #fdf5e6;
+        }
+
+        .medieval-icon {
+            background: transparent;
+            border: 0;
+        }
+
+        .medieval-icon svg {
+            display: block;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
+        }
+
+        .wrong-tooltip {
+            background-color: #d33a32 !important;
+            border: none !important;
+            color: white !important;
+            font-weight: bold;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .wrong-tooltip .leaflet-tooltip-tip {
+            border-top-color: #d33a32 !important;
+        }
+
+        .hint-tooltip {
+            background-color: #fdf5e6 !important;
+            border: 1px solid #ad1457 !important;
+            color: #880e4f !important;
+            font-weight: bold;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            padding: 4px 8px;
+            opacity: 0.9 !important;
+        }
+
+        .hint-tooltip .leaflet-tooltip-tip {
+            border-top-color: #fdf5e6 !important;
+        }
+
+        .correct-persistent-tooltip {
+            background-color: #e8f5e9 !important;
+            border: 1px solid #1e9d46 !important;
+            color: #0e6128 !important;
+            font-weight: bold;
+            border-radius: 6px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            padding: 8px 12px;
+            font-size: 14px;
+            z-index: 1000 !important;
+        }
+
+        .correct-persistent-tooltip .leaflet-tooltip-tip {
+            border-top-color: #e8f5e9 !important;
+        }
+
+        @media (min-width: 800px) {
+            #map-overlays {
+                flex-wrap: nowrap;
+                padding: 12px 25px;
+            }
+
+            .top-left {
+                order: 1;
+                flex: 1;
+                text-align: left;
+                max-width: fit-content;
+            }
+
+            .center-top {
+                order: 2;
+                flex: 2;
+                width: auto;
+                margin-top: 0 !important;
+                font-size: 24px !important;
+                padding: 12px 30px !important;
+            }
+
+            .top-right {
+                order: 3;
+                flex: 1;
+                justify-content: flex-end;
+            }
+
+            #map {
+                height: calc(100vh - 85px) !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .overlay {
+                padding: 8px 12px !important;
+                font-size: 14px !important;
+            }
+
+            .center-top {
+                font-size: 16px !important;
+            }
+
+            .top-left,
+            .top-right {
+                flex: 1;
+                text-align: center;
+                margin: 4px 2px;
+                justify-content: center;
+            }
+
+            #map {
+                height: calc(100vh - 145px) !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="map-overlays">
+        <div class="overlay top-left quiz-title-card">
+            <a href="../index.html" class="back-btn title-back-btn" aria-label="Back to home" title="Back"><svg
+                    viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg></a>
+            <span class="title-text">Rajasthan Prajamandal</span>
+        </div>
+        <div id="score" class="overlay top-right">
+            <span id="score-text">0%</span>
+            <span id="timer" style="margin-left:12px;font-weight:400;font-size:15px;">0:00</span>
+        </div>
+        <div id="question" class="overlay center-top">Loading events...</div>
+    </div>
+    <div id="map"></div>
+
+    <script>
+
+        let allData = [];
+        let featureQuestions = [];
+        let currentFeatureData = null;
+        let totalQuestions = 0;
+        let correctAnswers = 0;
+        let geoLayer;
+        let maxQuestions = 0;
+        let attemptsLeft = 3;
+        let attemptsCount = 0;
+        let requireCorrectToAdvance = false;
+        let correctFeatureForCurrent = null;
+        let _lastCorrectFeature = null;
+        let map = null;
+
+        const rajBounds = [
+            [23.0, 69.0],
+            [30.5, 78.5]
+        ];
+
+        const MARKER_VISUALS = {
+            default: { size: 20, fill: "#ad1457", stroke: "#880e4f" },
+            hover: { size: 24, fill: "#d81b60", stroke: "#880e4f" },
+            correct: { size: 24, fill: "#1e9d46", stroke: "#0e6128" },
+            wrong: { size: 24, fill: "#d33a32", stroke: "#8a1f1a" },
+            target: { size: 28, fill: "#d33a32", stroke: "#8a1f1a" }
+        };
+
+        const VECTOR_VISUALS = {
+            default: { color: "#ad1457", weight: 3, opacity: 0.8, fillColor: "#ad1457", fillOpacity: 0.2 },
+            hover: { color: "#d81b60", weight: 4, opacity: 0.9, fillColor: "#d81b60", fillOpacity: 0.4 },
+            correct: { color: "#1e9d46", weight: 4, opacity: 0.9, fillColor: "#1e9d46", fillOpacity: 0.5 },
+            wrong: { color: "#d33a32", weight: 4, opacity: 0.9, fillColor: "#d33a32", fillOpacity: 0.5 },
+            target: { color: "#d33a32", weight: 5, opacity: 1.0, fillColor: "#d33a32", fillOpacity: 0.6 }
+        };
+
+        function getMedievalIcon(state) {
+            const visual = MARKER_VISUALS[state] || MARKER_VISUALS.default;
+            const size = visual.size;
+            return L.divIcon({
+                className: 'medieval-icon',
+                iconSize: [size, size],
+                iconAnchor: [size / 2, size / 2],
+                html:
+                    '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" aria-hidden="true">' +
+                    '<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" fill="' + visual.fill + '" stroke="' + visual.stroke + '" stroke-width="1.5" stroke-linejoin="round"></path>' +
+                    '<path d="M14 2v6h6" fill="none" stroke="' + visual.stroke + '" stroke-width="1.5" stroke-linejoin="round"></path>' +
+                    '</svg>'
+            });
+        }
+
+        function setFeatureState(layer, state, featureType) {
+            if (featureType === 'Point') {
+                layer.setIcon(getMedievalIcon(state));
+            } else {
+                layer.setStyle(VECTOR_VISUALS[state] || VECTOR_VISUALS.default);
+            }
+        }
+
+        function resetFeatureStyle(layer, featureType) {
+            setFeatureState(layer, 'default', featureType);
+        }
+
+        window.addEventListener('DOMContentLoaded', function () {
+            fetch('../data/geojson/rajasthan_prajamandal.geojson')
+                .then(response => response.json())
+                .then(geojsonData => {
+                    if (geojsonData && geojsonData.features && geojsonData.features.length > 0) {
+                        allData = geojsonData.features;
+                        initializeQuiz();
+                    } else {
+                        alert('Invalid or empty rajasthan_prajamandal.geojson file');
+                    }
+                })
+                .catch(error => {
+                    alert('Error loading rajasthan_prajamandal.geojson: ' + error.message);
+                });
+        });
+
+        function initializeQuiz() {
+            map = L.map('map', {
+                maxBounds: rajBounds,
+                maxBoundsViscosity: 1.0
+            }).setView([26.5, 73.5], 7);
+
+            map.createPane('ripplePane');
+            map.getPane('ripplePane').style.zIndex = 700;
+            map.getPane('ripplePane').style.pointerEvents = 'none';
+
+            fetch('../data/geojson/india_districts.geojson')
+                .then(response => response.json())
+                .then(districtData => {
+                    const rajDistricts = {
+                        type: 'FeatureCollection',
+                        features: districtData.features.filter(
+                            f => f.properties && f.properties.st_nm === 'Rajasthan'
+                        )
+                    };
+                    L.geoJSON(rajDistricts, {
+                        interactive: false,
+                        style: {
+                            color: "#ad1457",
+                            weight: 1.5,
+                            opacity: 0.8,
+                            fillOpacity: 0.05,
+                            fillColor: "#f48fb1"
+                        }
+                    }).addTo(map);
+                });
+
+            // Extract all questions with IDs
+            featureQuestions = allData.map((f, index) => {
+                if (!f.properties.id) {
+                    f.properties.id = 'prajamandal_' + index;
+                }
+                return {
+                    id: f.properties.id,
+                    question: f.properties.question || 'Unknown event?',
+                    hint: f.properties.hint || 'No hint',
+                    brief: f.properties.brief || '',
+                    geomType: f.geometry.type
+                };
+            });
+
+            maxQuestions = featureQuestions.length;
+            geoLayer = L.featureGroup();
+
+            allData.forEach(feature => {
+                let layer;
+                if (feature.geometry.type === 'Point') {
+                    const coords = feature.geometry.coordinates;
+                    layer = L.marker([coords[1], coords[0]], {
+                        icon: getMedievalIcon('default'),
+                        keyboard: false
+                    });
+                } else {
+                    layer = L.geoJSON(feature, {
+                        style: VECTOR_VISUALS.default
+                    });
+                }
+
+                // Add permanent hint tooltip
+                if (feature.properties.hint) {
+                    layer.bindTooltip(feature.properties.hint, {
+                        permanent: true,
+                        direction: 'top',
+                        className: 'hint-tooltip',
+                        offset: [0, -10]
+                    });
+                }
+
+                layer.feature = feature;
+
+                layer.on({
+                    mouseover: function () {
+                        if (layer === correctFeatureForCurrent) return;
+                        setFeatureState(layer, 'hover', feature.geometry.type);
+                    },
+                    mouseout: function () {
+                        if (layer === correctFeatureForCurrent) return;
+                        resetFeatureStyle(layer, feature.geometry.type);
+                    },
+                    click: function (e) {
+                        handleFeatureClick(layer, feature, e);
+                    }
+                });
+
+                geoLayer.addLayer(layer);
+            });
+
+            geoLayer.addTo(map);
+            try { map.fitBounds(geoLayer.getBounds(), { padding: [30, 30] }); } catch (err) { }
+
+            startTimer();
+            nextQuestion();
+        }
+
+        function getCenterOfLayer(layer, featureType) {
+            if (featureType === 'Point') {
+                return layer.getLatLng();
+            } else {
+                return layer.getBounds().getCenter();
+            }
+        }
+
+        function handleFeatureClick(layer, feature, e) {
+            const featureType = feature.geometry.type;
+            const featureId = feature.properties.id;
+            const clickPosition = e && e.latlng ? e.latlng : getCenterOfLayer(layer, featureType);
+
+            // Clean up previous correct answer tooltip
+            if (_lastCorrectFeature) {
+                // Revert to hint-only tooltip
+                _lastCorrectFeature.layer.unbindTooltip();
+                _lastCorrectFeature.layer.bindTooltip(_lastCorrectFeature.hint, {
+                    permanent: true,
+                    direction: 'top',
+                    className: 'hint-tooltip',
+                    offset: [0, -10]
+                });
+                resetFeatureStyle(_lastCorrectFeature.layer, _lastCorrectFeature.featureType);
+                _lastCorrectFeature = null;
+            }
+
+            attemptsCount++;
+
+            if (featureId === currentFeatureData.id) {
+                correctAnswers++;
+                playCorrectSound();
+                updateScore();
+                setFeatureState(layer, 'correct', featureType);
+                triggerCelebration(clickPosition);
+
+                // Update to detailed tooltip
+                let details = "<b>Hint: " + feature.properties.hint + "</b>";
+                if (feature.properties.brief) details += "<br/>" + feature.properties.brief;
+
+                layer.unbindTooltip();
+                layer.bindTooltip(details, {
+                    permanent: true,
+                    direction: 'top',
+                    offset: [0, -10],
+                    className: 'correct-persistent-tooltip'
+                }).openTooltip();
+
+                // Keep tooltip visible until next answer
+                _lastCorrectFeature = {
+                    layer: layer,
+                    hint: feature.properties.hint,
+                    featureType: featureType
+                };
+
+                nextQuestion();
+                return;
+            }
+
+            playIncorrectSound();
+            updateScore();
+
+            if (requireCorrectToAdvance) {
+                setFeatureState(layer, 'wrong', featureType);
+                setTimeout(() => resetFeatureStyle(layer, featureType), 1200);
+
+                // Show temporary wrong tooltip, keep existing hint
+                layer.unbindTooltip();
+                layer.bindTooltip("Incorrect: " + feature.properties.hint, {
+                    permanent: false,
+                    className: 'wrong-tooltip',
+                    direction: 'top',
+                    offset: [0, -10]
+                }).openTooltip(clickPosition);
+
+                setTimeout(() => {
+                    layer.closeTooltip();
+                    layer.unbindTooltip();
+                    layer.bindTooltip(feature.properties.hint, {
+                        permanent: true,
+                        direction: 'top',
+                        className: 'hint-tooltip',
+                        offset: [0, -10]
+                    });
+                }, 1200);
+                return;
+            }
+
+            attemptsLeft = Math.max(0, attemptsLeft - 1);
+            if (attemptsLeft > 0) {
+                setFeatureState(layer, 'wrong', featureType);
+                setTimeout(() => resetFeatureStyle(layer, featureType), 2000);
+
+                // Show temporary wrong tooltip, keep existing hint
+                layer.unbindTooltip();
+                layer.bindTooltip("Incorrect: " + feature.properties.hint, {
+                    permanent: false,
+                    className: 'wrong-tooltip',
+                    direction: 'top',
+                    offset: [0, -10]
+                }).openTooltip(clickPosition);
+
+                setTimeout(() => {
+                    layer.closeTooltip();
+                    layer.unbindTooltip();
+                    layer.bindTooltip(feature.properties.hint, {
+                        permanent: true,
+                        direction: 'top',
+                        className: 'hint-tooltip',
+                        offset: [0, -10]
+                    });
+                }, 1200);
+            } else {
+                let correctLayer = null;
+                let correctFeatureType = 'Point';
+
+                geoLayer.eachLayer(function (lyr) {
+                    if (lyr.feature.properties.id === currentFeatureData.id) {
+                        correctLayer = lyr;
+                        correctFeatureType = lyr.feature.geometry.type;
+                    }
+                });
+
+                if (correctLayer) {
+                    let on = true;
+                    const iv = setInterval(() => {
+                        setFeatureState(correctLayer, on ? 'wrong' : 'default', correctFeatureType);
+                        on = !on;
+                    }, 250);
+
+                    setTimeout(() => {
+                        clearInterval(iv);
+                        requireCorrectToAdvance = true;
+                        correctFeatureForCurrent = correctLayer;
+                        setFeatureState(correctLayer, 'target', correctFeatureType);
+
+                        const center = getCenterOfLayer(correctLayer, correctFeatureType);
+                        triggerRippleAt(center, '#d33a32');
+
+                        // Force update question banner
+                        setQuestion("Where is: " + currentFeatureData.hint + "?", totalQuestions, maxQuestions, true);
+                    }, 2000);
+                } else {
+                    nextQuestion();
+                }
+            }
+        }
+
+        function nextQuestion() {
+            requireCorrectToAdvance = false;
+            if (correctFeatureForCurrent) {
+                resetFeatureStyle(correctFeatureForCurrent, correctFeatureForCurrent.feature.geometry.type);
+                correctFeatureForCurrent = null;
+            }
+
+            if (maxQuestions > 0 && totalQuestions >= maxQuestions) {
+                endQuiz();
+                return;
+            }
+
+            if (!featureQuestions || featureQuestions.length === 0) {
+                endQuiz();
+                return;
+            }
+
+            const idx = Math.floor(Math.random() * featureQuestions.length);
+            currentFeatureData = featureQuestions.splice(idx, 1)[0];
+            attemptsLeft = 3;
+            totalQuestions++;
+
+            // Handle coordinate visibility (Hide overlapping points not belonging to the current question)
+            if (geoLayer) {
+                // First find the coordinates of the current question if it's a point
+                let currentCoords = null;
+                geoLayer.eachLayer(function (layer) {
+                    if (layer.feature.properties.id === currentFeatureData.id && layer.feature.geometry.type === 'Point') {
+                        currentCoords = layer.feature.geometry.coordinates;
+                    }
+                });
+
+                // Now toggle visibility of all clustered points
+                geoLayer.eachLayer(function (layer) {
+                    if (layer.feature.geometry.type === 'Point') {
+                        const coords = layer.feature.geometry.coordinates;
+
+                        // Check if coordinates are functionally identical (within tiny tolerance)
+                        let isSameCoord = false;
+                        if (currentCoords) {
+                            const dx = Math.abs(coords[0] - currentCoords[0]);
+                            const dy = Math.abs(coords[1] - currentCoords[1]);
+                            isSameCoord = (dx < 0.005 && dy < 0.005);
+                        }
+
+                        // If this layer shares coordinates with the current target, but is NOT the current target, hide it.
+                        // Otherwise (different coordinates, or is the actual target), make sure it's shown.
+                        if (isSameCoord && layer.feature.properties.id !== currentFeatureData.id) {
+                            // Hide marker
+                            if (layer.getElement()) layer.getElement().style.display = 'none';
+                            layer.closeTooltip();
+                            // Temporarily remove tooltip so it doesn't show up on map hover if the marker bounds are weird
+                            if (layer.getTooltip()) {
+                                layer._tempTooltipContent = layer.getTooltip().getContent();
+                                layer.unbindTooltip();
+                            }
+                        } else {
+                            // Show marker
+                            if (layer.getElement()) layer.getElement().style.display = 'block';
+                            // Restore tooltip if it was removed
+                            if (layer._tempTooltipContent) {
+                                layer.bindTooltip(layer._tempTooltipContent, {
+                                    permanent: true,
+                                    direction: 'top',
+                                    className: 'hint-tooltip',
+                                    offset: [0, -10]
+                                });
+                                layer._tempTooltipContent = null;
+                            }
+                        }
+                    }
+                });
+            }
+
+            setQuestion(currentFeatureData.question, totalQuestions, maxQuestions);
+        }
+
+        function updateScore() {
+            let percentage = attemptsCount === 0 ? 0 : Math.round((correctAnswers / attemptsCount) * 100);
+            document.getElementById("score-text").innerHTML = percentage + "%";
+        }
+
+        function endQuiz() {
+            stopTimer();
+            const percent = attemptsCount === 0 ? 0 : Math.round((correctAnswers / attemptsCount) * 100);
+            if (typeof saveStandaloneQuizResult === 'function') saveStandaloneQuizResult(percent, totalQuestions || 0, correctAnswers || 0);
+            document.getElementById("question").innerHTML = "Quiz finished! Final score: <b>" + percent + "%</b>";
+
+            if (geoLayer) {
+                geoLayer.eachLayer(function (layer) {
+                    layer.off();
+                });
+            }
+
+            const restart = document.createElement('button');
+            restart.textContent = 'Restart Quiz';
+            restart.style.cssText = 'margin-left:15px; padding:5px 12px; border-radius:4px; border:1px solid #ad1457; background:#fff; color:#ad1457; cursor:pointer; font-weight:bold;';
+            restart.onclick = function () { location.reload(); };
+            const q = document.getElementById('question');
+            if (q) q.appendChild(restart);
+        }
+
+    </script>
+</body>
+
+</html>

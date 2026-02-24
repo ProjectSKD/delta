@@ -1,0 +1,245 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    70.52,
+                    26.04
+                ]
+            },
+            "properties": {
+                "question": "Where is the main shrine (Mukhya Dham) of Baba Ramdev Ji located?",
+                "hint": "Ramdevra",
+                "brief": "One of the 'Panch-Peers'; famous for the Bhadrapada Mela and the Kamadiya Panth."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    69.50,
+                    31.00
+                ]
+            },
+            "properties": {
+                "question": "When did Baba Ramdev Ji take 'Jeevit Samadhi'?",
+                "hint": "1458 CE",
+                "brief": "Known as the 'Peeron ke Peer' (Ramshah Peer) by Muslims."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.78,
+                    27.22
+                ]
+            },
+            "properties": {
+                "question": "Where is the birthplace of the 'Deity of Snakes', Tejaji?",
+                "hint": "Kharnal",
+                "brief": "A non-Peer deity immensely popular among the Jat community; died protecting cows."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    71.00,
+                    31.00
+                ]
+            },
+            "properties": {
+                "question": "When is the major animal fair of Tejaji held in Parbatsar?",
+                "hint": "Bhadrapad Shukla Dashami",
+                "brief": "Teja Dashami is celebrated across Rajasthan to honor his sacrifice."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    74.45,
+                    28.60
+                ]
+            },
+            "properties": {
+                "question": "Where is the main site of Gogaji, known as Dhurmadi?",
+                "hint": "Gogamedi",
+                "brief": "A 'Panch-Peer' who fought against Mahmud Ghazni to protect his cattle."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    72.50,
+                    31.00
+                ]
+            },
+            "properties": {
+                "question": "When did Gogaji fight the historic battle against Mahmud Ghazni?",
+                "hint": "11th Century CE",
+                "brief": "Ghazni called him 'Jahar Peer' (The Living God) due to his battlefield prowess."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    74.22,
+                    25.90
+                ]
+            },
+            "properties": {
+                "question": "Where is the primary shrine of Devnarayan Ji, the deity of the Gujjar community?",
+                "hint": "Asind",
+                "brief": "An incarnation of Vishnu; his 'Phad' is the longest and oldest in Rajasthan."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    74.00,
+                    31.00
+                ]
+            },
+            "properties": {
+                "question": "When was a postage stamp issued on the Phad of Devnarayan Ji?",
+                "hint": "1992 CE",
+                "brief": "He is traditionally worshipped with Neem leaves and bricks."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.18,
+                    26.08
+                ]
+            },
+            "properties": {
+                "question": "Where is the shrine of Mallinath Ji, the protector of the Barmer region?",
+                "hint": "Tilwara",
+                "brief": "A major cattle fair is held here on the banks of the Luni River."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    69.50,
+                    22.00
+                ]
+            },
+            "properties": {
+                "question": "When was the Mallinath Cattle Fair officially started by the Marwar state?",
+                "hint": "1593 CE",
+                "brief": "One of the oldest organized cattle fairs in India."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    72.68,
+                    26.74
+                ]
+            },
+            "properties": {
+                "question": "Where is the birthplace of Pabuji Rathore, the 'Deity of Camels'?",
+                "hint": "Kolu",
+                "brief": "A 'Panch-Peer' credited with bringing camels (Sandry) to Rajasthan."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    71.00,
+                    22.00
+                ]
+            },
+            "properties": {
+                "question": "When is the Pabuji Phad typically recited by the Bhopa community?",
+                "hint": "Night time",
+                "brief": "Recited using the Ravanhatta instrument to cure ailing camels."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    72.45,
+                    26.05
+                ]
+            },
+            "properties": {
+                "question": "Where is the shrine of Harbhu Ji, the master of Omens (Shakun Shastra)?",
+                "hint": "Bengti",
+                "brief": "A 'Panch-Peer' and cousin of Baba Ramdev; he blessed Rao Jodha to reclaim Marwar."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    72.50,
+                    22.00
+                ]
+            },
+            "properties": {
+                "question": "When did Harbhu Ji offer a 'Moong' blessing to Rao Jodha?",
+                "hint": "15th Century CE",
+                "brief": "His cart (Gada) is worshipped instead of an idol in the Bengti temple."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.34,
+                    27.89
+                ]
+            },
+            "properties": {
+                "question": "Where is the temple of Karni Mata, the 'Deity of Rats'?",
+                "hint": "Deshnok",
+                "brief": "She is the Kul-Devi of the Rathores of Bikaner; white rats are called 'Kaba'."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    74.00,
+                    22.00
+                ]
+            },
+            "properties": {
+                "question": "When did Karni Mata lay the foundation stone of Mehrangarh Fort?",
+                "hint": "1459 CE",
+                "brief": "She is considered an incarnation of Hinglaj Mata."
+            }
+        }
+    ]
+}

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Geography Quiz Engine</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="../css/quiz-shared.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="../js/quiz_common.js">
+    </script>
+    <script src="../js/quiz_status.js"></script>
+    <script src="../js/quiz_config.js"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background: #f0f4f8;
+        }
+
+        #map-overlays {
+            height: auto !important;
+            min-height: 70px;
+            display: flex !important;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            box-sizing: border-box;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .overlay {
+            position: relative !important;
+            margin: 5px;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.65) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.8) !important;
+            border-top: 1px solid rgba(255, 255, 255, 1) !important;
+            border-left: 1px solid rgba(255, 255, 255, 1) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.02) !important;
+            color: #1a4d6e !important;
+            font-weight: 700 !important;
+            padding: 10px 18px !important;
+            transition: all 0.3s ease;
+        }
+
+        .overlay:hover {
+            background: rgba(255, 255, 255, 0.8) !important;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08), 0 12px 20px rgba(0, 0, 0, 0.04) !important;
+            transform: translateY(-2px) !important;
+        }
+
+        .top-left {
+            order: 1;
+            border-left: 4px solid #0077be !important;
+        }
+
+        .top-right {
+            order: 2;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        #timer {
+            background: rgba(0, 119, 190, 0.1);
+            padding: 4px 10px;
+            border-radius: 6px;
+            color: #0077be;
+            font-weight: 700 !important;
+        }
+
+        .center-top {
+            order: 3;
+            width: 100%;
+            margin-top: 10px !important;
+            font-size: 20px !important;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.75) !important;
+            color: #005a91 !important;
+        }
+
+        .center-top b {
+            color: #d33a32;
+            font-weight: 800;
+            padding: 0 4px;
+        }
+
+        #map {
+            height: calc(100vh - 120px) !important;
+        }
+
+        /* Marker Styles */
+        .quiz-icon {
+            background: transparent;
+            border: 0;
+        }
+
+        .quiz-icon svg {
+            display: block;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+        }
+
+        /* Tooltip Overrides */
+        .wrong-tooltip {
+            background-color: #d33a32 !important;
+            border: none !important;
+            color: white !important;
+            font-weight: bold;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .wrong-tooltip .leaflet-tooltip-tip {
+            border-top-color: #d33a32 !important;
+        }
+
+        @media (min-width: 800px) {
+            #map-overlays {
+                flex-wrap: nowrap;
+                padding: 12px 25px;
+            }
+
+            .top-left {
+                order: 1;
+                flex: 1;
+                text-align: left;
+                max-width: fit-content;
+            }
+
+            .center-top {
+                order: 2;
+                flex: 2;
+                width: auto;
+                margin-top: 0 !important;
+                font-size: 24px !important;
+                padding: 12px 30px !important;
+            }
+
+            .top-right {
+                order: 3;
+                flex: 1;
+                justify-content: flex-end;
+            }
+
+            #map {
+                height: calc(100vh - 85px) !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .overlay {
+                padding: 8px 12px !important;
+                font-size: 14px !important;
+            }
+
+            .center-top {
+                font-size: 16px !important;
+            }
+
+            .top-left,
+            .top-right {
+                flex: 1;
+                text-align: center;
+                margin: 4px 2px;
+                justify-content: center;
+            }
+
+            #map {
+                height: calc(100vh - 145px) !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map-overlays">
+        <div id="quiz-title" class="overlay top-left quiz-title-card">
+            <a href="../index.html" class="back-btn title-back-btn" title="Back">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <span class="title-text">Loading Engine...</span>
+        </div>
+        <div id="score" class="overlay top-right">
+            <span id="score-text">0%</span>
+            <span id="timer" style="margin-left:12px;font-weight:400;font-size:15px;">0:00</span>
+        </div>
+        <div id="question" class="overlay center-top">Initializing map and gamification layers...</div>
+    </div>
+    <div id="map"></div>
+
+    <script src="../js/quiz_engine.js"></script>
+    
+</body>
+
+</html>

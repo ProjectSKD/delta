@@ -1,0 +1,305 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    75.78,
+                    26.32
+                ]
+            },
+            "properties": {
+                "question": "Where is the birthplace of Sant Dhanna?",
+                "hint": "Dhuan",
+                "brief": "Jat saint; Ramananda disciple; mass Bhakti pioneer; Tonk region."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    70.00,
+                    31.00
+                ]
+            },
+            "properties": {
+                "question": "In which century did Sant Dhanna live?",
+                "hint": "15th",
+                "brief": "Nirguna Bhakti; spiritual equality; first to bring Bhakti to masses."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    76.28,
+                    24.63
+                ]
+            },
+            "properties": {
+                "question": "Where is the cave of Sant Pipaji?",
+                "hint": "Gagraun",
+                "brief": "Khichi king; tailor community patron; Nirguna tradition; Ramananda disciple."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    71.00,
+                    31.00
+                ]
+            },
+            "properties": {
+                "question": "In which century did Sant Pipaji renounce his throne?",
+                "hint": "15th",
+                "brief": "Social equality; Jhalawar region; renounced kingdom for Bhakti."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.55,
+                    27.64
+                ]
+            },
+            "properties": {
+                "question": "Where is the Mukti Dham of Sant Jambhoji?",
+                "hint": "Mukam",
+                "brief": "Bishnoi founder; 29 principles; environmentalism; wildlife protection."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    72.00,
+                    31.00
+                ]
+            },
+            "properties": {
+                "question": "In which year was the Bishnoi sect founded?",
+                "hint": "1485",
+                "brief": "Samrathal Dhora; Bikaner region; Vishnu incarnation belief."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.74,
+                    28.05
+                ]
+            },
+            "properties": {
+                "question": "Where is the main seat of Sant Jasnath Ji?",
+                "hint": "Katriyasar",
+                "brief": "Fire dance; 36 rules; contemporary of Jambhoji; Bikaner region."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.00,
+                    31.00
+                ]
+            },
+            "properties": {
+                "question": "In which year did Sant Jasnath Ji attain Samadhi?",
+                "hint": "1506",
+                "brief": "Youngest saint; Sikandar Lodi contemporary; Siddha community."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    75.20,
+                    26.79
+                ]
+            },
+            "properties": {
+                "question": "Where is the main seat of the Dadu Panth?",
+                "hint": "Naraina",
+                "brief": "Dadu Dayal; 'Kabir of Rajasthan'; 52 pillars; Ibadat Khana invitee."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    70.00,
+                    22.00
+                ]
+            },
+            "properties": {
+                "question": "In which year did Dadu Dayal pass away in Naraina?",
+                "hint": "1603",
+                "brief": "Bhakti reform; Akbar contemporary; Hindi-Gujarati-Braj blend poetry."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.33,
+                    25.40
+                ]
+            },
+            "properties": {
+                "question": "Where is the birthplace of Mira Bai?",
+                "hint": "Kudki",
+                "brief": "Krishna Bhakti queen; Rathore clan; Saguna tradition; Merta region."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    71.00,
+                    22.00
+                ]
+            },
+            "properties": {
+                "question": "In which century did Mira Bai compose her Bhakti pads?",
+                "hint": "16th",
+                "brief": "Madhurya Bhava; Girdhar Gopal devotee; Chittorgarh connections."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    76.61,
+                    27.56
+                ]
+            },
+            "properties": {
+                "question": "Where did Sant Laldas preach communal unity?",
+                "hint": "Dhauli Doob",
+                "brief": "Mewat saint; Hindu-Muslim unity; Alwar region; Laldasi sect."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    72.00,
+                    22.00
+                ]
+            },
+            "properties": {
+                "question": "In which century did Sant Laldas influence the Mewat region?",
+                "hint": "17th",
+                "brief": "Nirguna tradition; self-reliance; woodcutter background."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    74.45,
+                    26.41
+                ]
+            },
+            "properties": {
+                "question": "Where is the seat of the Ramanandi sect in Rajasthan?",
+                "hint": "Galta Ji",
+                "brief": "Monkey temple; Krishna Das Payahari founder; Jaipur region."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.00,
+                    22.00
+                ]
+            },
+            "properties": {
+                "question": "In which century was the Galta Ji seat established?",
+                "hint": "16th",
+                "brief": "Prithvi Raj Kachwaha reign; displaced Nath panthis; Ramananda tradition."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    73.91,
+                    23.85
+                ]
+            },
+            "properties": {
+                "question": "Where is the Nishkalank sect center of Sant Mavji?",
+                "hint": "Baneshwar",
+                "brief": "Tribal Kumbh; Dungarpur region; predicted future in 'Chopra'."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    74.00,
+                    22.00
+                ]
+            },
+            "properties": {
+                "question": "In which century did Sant Mavji lead social reforms?",
+                "hint": "18th",
+                "brief": "Vagadi dialect; Kalki incarnation belief; Bhil community reformer."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    76.71,
+                    27.21
+                ]
+            },
+            "properties": {
+                "question": "Where did Sant Charan Das establish his sect seat?",
+                "hint": "Dehra",
+                "brief": "Alwar; 42 rules; Nadir Shah invasion predictor; women disciples (Sahjobai)."
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    75.00,
+                    22.00
+                ]
+            },
+            "properties": {
+                "question": "In which year did Charan Das predict Nadir Shah's invasion?",
+                "hint": "1739",
+                "brief": "Charandasi sect; blend of Nirguna and Saguna; Delhi center."
+            }
+        }
+    ]
+}

@@ -2,79 +2,104 @@
 <html lang="en">
 
 <head>
-    <title>Geography Quizzes - Unified Menu</title>
+    <title>Geography Explorer — Interactive Quizzes</title>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description"
+        content="Test your geography knowledge with interactive map-based quizzes covering world countries, capitals, rivers, mountains, and India.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 50%, #f5f7fa 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
+            color: #1e293b;
+            padding: 0 16px;
+            padding-bottom: 40px;
         }
 
+        /* ─── Header ─── */
         header {
-            margin-top: 40px;
+            margin-top: 32px;
             text-align: center;
-            color: #1a4d6e;
         }
 
         h1 {
-            font-size: 3rem;
-            margin-bottom: 5px;
-            font-weight: 800;
+            font-size: 2.4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
         }
 
         p.subtitle {
-            font-size: 1.2rem;
-            color: #005a91;
-            margin-top: 0;
-            margin-bottom: 25px;
+            font-size: 1rem;
+            color: #64748b;
+            margin-top: 6px;
+            margin-bottom: 20px;
         }
 
-        /* Top Level Tabs */
+        /* ─── Top Level Tabs ─── */
         .tabs {
             display: flex;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.4);
-            padding: 8px;
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-            margin-bottom: 20px;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 6px;
+            border-radius: 14px;
+            border: 1px solid rgba(71, 85, 105, 0.15);
+            margin-bottom: 16px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            max-width: 100%;
+        }
+
+        .tabs::-webkit-scrollbar {
+            display: none;
         }
 
         .tab-btn {
             background: transparent;
             border: none;
-            padding: 12px 24px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #005a91;
+            padding: 10px 18px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #64748b;
             cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            border-radius: 10px;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            font-family: inherit;
         }
 
         .tab-btn:hover {
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(71, 85, 105, 0.08);
+            color: #1e293b;
         }
 
         .tab-btn.active {
-            background: #fff;
-            color: #0077be;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
         }
 
-        /* Sub Category Tabs (For States) */
+        /* ─── Sub Tabs ─── */
         .sub-tabs {
             display: none;
-            /* hidden by default */
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 16px;
             flex-wrap: wrap;
             justify-content: center;
         }
@@ -84,126 +109,274 @@
         }
 
         .sub-tab-btn {
-            background: rgba(255, 255, 255, 0.5);
-            border: 1px solid rgba(0, 119, 190, 0.2);
-            padding: 8px 18px;
-            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(71, 85, 105, 0.2);
+            padding: 6px 16px;
+            font-size: 0.8rem;
             font-weight: 600;
-            color: #1a4d6e;
+            color: #64748b;
             cursor: pointer;
             border-radius: 20px;
             transition: all 0.2s ease;
+            font-family: inherit;
         }
 
         .sub-tab-btn:hover {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(71, 85, 105, 0.08);
+            color: #1e293b;
         }
 
         .sub-tab-btn.active {
-            background: #0077be;
+            background: #6366f1;
             color: #fff;
-            border-color: #0077be;
-            box-shadow: 0 4px 8px rgba(0, 119, 190, 0.3);
+            border-color: #6366f1;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
         }
 
-        /* Content Grid */
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+        /* ─── Progress Bar ─── */
+        .progress-container {
             width: 90%;
             max-width: 1200px;
-            margin-bottom: 60px;
+            margin-bottom: 16px;
         }
 
-        /* Glassmorphism Cards */
-        .quiz-card {
+        .progress-bar-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(71, 85, 105, 0.15);
+            border-radius: 12px;
+            padding: 10px 16px;
+        }
+
+        .progress-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #64748b;
+            white-space: nowrap;
+        }
+
+        .progress-track {
+            flex: 1;
+            height: 6px;
+            background: rgba(71, 85, 105, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #22c55e, #10b981);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-count {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #22c55e;
+            white-space: nowrap;
+        }
+
+        /* ─── Grid ─── */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        /* ─── Quiz Cards ─── */
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            border-top: 1px solid rgba(255, 255, 255, 1);
-            border-left: 1px solid rgba(255, 255, 255, 1);
-            border-radius: 16px;
-            padding: 20px;
+            border: 1px solid rgba(71, 85, 105, 0.15);
+            border-radius: 14px;
+            padding: 10px 12px;
             text-decoration: none;
-            color: #1a4d6e;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            color: #1e293b;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
             position: relative;
+            min-height: 56px;
         }
 
         .quiz-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.08);
-            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+            border-color: rgba(99, 102, 241, 0.4);
+            background: rgba(255, 255, 255, 0.95);
         }
 
         .quiz-card.placeholder {
-            opacity: 0.6;
+            opacity: 0.45;
             cursor: not-allowed;
         }
 
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .card-main {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+            flex: 1;
+        }
+
         .quiz-card h2 {
-            margin: 0 0 8px 0;
-            font-size: 1.3rem;
+            font-size: 0.98rem;
             font-weight: 700;
-        }
-
-        .quiz-card p {
             margin: 0;
-            font-size: 0.95rem;
-            color: #004e7c;
-            opacity: 0.85;
-            line-height: 1.4;
+            flex: 1;
+            line-height: 1.25;
         }
 
-        .icon-container {
-            width: 42px;
-            height: 42px;
+        .card-icon {
+            width: 34px;
+            height: 34px;
             border-radius: 10px;
-            background: rgba(0, 119, 190, 0.1);
+            background: rgba(99, 102, 241, 0.08);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 12px;
+            flex-shrink: 0;
         }
 
-        .badge {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            padding: 3px 6px;
-            border-radius: 6px;
-            text-transform: uppercase;
-            background: #e2e8f0;
-            color: #64748b;
+        .card-icon img {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            display: block;
         }
 
-        .badge.playable {
-            background: #1e9d46;
-            color: white;
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            border: 1px solid rgba(100, 116, 139, 0.28);
+            background: rgba(100, 116, 139, 0.18);
+            transition: all 0.2s ease;
         }
 
-        .badge.wip {
-            background: #f59e0b;
-            color: white;
+        .status-dot.never {
+            border-color: rgba(100, 116, 139, 0.28);
+            background: rgba(100, 116, 139, 0.18);
         }
 
+        .quiz-card:hover .status-dot.never {
+            background: rgba(100, 116, 139, 0.28);
+        }
+
+        .status-dot.incomplete {
+            border-color: rgba(217, 119, 6, 0.5);
+            background: rgba(245, 158, 11, 0.45);
+        }
+
+        .status-dot.completed {
+            border-color: #16a34a;
+            background: rgba(34, 197, 94, 0.95);
+            box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+        }
+
+        .status-dot.coming-soon {
+            border-color: rgba(100, 116, 139, 0.34);
+            background: rgba(100, 116, 139, 0.3);
+        }
+
+        .status-dot.custom {
+            border-color: rgba(99, 102, 241, 0.55);
+            background: rgba(99, 102, 241, 0.5);
+        }
+
+        /* ─── Mobile ─── */
         @media (max-width: 600px) {
+            body {
+                padding: 0 10px;
+                padding-bottom: 30px;
+            }
+
+            header {
+                margin-top: 20px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            p.subtitle {
+                font-size: 0.85rem;
+                margin-bottom: 14px;
+            }
+
             .tabs {
-                flex-wrap: wrap;
-                justify-content: center;
+                padding: 4px;
+                gap: 4px;
             }
 
             .tab-btn {
-                padding: 8px 16px;
-                font-size: 1rem;
+                padding: 8px 12px;
+                font-size: 0.75rem;
+            }
+
+            .grid-container {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                width: 100%;
+            }
+
+            .quiz-card {
+                padding: 8px 10px;
+                min-height: 48px;
+            }
+
+            .quiz-card h2 {
+                font-size: 0.9rem;
+            }
+
+            .card-icon {
+                width: 30px;
+                height: 30px;
+            }
+
+            .card-icon img {
+                width: 17px;
+                height: 17px;
+            }
+
+            .status-dot {
+                width: 9px;
+                height: 9px;
+            }
+
+            .sub-tab-btn {
+                padding: 5px 12px;
+                font-size: 0.75rem;
+            }
+
+            .progress-bar-wrapper {
+                padding: 8px 12px;
+            }
+
+            .progress-label,
+            .progress-count {
+                font-size: 0.72rem;
+            }
+        }
+
+        @media (min-width: 601px) and (max-width: 900px) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
@@ -213,35 +386,122 @@
 
     <header>
         <h1>Geography Explorer</h1>
-        <p class="subtitle">Select a category to test your knowledge</p>
+        <p class="subtitle">Test your knowledge — select a category below</p>
     </header>
 
-    <!-- Main Categories -->
+    <!-- Main Category Tabs -->
     <div class="tabs" id="main-tabs">
         <button class="tab-btn active" data-category="POPULAR">⭐ POPULAR</button>
         <button class="tab-btn" data-category="WORLD">WORLD</button>
         <button class="tab-btn" data-category="INDIA">INDIA</button>
         <button class="tab-btn" data-category="STATES">STATES</button>
         <button class="tab-btn" data-category="PLACES_IN_NEWS">PLACES IN NEWS</button>
-        <button class="tab-btn" data-category="CUSTOM">🛠️ CUSTOM QUIZ</button>
+        <button class="tab-btn" data-category="CUSTOM">🛠️ CUSTOM</button>
     </div>
 
     <!-- Dynamic Subcategories -->
     <div class="sub-tabs" id="sub-tabs-container"></div>
 
-    <!-- Generated Grid -->
+    <!-- Category Progress -->
+    <div class="progress-container" id="progress-container"></div>
+
+    <!-- Quiz Grid -->
     <div class="grid-container" id="quiz-grid"></div>
 
-    <script src="quiz_config.js"></script>
+    <script src="js/quiz_config.js?v=2"></script>
+    <script src="js/quiz_status.js?v=2"></script>
     <script>
         let currentCategory = "POPULAR";
-        let currentSubcategory = null; // null means "show all" or "show top-level"
+        let currentSubcategory = null;
 
         const grid = document.getElementById('quiz-grid');
         const mainTabs = document.querySelectorAll('.tab-btn');
         const subTabsContainer = document.getElementById('sub-tabs-container');
+        const progressContainer = document.getElementById('progress-container');
+        const ICON_BASE = 'icons/';
 
-        // Dynamically discover subcategories for a given category
+        function slugify(value) {
+            return (value || '')
+                .toString()
+                .trim()
+                .toLowerCase()
+                .replace(/&/g, 'and')
+                .replace(/[^a-z0-9]+/g, '_')
+                .replace(/^_+|_+$/g, '');
+        }
+
+        function iconForQuiz(id, config) {
+            const title = (config.title || '').toLowerCase();
+            const category = (config.category || '').toUpperCase();
+            const subcategory = (config.subcategory || '').toUpperCase();
+            const haystack = `${id} ${title} ${category} ${subcategory}`.toLowerCase();
+
+            if (id === 'india_state_capitals') return 'india.svg';
+            if (id.startsWith('india_districts_')) return `${id.replace('india_districts_', '')}.svg`;
+            if (category === 'STATES' && subcategory) return `${slugify(subcategory)}.svg`;
+            if (id.includes('custom') || title.includes('custom')) return 'badge.svg';
+            if (haystack.includes('current affairs')) return 'current_affairs.svg';
+            if (haystack.includes('volcano')) return 'volcano.svg';
+            if (haystack.includes('waterfall')) return 'water_fall.svg';
+            if (haystack.includes('ocean') || haystack.includes('sea') || haystack.includes('strait')) return 'ocean.svg';
+            if (haystack.includes('river')) return 'river.svg';
+            if (haystack.includes('lake')) return 'lake.svg';
+            if (haystack.includes('mountain') || haystack.includes('peak')) return 'mountain.svg';
+            if (haystack.includes('wetland') || haystack.includes('ramsar')) return 'wetland.svg';
+            if (haystack.includes('wildlife')) return 'wildlife.svg';
+            if (haystack.includes('national park')) return 'national_park.svg';
+            if (haystack.includes('nuclear')) return 'nuclear_power_plant.svg';
+            if (haystack.includes('renewable')) return 'renewable_energy.svg';
+            if (haystack.includes('mineral') || haystack.includes('mine')) return 'mineral.svg';
+            if (haystack.includes('monument')) return 'monument.svg';
+            if (haystack.includes('fort') || haystack.includes('palace')) return 'fort.svg';
+            if (haystack.includes('folk music') || haystack.includes('festival')) return 'folk_music.svg';
+            if (haystack.includes('industry')) return 'insdustry.svg';
+            if (haystack.includes('chief minister') || haystack.includes('cm')) return 'person.svg';
+            if (haystack.includes('capitals') || haystack.includes('capital')) return 'places.svg';
+            if (haystack.includes('district')) return 'india.svg';
+
+            if (category === 'WORLD') {
+                if (subcategory.includes('AFRICA')) return 'africa.svg';
+                if (subcategory.includes('ASIA')) return 'asia.svg';
+                if (subcategory.includes('EUROPE')) return 'europe.svg';
+                if (subcategory.includes('AMERICA')) return 'america.svg';
+                if (subcategory.includes('OCEANIA')) return 'australia.svg';
+                return 'world.svg';
+            }
+
+            if (category === 'INDIA') return 'india.svg';
+
+            if (category === 'STATES') {
+                if (subcategory === 'RAJASTHAN') return 'rajasthan.svg';
+                if (subcategory === 'BIHAR') return 'bihar.svg';
+                if (subcategory === 'UTTAR PRADESH') return 'uttar_pradesh.svg';
+                if (subcategory === 'HARYANA') return 'haryana.svg';
+                return 'places.svg';
+            }
+
+            if (category === 'PLACES_IN_NEWS') return 'current_affairs.svg';
+            if (category === 'POPULAR') return 'badge.svg';
+            return 'world.svg';
+        }
+
+        function fallbackIconForQuiz(id, config) {
+            const category = (config.category || '').toUpperCase();
+            if (id.startsWith('india_districts_')) return 'india.svg';
+            if (id === 'india_state_capitals') return 'india.svg';
+            if (category === 'INDIA' || category === 'STATES') return 'india.svg';
+            if (category === 'PLACES_IN_NEWS') return 'current_affairs.svg';
+            return 'world.svg';
+        }
+
+        function buildIconMarkup(id, config) {
+            const file = iconForQuiz(id, config);
+            const fallback = fallbackIconForQuiz(id, config);
+            const src = `${ICON_BASE}${file}`;
+            const safeTitle = (config.title || 'Quiz').replace(/"/g, '&quot;');
+            return `<img src="${src}" alt="${safeTitle} icon" loading="lazy" onerror="this.src='${ICON_BASE}${fallback}'">`;
+        }
+
         function getSubcategories(category) {
             const subs = new Set();
             Object.values(QUIZ_CONFIG).forEach(config => {
@@ -252,7 +512,6 @@
             return Array.from(subs);
         }
 
-        // Build subcategory tab buttons
         function buildSubTabs(category) {
             const subs = getSubcategories(category);
             subTabsContainer.innerHTML = '';
@@ -263,7 +522,6 @@
                 return;
             }
 
-            // Add an "All" button first
             const allBtn = document.createElement('button');
             allBtn.className = 'sub-tab-btn active';
             allBtn.textContent = 'All';
@@ -281,7 +539,6 @@
 
             subTabsContainer.classList.add('active');
 
-            // Attach click handlers
             subTabsContainer.querySelectorAll('.sub-tab-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     subTabsContainer.querySelectorAll('.sub-tab-btn').forEach(t => t.classList.remove('active'));
@@ -292,22 +549,48 @@
             });
         }
 
+        function renderProgress() {
+            if (currentCategory === 'CUSTOM') {
+                progressContainer.innerHTML = '';
+                return;
+            }
+            const progress = getCategoryProgress(currentCategory);
+            if (progress.total === 0) {
+                progressContainer.innerHTML = '';
+                return;
+            }
+            const pct = Math.round((progress.completed / progress.total) * 100);
+            progressContainer.innerHTML = `
+                <div class="progress-bar-wrapper">
+                    <span class="progress-label">Progress</span>
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width: ${pct}%"></div>
+                    </div>
+                    <span class="progress-count">${progress.completed} / ${progress.total} completed</span>
+                </div>
+            `;
+        }
+
         function renderGrid() {
             grid.innerHTML = '';
+            renderProgress();
 
-            /* Special: CUSTOM tab shows the quiz builder card */
+            /* CUSTOM tab */
             if (currentCategory === 'CUSTOM') {
                 const card = document.createElement('a');
-                card.href = 'custom_quiz.html';
+                card.href = 'quizzes/custom_quiz.html';
                 card.className = 'quiz-card';
-                card.style.cssText = 'background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.15)); border: 1px solid rgba(99,102,241,0.3);';
+                card.style.borderColor = 'rgba(99, 102, 241, 0.3)';
                 card.innerHTML = `
-                    <div class="badge playable" style="background: #6366f1;">BUILD</div>
-                    <div class="icon-container" style="background: rgba(99,102,241,0.15);">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                    <div class="card-header">
+                        <div class="card-main">
+                            <div class="card-icon" style="background: rgba(99,102,241,0.2);">
+                                ${buildIconMarkup('custom_quiz', { title: 'Custom Quiz', category: 'CUSTOM' })}
+                            </div>
+                            <h2>Build Custom Quiz</h2>
+                        </div>
+                        <span class="status-dot custom" title="Available" aria-label="Available"></span>
                     </div>
-                    <h2>🛠️ Build Custom Quiz</h2>
-                    <p>Pick your topics, set the number of questions, and create a personalised geography quiz.</p>
                 `;
                 grid.appendChild(card);
                 return;
@@ -315,50 +598,58 @@
 
             Object.keys(QUIZ_CONFIG).forEach(id => {
                 const config = QUIZ_CONFIG[id];
-
                 if (config.category !== currentCategory) return;
 
-                // Subcategory filtering
                 if (currentSubcategory && currentSubcategory !== '__ALL__') {
                     if (config.subcategory !== currentSubcategory) return;
                 }
 
                 const card = document.createElement(config.is_placeholder ? 'div' : 'a');
-
                 if (!config.is_placeholder) {
-                    card.href = config.external_url ? config.external_url : `quiz.html?id=${id}`;
+                    card.href = config.external_url ? config.external_url : `quizzes/quiz.html?id=${id}`;
                 }
-
                 card.className = `quiz-card ${config.is_placeholder ? 'placeholder' : ''}`;
 
-                const badgeText = config.is_placeholder ? "Coming Soon" : "Play";
-                const badgeClass = config.is_placeholder ? "wip" : "playable";
+                const iconMarkup = buildIconMarkup(id, config);
 
-                let iconSvg = "";
-                if (config.icon_svg && config.visuals && config.visuals.default) {
-                    iconSvg = config.icon_svg
-                        .replace(/\{SIZE\}/g, 24)
-                        .replace(/\{FILL\}/g, config.visuals.default.fill || "#0077be")
-                        .replace(/\{STROKE\}/g, config.visuals.default.stroke || "#004e7c");
+                let statusClass = 'never';
+                let statusTitle = 'Not started';
+                if (config.is_placeholder) {
+                    statusClass = 'coming-soon';
+                    statusTitle = 'Coming soon';
                 } else {
-                    iconSvg = SVG_ICONS.drop.replace(/\{SIZE\}/g, 24).replace(/\{FILL\}/g, "#0077be").replace(/\{STROKE\}/g, "#004e7c");
+                    const data = getQuizData(id);
+                    if (data) {
+                        if (data.score === 100) {
+                            statusClass = 'completed';
+                            statusTitle = 'Completed (100%)';
+                        } else if (data.status === 'completed' || data.status === 'incomplete') {
+                            statusClass = 'incomplete';
+                            statusTitle = `Partial / In progress (${data.score || 0}%)`;
+                        }
+                    }
                 }
 
+                const statusDotHtml = `<span class="status-dot ${statusClass}" title="${statusTitle}" aria-label="${statusTitle}"></span>`;
+
                 card.innerHTML = `
-                    <div class="badge ${badgeClass}">${badgeText}</div>
-                    <div class="icon-container">${iconSvg}</div>
-                    <h2>${config.title}</h2>
-                    <p>${config.desc || ''}</p>
+                    <div class="card-header">
+                        <div class="card-main">
+                            <div class="card-icon">${iconMarkup}</div>
+                            <h2>${config.title}</h2>
+                        </div>
+                        ${statusDotHtml}
+                    </div>
                 `;
                 grid.appendChild(card);
             });
 
             if (grid.innerHTML === '') {
-                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #005a91;">No quizzes available in this category yet. Check back soon!</p>`;
+                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #94a3b8;">No quizzes available in this category yet.</p>`;
             }
         }
 
-        // Main Tab Click
+        // Tab click handlers
         mainTabs.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 mainTabs.forEach(t => t.classList.remove('active'));
@@ -369,7 +660,7 @@
             });
         });
 
-        // Initial Load
+        // Initial render
         buildSubTabs(currentCategory);
         renderGrid();
     </script>
